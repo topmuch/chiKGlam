@@ -378,10 +378,10 @@ export const reviews: Review[] = [
 
 export const heroSlides: { title: string; subtitle: string; cta: string; image: string; link: string }[] = [
   {
-    title: 'Nouvelle Collection Maquillage',
-    subtitle: 'Découvrez notre gamme hyper-pigmentée, minérale et végan — conçue pour toutes les carnations.',
+    title: 'Révélez Votre Beauté Naturelle',
+    subtitle: 'Maquillage minéral hyper-pigmenté conçu pour sublimer chaque carnation. Vegan & cruelty-free.',
     cta: 'Découvrir',
-    image: '/images/hero/slide-1.png',
+    image: '/images/hero/slide-noir-1.png',
     link: 'makeup',
   },
   {
@@ -392,11 +392,11 @@ export const heroSlides: { title: string; subtitle: string; cta: string; image: 
     link: 'lingerie',
   },
   {
-    title: 'Box de Séduction',
-    subtitle: 'Petits pagnes, kit nuisette, kimono et accessoires — le cadeau parfait.',
-    cta: 'Offrir',
-    image: '/images/hero/slide-3.png',
-    link: 'box-de-seduction',
+    title: 'Glamour Absolu',
+    subtitle: 'Notre collection maquillage est conçue pour sublimer votre beauté naturelle avec des teintes vibrantes.',
+    cta: 'Voir la Collection',
+    image: '/images/hero/slide-noir-2.png',
+    link: 'makeup',
   },
 ];
 
