@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,16 +11,168 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
+  password  String?
+  role      String   @default("customer")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Post {
+model Category {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String
+  description   String   @default("")
+  image         String   @default("")
+  subcategories String   @default("[]")
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Product {
+  id               String   @id @default(cuid())
+  name             String
+  slug             String
+  brand            String
+  price            Float
+  originalPrice    Float?
+  description      String
+  shortDescription String?
+  image            String
+  images           String
+  category         String
+  subcategory      String
+  rating           Float    @default(0)
+  reviewCount      Int      @default(0)
+  tags             String   @default("[]")
+  inStock          Boolean  @default(true)
+  stockCount       Int      @default(100)
+  isNew            Boolean  @default(false)
+  isTrending       Boolean  @default(false)
+  isBestseller     Boolean  @default(false)
+  isFeatured       Boolean  @default(false)
+  isActive         Boolean  @default(true)
+  seoTitle         String?
+  seoDescription   String?
+  weight           Float?
+  sku              String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Order {
+  id               String    @id @default(cuid())
+  orderNumber      String
+  userId           String?
+  customerEmail    String
+  customerName     String
+  customerPhone    String?
+  shippingAddress  String
+  billingAddress   String?
+  subtotal         Float
+  shippingCost     Float     @default(0)
+  tax              Float     @default(0)
+  total            Float
+  status           String    @default("processing")
+  paymentMethod    String?
+  paymentId        String?
+  paymentStatus    String    @default("pending")
+  shippingCarrier  String?
+  trackingNumber   String?
+  trackingUrl      String?
+  shippedAt        DateTime?
+  deliveredAt      DateTime?
+  notes            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  orderConfirmedAt DateTime?
+  orderShippedAt   DateTime?
+  orderDeliveredAt DateTime?
+}
+
+model OrderItem {
+  id           String @id @default(cuid())
+  orderId      String
+  productId    String
+  productName  String
+  productImage String
+  brand        String
+  price        Float
+  quantity     Int
+  total        Float
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  userId     String
+  label      String?
+  firstName  String
+  lastName   String
+  address1   String
+  address2   String?
+  city       String
+  state      String?
+  postalCode String
+  country    String   @default("France")
+  phone      String?
+  isDefault  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  productId  String
+  userId     String?
+  userName   String
+  rating     Int
+  title      String?
+  comment    String
+  isVerified Boolean  @default(false)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Banner {
   id        String   @id @default(cuid())
   title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+  subtitle  String?
+  image     String
+  link      String?
+  position  Int      @default(0)
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model WooCommerceImport {
+  id            String   @id @default(cuid())
+  filename      String
+  totalProducts Int      @default(0)
+  importedCount Int      @default(0)
+  failedCount   Int      @default(0)
+  status        String   @default("pending")
+  errors        String   @default("[]")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model SiteSettings {
+  id              String   @id @default("main")
+  siteName        String   @default("ChicGlambyEva")
+  siteDescription String   @default("Premium Beauty & Skincare")
+  siteUrl         String   @default("https://chicglambyeva.com")
+  ogImage         String?
+  contactEmail    String?
+  activeTemplate  String   @default("default")
+  stripeKey       String?
+  stripeSecret    String?
+  sumupKey        String?
+  sumUpMerchantId String?
+  smtpHost        String?
+  smtpPort        Int?
+  smtpUser        String?
+  smtpPass        String?
+  updatedAt       DateTime @updatedAt
 }

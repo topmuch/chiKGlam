@@ -59,3 +59,21 @@ Stage Summary:
 - WooCommerce import now correctly maps categories
 - CategoryPage is resilient and handles any category dynamically
 - Deployment will work without re-importation
+---
+Task ID: 1
+Agent: Main Agent
+Task: Rename category "carte cadeaux" to "Box de Seduction" and generate representative image
+
+Work Log:
+- Restored Prisma schema to match actual database tables (Category, Product, Order, OrderItem, Address, Review, Banner, WooCommerceImport, SiteSettings)
+- Generated Prisma client from restored schema
+- Created "Box de Seduction" category in database with slug "box-de-seduction"
+- Category subcategories: Petits pagnes, Kit nuisette, Kimono, Accessoires (perles/tour de taille)
+- Generated category image using AI image generation (flat lay of African wax print wraps, negligee, kimono, pearl accessories on velvet background)
+- Image saved to `/public/images/categories/box-de-seduction.png`
+- Updated category record with image path
+
+Stage Summary:
+- Category "Box de Seduction" created in database (ID: cat_box-de-seduction)
+- AI-generated category image saved at `/images/categories/box-de-seduction.png`
+- Prisma schema fully restored to match database structure
