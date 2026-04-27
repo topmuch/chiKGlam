@@ -20,7 +20,6 @@ interface HeaderProps {
 
 const NAV_LINKS: { label: string; page: AppPage; section?: string }[] = [
   { label: 'ACCUEIL', page: 'home', section: '#accueil' },
-  { label: 'À PROPOS', page: 'about' },
   { label: 'CONTACT', page: 'home', section: '#contact' },
 ]
 
