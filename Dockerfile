@@ -33,7 +33,6 @@ WORKDIR /app
 # Set environment to production
 ENV NODE_ENV=production
 ENV DATABASE_URL="file:/app/data/custom.db"
-ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
 # Create non-root user
@@ -60,6 +59,7 @@ RUN mkdir -p /app/data && chown nextjs:nodejs /app/data
 
 USER nextjs
 
+# Coolify sets PORT dynamically — do NOT hardcode it
 EXPOSE 3000
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
