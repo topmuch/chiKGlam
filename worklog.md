@@ -24,3 +24,38 @@ Stage Summary:
 - Template selection persists in DB + localStorage
 - Gold theme changes: promo banner bg, section titles, underline accents, ACHETER button, footer bg, newsletter section bg, CustomerFeedback section bg, social icons
 - Homepage product counts reduced from 6 to 4 in both trending and newArrivals sections
+---
+Task ID: 1
+Agent: Main Agent
+Task: Fix category system issues - WooCommerce import category mapping, CategoryPage resilience, and static category expansion
+
+Work Log:
+- Investigated full codebase: Prisma schema, WooCommerce import routes (A, B, C), CSV parser, CategoryPage, FilterSidebar, ProductPage, AdminDashboard
+- Found 141 local product images already in public/images/products/woocommerce/
+- Found 24 seed products in DB with proper categories (Makeup: 16, Lingerie: 3, Accessoires: 5)
+- Found 0 WooCommerceImport records (current products are from seed, not import)
+
+Key Issues Found & Fixed:
+1. **CategoryPage "Catégorie introuvable" bug**: CategoryPage showed error for any category not in the 4-item static list. Now uses dynamic fallback - any category slug works.
+2. **Missing slug-to-category mappings**: Added Skincare, Haircare, Fragrance, Bodycare, Nailcare mappings
+3. **WooCommerce Import Route B French→English**: `/api/woocommerce/import/route.ts` did NOT map French categories (Maquillage→Makeup, etc.). Added CATEGORY_MAP with mapCategoryName() helper.
+4. **Static categories expansion**: Added Skincare, Haircare, Fragrance to data/products.ts categories array
+5. **CategoryPage reverse lookup**: Added categoryToSlugMap so ProductPage breadcrumbs (which pass DB category names like "Makeup") resolve correctly
+
+Files Modified:
+- src/components/category/CategoryPage.tsx - Added dynamic category fallback, expanded slug mappings, removed "Catégorie introuvable" dead-end
+- src/app/api/woocommerce/import/route.ts - Added CATEGORY_MAP (French→English) and mapCategoryName() function
+- src/data/products.ts - Added Skincare, Haircare, Fragrance categories with subcategories
+
+Answer to user's deployment question:
+- NO re-import needed for deployment. All 141 images are local static files in public/images/products/woocommerce/
+- Images WILL display correctly on deployment
+- Products are already categorized correctly in the DB
+- Category pages now work for ALL categories (including future ones from imports)
+- Future WooCommerce imports will automatically map French categories to English
+
+Stage Summary:
+- All category-related bugs fixed
+- WooCommerce import now correctly maps categories
+- CategoryPage is resilient and handles any category dynamically
+- Deployment will work without re-importation
