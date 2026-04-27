@@ -36,12 +36,14 @@ export function CategoriesGrid() {
                 onClick={() => navigateTo('category', { category: category.slug })}
               >
                 {/* Category card with responsive height */}
-                <div className="relative w-full" style={{ aspectRatio: '4/3' }}>
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
+                <div className="relative w-full bg-gradient-to-br from-neutral-200 via-neutral-100 to-neutral-300" style={{ aspectRatio: '4/3' }}>
+                  {category.image && (
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )}
                   {/* Strong gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/5" />
 

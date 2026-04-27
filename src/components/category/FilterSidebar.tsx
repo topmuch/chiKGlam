@@ -142,7 +142,8 @@ function FilterSidebarContent({
           </AccordionContent>
         </AccordionItem>
 
-        {/* Brand */}
+        {/* Brand - only show if brands exist */}
+        {brands.length > 0 && (
         <AccordionItem value="brand">
           <AccordionTrigger className="text-xs font-semibold uppercase tracking-wider py-3">
             Marque
@@ -173,6 +174,7 @@ function FilterSidebarContent({
             </div>
           </AccordionContent>
         </AccordionItem>
+        )}
 
         {/* Category */}
         <AccordionItem value="category">

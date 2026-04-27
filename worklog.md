@@ -125,3 +125,61 @@ Stage Summary:
 - Mobile hamburger menu using shadcn/ui Sheet
 - Sticky footer implementation with flex layout
 - All 3 about images properly displayed with Next.js Image optimization
+---
+Task ID: 5
+Agent: Sub Agent
+Task: Remove ALL hardcoded fake products, categories and images from data/products.ts
+
+Work Log:
+- Read and analyzed src/data/products.ts (731 lines) containing 24 fake hardcoded products (La Mer, SK-II, Tatcha, Charlotte Tilbury, Fenty Beauty, etc.)
+- Identified 8 files importing from data/products.ts: TrendingProducts, NewArrivals, HeroSlider, CategoriesGrid, CategoryPage, FilterSidebar, MegaMenu, MobileMenu
+- Analyzed each importing component for breakage risk with empty fallback data
+
+Changes Made:
+1. **src/data/products.ts** - Complete rewrite:
+   - `products`: Replaced 24 fake products with empty array `Product[] = []`
+   - `categories`: Replaced 4 fake categories (with fake subcategories and 404 image paths) with 4 real categories:
+     - MAKEUP: Teint, Yeux, Lèvres (removed Ongles)
+     - LINGERIE: Ensembles, Nuisettes, Bodys, Pagnes, Box Séduction (added Box Séduction)
+     - ACCESSOIRES: Cils, Pinceaux (removed Bijoux)
+     - BOX DE SEDUCTION: Petits pagnes, Kit nuisette, Kimono, Accessoires perles/tour de taille (renamed from CARTE DE CADEAUX)
+   - `brands`: Replaced 15 fake brands (La Mer, SK-II, etc.) with empty `string[] = []`
+   - `reviews`: Replaced 6 fake reviews with empty `Review[] = []`
+   - `heroSlides`: Replaced 3 fake slides (with 404 image paths) with empty array
+   - `offerBanners`: Replaced 3 fake banners (with 404 image paths) with empty array
+   - All 8 helper functions preserved intact (getProductsByCategory, getTrendingProducts, etc.) - they return empty arrays from the empty products array
+
+2. **src/components/home/CategoriesGrid.tsx** - Fixed empty image handling:
+   - Added conditional `{category.image && <img ... />}` to prevent broken img tags when image is empty string
+   - Added `bg-gradient-to-br from-neutral-200 via-neutral-100 to-neutral-300` as visual fallback when no image exists
+
+3. **src/components/category/FilterSidebar.tsx** - Fixed empty brands handling:
+   - Wrapped Brand accordion item with `{brands.length > 0 && ...}` to hide when no brands available
+
+Components verified safe with empty fallbacks:
+- TrendingProducts.tsx: uses API data, fallback to empty array → shows loading state, then empty grid
+- NewArrivals.tsx: same pattern → works fine
+- HeroSlider.tsx: falls back to empty heroSlides → shows animated pulse placeholder
+- OffersBanner.tsx: does NOT import from data/products (has own SLIDES + live API data) → no change needed
+- CustomerFeedback.tsx: does NOT import from data/products (has own testimonials) → no change needed
+- BrandSpotlight.tsx: does NOT import from data/products (has own brands list) → no change needed
+- ProductPage.tsx: does NOT import from data/products (uses useProducts hook) → no change needed
+- CategoryPage.tsx: imports categories + products + getProductsByCategory → categories updated, products empty → API data is primary source, empty fallback is fine
+- MegaMenu.tsx: imports categories + getProductsByCategory → featuredProducts will be empty → shows "Aucun produit en vedette"
+- MobileMenu.tsx: imports categories → will show 4 real categories → works correctly
+
+Lint: 0 errors, 3 pre-existing warnings (unrelated StaticPages.tsx)
+
+Stage Summary:
+- All 24 fake hardcoded products removed
+- All 15 fake brands removed
+- All 6 fake reviews removed
+- All 3 fake hero slides removed
+- All 3 fake offer banners removed
+- Categories updated to 4 real ones matching the database
+- "CARTE DE CADEAUX" renamed to "BOX DE SEDUCTION"
+- Fake subcategories (Ongles, Bijoux, Cartes Cadeaux) removed; real ones added
+- Fake 404 image paths replaced with empty strings
+- All helper functions preserved
+- No importing components broken (all handle empty arrays gracefully)
+- Lint passes clean
