@@ -6,7 +6,7 @@ import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { useTemplate } from '@/hooks/use-template';
 import { useStore } from '@/store/use-store';
 import { useBanners, type BannerData } from '@/lib/use-banners';
-import { useProducts } from '@/hooks/use-products';
+import { getProductsByCategory } from '@/data/products';
 import type { Product } from '@/types';
 
 function getDiscountPercent(price: number, originalPrice?: number | null): number {
@@ -32,8 +32,8 @@ export function PromoDualBanner() {
   const { banners, loading } = useBanners('promo');
   const { isGold } = useTemplate();
 
-  // Fetch Accessoires products from DB
-  const { data: accessoiresData } = useProducts({ category: 'Accessoires', sort: 'newest', limit: 2 });
+  // Use static data directly — no API dependency for product images
+  const accessoiresData = getProductsByCategory('Accessoires');
 
   const [promoProducts, setPromoProducts] = useState<Product[]>([]);
   const [productsFetched, setProductsFetched] = useState(false);
@@ -97,11 +97,11 @@ export function PromoDualBanner() {
     if (promoProductIds.length > 0) {
       return promoProducts.length > 0 ? promoProducts : null;
     }
-    // Live: use Accessoires products from DB
+    // Use static Accessoires products
     if (accessoiresData && accessoiresData.length > 0) {
-      return accessoiresData;
+      return accessoiresData.slice(0, 2);
     }
-    // Fallback: show nothing (no static fake products)
+    // Fallback: show nothing
     return null;
   })();
 

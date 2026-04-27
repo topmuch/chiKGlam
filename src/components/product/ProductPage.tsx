@@ -6,7 +6,6 @@ import {
   Minus,
   Plus,
   Home,
-  ChevronLeft,
   ChevronRight,
   Star,
   MessageSquare,
@@ -14,7 +13,6 @@ import {
   Truck,
   RotateCcw,
   Award,
-  CreditCard,
   Instagram,
   Facebook,
   CheckCircle2,
@@ -39,10 +37,9 @@ import {
 import { StarRating } from '@/components/shared/StarRating';
 import { ProductCard } from '@/components/shared/ProductCard';
 import { ProductGallery } from './ProductGallery';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useCartStore } from '@/store/use-cart-store';
 import { useStore } from '@/store/use-store';
-import { useProducts } from '@/hooks/use-products';
+import { getRelatedProducts } from '@/data/products';
 import { Product, Review } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -143,13 +140,8 @@ export function ProductPage({ product }: ProductPageProps) {
       )
     : 0;
 
-  // Fetch related products from DB (same category, exclude current product)
-  const { data: relatedProductsData, isLoading: relatedLoading } = useProducts({
-    category: product.category,
-    limit: 7,
-    sort: 'newest',
-  });
-  const relatedProducts = (relatedProductsData || []).filter((p) => p.id !== product.id).slice(0, 6);
+  // Use static data directly — no API dependency for product images
+  const relatedProducts = getRelatedProducts(product.id, product.category);
 
   const avgRating = product.rating || 0;
 
@@ -611,7 +603,7 @@ export function ProductPage({ product }: ProductPageProps) {
 
 
       {/* Related Products */}
-      {(relatedProducts.length > 0 || relatedLoading) && (
+      {relatedProducts.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
           <Separator className="bg-gray-100 mb-8" />
           <div className="flex items-center justify-between mb-6">
@@ -631,17 +623,9 @@ export function ProductPage({ product }: ProductPageProps) {
             </Button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5">
-            {relatedLoading
-              ? Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="space-y-3">
-                    <Skeleton className="aspect-square w-full rounded-lg" />
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                ))
-              : relatedProducts.map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
+            {relatedProducts.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
           </div>
         </section>
       )}

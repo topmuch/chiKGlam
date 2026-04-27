@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { useStore } from '@/store/use-store';
-import { useProducts } from '@/hooks/use-products';
+import { getProductsByCategory } from '@/data/products';
 import type { Product } from '@/types';
 
 interface BannerSlide {
@@ -118,14 +118,14 @@ export function OffersBanner() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const navigateTo = useStore((s) => s.navigateTo);
 
-  // Fetch products from both categories
-  const { data: makeupProducts } = useProducts({ category: 'Makeup', sort: 'newest', limit: 6 });
-  const { data: accessoiresProducts } = useProducts({ category: 'Accessoires', sort: 'newest', limit: 6 });
+  // Use static data directly — no API dependency for product images
+  const makeupProducts = getProductsByCategory('Makeup');
+  const accessoiresProducts = getProductsByCategory('Accessoires');
 
   // Pick products for each slide
   const slideProducts = [
-    pickProducts(makeupProducts || [], 5, 42),
-    pickProducts(accessoiresProducts || [], 5, 73),
+    pickProducts(makeupProducts, 5, 42),
+    pickProducts(accessoiresProducts, 5, 73),
   ];
 
   const hasProducts = slideProducts[0].length > 0 || slideProducts[1].length > 0;
