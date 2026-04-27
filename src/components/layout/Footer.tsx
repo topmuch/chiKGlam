@@ -2,18 +2,28 @@
 
 import { Instagram, Facebook } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
+import type { AppPage } from '@/app/page'
 
-const QUICK_LINKS = [
-  { label: 'Accueil', href: '#accueil' },
-  { label: 'Boutique', href: '#boutique' },
-  { label: 'Contact', href: '#contact' },
+interface FooterProps {
+  currentPage: AppPage
+  onNavigate: (page: AppPage) => void
+}
+
+const QUICK_LINKS: { label: string; page: AppPage }[] = [
+  { label: 'Accueil', page: 'home' },
+  { label: 'À propos', page: 'about' },
+  { label: 'Contact', page: 'home' },
 ]
 
-export default function Footer() {
-  const handleNavClick = (href: string) => {
-    const el = document.querySelector(href)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
+export default function Footer({ currentPage, onNavigate }: FooterProps) {
+  const handleLinkClick = (page: AppPage) => {
+    if (currentPage !== page) {
+      onNavigate(page)
+      return
+    }
+    const contactEl = document.querySelector('#contact')
+    if (contactEl && page === 'home') {
+      contactEl.scrollIntoView({ behavior: 'smooth' })
     }
   }
 
@@ -39,9 +49,9 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2">
               {QUICK_LINKS.map((link) => (
-                <li key={link.href}>
+                <li key={link.label}>
                   <button
-                    onClick={() => handleNavClick(link.href)}
+                    onClick={() => handleLinkClick(link.page)}
                     className="text-sm text-white/60 transition-colors hover:text-[#bc8752]"
                   >
                     {link.label}

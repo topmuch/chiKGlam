@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Menu, X } from 'lucide-react'
+import { Menu } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -11,14 +11,20 @@ import {
   SheetClose,
 } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
+import type { AppPage } from '@/app/page'
 
-const NAV_LINKS = [
-  { label: 'ACCUEIL', href: '#accueil' },
-  { label: 'BOUTIQUE', href: '#boutique' },
-  { label: 'CONTACT', href: '#contact' },
+interface HeaderProps {
+  currentPage: AppPage
+  onNavigate: (page: AppPage) => void
+}
+
+const NAV_LINKS: { label: string; page: AppPage; section?: string }[] = [
+  { label: 'ACCUEIL', page: 'home', section: '#accueil' },
+  { label: 'À PROPOS', page: 'about' },
+  { label: 'CONTACT', page: 'home', section: '#contact' },
 ]
 
-export default function Header() {
+export default function Header({ currentPage, onNavigate }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -30,11 +36,15 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = (link: typeof NAV_LINKS[number]) => {
     setMobileOpen(false)
-    const el = document.querySelector(href)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
+    if (currentPage !== link.page) {
+      onNavigate(link.page)
+      return
+    }
+    if (link.section) {
+      const el = document.querySelector(link.section)
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
     }
   }
 
@@ -50,32 +60,33 @@ export default function Header() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between md:h-20">
           {/* Logo */}
-          <a
-            href="#accueil"
-            onClick={(e) => {
-              e.preventDefault()
-              handleNavClick('#accueil')
-            }}
+          <button
+            onClick={() => handleNavClick(NAV_LINKS[0])}
             className="flex items-center gap-2"
           >
             <span className="text-lg font-bold tracking-wider text-white md:text-xl lg:text-2xl">
               CHIC & <span className="text-[#bc8752]">GLAMOUR</span> BY EVA
             </span>
-          </a>
+          </button>
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center gap-8 md:flex">
             {NAV_LINKS.map((link) => (
               <button
-                key={link.href}
-                onClick={() => handleNavClick(link.href)}
-                className="text-sm font-medium tracking-widest text-white/80 transition-colors hover:text-[#bc8752]"
+                key={link.label}
+                onClick={() => handleNavClick(link)}
+                className={cn(
+                  'text-sm font-medium tracking-widest transition-colors',
+                  currentPage === link.page && !link.section
+                    ? 'text-[#bc8752]'
+                    : 'text-white/80 hover:text-[#bc8752]'
+                )}
               >
                 {link.label}
               </button>
             ))}
             <Button
-              onClick={() => handleNavClick('#boutique')}
+              onClick={() => onNavigate('home')}
               className="bg-[#bc8752] text-white hover:bg-[#a8763f] text-xs tracking-widest"
             >
               DÉCOUVRIR
@@ -104,10 +115,15 @@ export default function Header() {
               </SheetHeader>
               <nav className="flex flex-col gap-4 mt-8 px-4">
                 {NAV_LINKS.map((link) => (
-                  <SheetClose asChild key={link.href}>
+                  <SheetClose asChild key={link.label}>
                     <button
-                      onClick={() => handleNavClick(link.href)}
-                      className="text-left text-base font-medium tracking-widest text-white/80 transition-colors hover:text-[#bc8752] py-2 border-b border-white/10"
+                      onClick={() => handleNavClick(link)}
+                      className={cn(
+                        'text-left text-base font-medium tracking-widest py-2 border-b border-white/10 transition-colors',
+                        currentPage === link.page && !link.section
+                          ? 'text-[#bc8752]'
+                          : 'text-white/80 hover:text-[#bc8752]'
+                      )}
                     >
                       {link.label}
                     </button>
@@ -115,7 +131,7 @@ export default function Header() {
                 ))}
                 <SheetClose asChild>
                   <Button
-                    onClick={() => handleNavClick('#boutique')}
+                    onClick={() => onNavigate('home')}
                     className="mt-4 bg-[#bc8752] text-white hover:bg-[#a8763f] w-full tracking-widest"
                   >
                     DÉCOUVRIR LA BOUTIQUE
