@@ -1,50 +1,98 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
+import { Providers } from "@/components/providers/Providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
-  title: "CHIC & GLAMOUR BY EVA | Maquillage Minéral & Végan | Lingerie Africaine",
+  title: {
+    default: "ChicGlambyEva | Premium Beauty & Skincare",
+    template: "%s | ChicGlambyEva",
+  },
   description:
-    "Découvrez CHIC & GLAMOUR BY EVA — maquillage minéral, végan et hyper pigmenté. Lingerie africaine artisanale faite à la main au Sénégal. Livraison rapide en France.",
+    "Discover luxury beauty products, skincare essentials, and premium cosmetics at ChicGlambyEva. Shop top brands like La Mer, Charlotte Tilbury, Olaplex, Drunk Elephant, Fenty Beauty, and Tom Ford.",
   keywords: [
-    "maquillage minéral",
-    "maquillage végan",
-    "lingerie africaine",
-    "Chic & Glamour by Eva",
-    "beauté",
-    "cosmétiques",
-    "Senegal",
-    "commerce équitable",
+    "beauty",
+    "skincare",
+    "cosmetics",
+    "makeup",
+    "haircare",
+    "fragrance",
+    "luxury beauty",
+    "premium skincare",
+    "ChicGlambyEva",
+    "La Mer",
+    "Charlotte Tilbury",
+    "Olaplex",
+    "Drunk Elephant",
+    "Fenty Beauty",
   ],
-  authors: [{ name: "Chic & Glamour by Eva" }],
-  icons: {
-    icon: "/favicon.ico",
+  authors: [{ name: "ChicGlambyEva" }],
+  creator: "ChicGlambyEva",
+  publisher: "ChicGlambyEva",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL("https://chicglambyeva.com"),
+  alternates: {
+    canonical: "/",
   },
   openGraph: {
-    title: "CHIC & GLAMOUR BY EVA",
-    description:
-      "Maquillage minéral & végan | Lingerie africaine artisanale",
-    url: "https://chicglambyeva.com",
-    siteName: "Chic & Glamour by EVA",
     type: "website",
-    locale: "fr_FR",
+    locale: "en_US",
+    url: "https://chicglambyeva.com",
+    title: "ChicGlambyEva | Premium Beauty & Skincare",
+    description:
+      "Discover luxury beauty products and premium cosmetics. Free delivery on orders over €50.",
+    siteName: "ChicGlambyEva",
+    images: [
+      {
+        url: "/images/hero/hero-1.png",
+        width: 1024,
+        height: 1024,
+        alt: "ChicGlambyEva Beauty Collection",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CHIC & GLAMOUR BY EVA",
-    description: "Maquillage minéral & végan | Lingerie africaine artisanale",
+    title: "ChicGlambyEva | Premium Beauty & Skincare",
+    description: "Discover luxury beauty products and premium cosmetics.",
+    images: ["/images/hero/hero-1.png"],
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", sizes: "32x32", type: "image/png" },
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    apple: "/apple-icon.png",
+  },
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
@@ -53,12 +101,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${inter.variable} ${poppins.variable} font-sans antialiased`}
       >
-        {children}
-        <Toaster />
+        <Providers>
+          {children}
+          <Toaster />
+        </Providers>
       </body>
     </html>
   );
