@@ -119,7 +119,7 @@ export function HeroSlider() {
       {slides.length > 1 && (
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm text-foreground opacity-100 transition-all duration-300 hover:bg-white hover:shadow-lg z-10"
+          className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 h-12 w-12 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm text-foreground transition-all duration-300 hover:bg-white hover:shadow-lg z-10"
           aria-label="Previous slide"
         >
           <ChevronLeft className="h-6 w-6" />
@@ -130,7 +130,7 @@ export function HeroSlider() {
       {slides.length > 1 && (
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm text-foreground opacity-100 transition-all duration-300 hover:bg-white hover:shadow-lg z-10"
+          className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 h-12 w-12 items-center justify-center rounded-full bg-white/90 backdrop-blur-sm text-foreground transition-all duration-300 hover:bg-white hover:shadow-lg z-10"
           aria-label="Next slide"
         >
           <ChevronRight className="h-6 w-6" />
