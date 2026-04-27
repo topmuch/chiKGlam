@@ -132,6 +132,7 @@ export function ProductPage({ product }: ProductPageProps) {
   const setCartOpen = useCartStore((s) => s.setCartOpen);
   const navigateTo = useStore((s) => s.navigateTo);
   const [quantity, setQuantity] = useState(1);
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
   const reviewsRef = useRef<HTMLDivElement>(null);
 
   const discount = product.originalPrice
@@ -269,6 +270,81 @@ export function ProductPage({ product }: ProductPageProps) {
             <p className="text-sm text-gray-600 leading-relaxed">
               {product.description}
             </p>
+
+            {/* Product Variants Selector */}
+            {product.variants && product.variants.length > 0 && (
+              <div className="space-y-4">
+                {product.variants.map((variant) => (
+                  <div key={variant.name}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-semibold text-neutral-900">
+                        {variant.name}
+                      </span>
+                      {selectedVariants[variant.name] && (
+                        <span className="text-xs text-muted-foreground">
+                          {variant.options.find((o) => o.label === selectedVariants[variant.name])?.label}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {variant.type === 'color' ? (
+                        // Color swatches
+                        variant.options.map((option) => (
+                          <button
+                            key={option.label}
+                            onClick={() =>
+                              setSelectedVariants((prev) => ({
+                                ...prev,
+                                [variant.name]: option.label,
+                              }))
+                            }
+                            title={option.label}
+                            className={cn(
+                              'relative w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 transition-all duration-200',
+                              'hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-900',
+                              selectedVariants[variant.name] === option.label
+                                ? 'border-neutral-900 ring-2 ring-neutral-900/20 scale-110'
+                                : 'border-gray-200 hover:border-gray-400',
+                              !option.inStock && 'opacity-30 cursor-not-allowed hover:border-gray-200 hover:scale-100'
+                            )}
+                            disabled={!option.inStock}
+                          >
+                            <span
+                              className="absolute inset-0.5 rounded-full"
+                              style={{ backgroundColor: option.value }}
+                            />
+                          </button>
+                        ))
+                      ) : (
+                        // Text buttons (Taille, Volume, Motif, etc.)
+                        variant.options.map((option) => (
+                          <button
+                            key={option.label}
+                            onClick={() =>
+                              setSelectedVariants((prev) => ({
+                                ...prev,
+                                [variant.name]: option.label,
+                              }))
+                            }
+                            className={cn(
+                              'px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium border transition-all duration-200',
+                              'hover:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-neutral-900',
+                              selectedVariants[variant.name] === option.label
+                                ? 'bg-neutral-900 text-white border-neutral-900'
+                                : 'bg-white text-neutral-900 border-gray-200 hover:bg-gray-50',
+                              !option.inStock && 'opacity-30 cursor-not-allowed hover:bg-white hover:border-gray-200'
+                            )}
+                            disabled={!option.inStock}
+                          >
+                            {option.label}
+                          </button>
+                        ))
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Benefits Bar */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-1">

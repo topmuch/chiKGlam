@@ -1,3 +1,13 @@
+export interface ProductVariant {
+  name: string;           // e.g. "Teinte", "Taille", "Volume", "Couleur"
+  type: 'color' | 'text' | 'image';  // color = swatch, text = button label, image = thumbnail
+  options: {
+    label: string;        // e.g. "Clair", "Moyen", "Foncé"
+    value: string;        // hex color for color swatch, or same as label
+    inStock?: boolean;
+  }[];
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -18,6 +28,7 @@ export interface Product {
   isBestseller?: boolean;
   concerns?: string[];
   skinType?: string[];
+  variants?: ProductVariant[];
 }
 
 export interface CartItem {

@@ -74,6 +74,24 @@ export const products: Product[] = [
     isNew: true,
     isTrending: true,
     isBestseller: true,
+    variants: [
+      {
+        name: 'Teinte',
+        type: 'color',
+        options: [
+          { label: 'N1 Porcelaine', value: '#F5E0D3', inStock: true },
+          { label: 'N2 Vanille', value: '#EDCDB5', inStock: true },
+          { label: 'N3 Beige Clr', value: '#D4A574', inStock: true },
+          { label: 'N4 Beige', value: '#C68E5B', inStock: true },
+          { label: 'N5 Abricot', value: '#B87A45', inStock: true },
+          { label: 'N6 Miel', value: '#A66B30', inStock: true },
+          { label: 'N7 Doré', value: '#8B5E2A', inStock: true },
+          { label: 'N8 Caramel', value: '#6B4226', inStock: true },
+          { label: 'N9 Chatain', value: '#4A2E14', inStock: true },
+          { label: 'N10 Ébène', value: '#2C1810', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'mk-002',
@@ -93,6 +111,23 @@ export const products: Product[] = [
     isNew: true,
     isTrending: true,
     isBestseller: true,
+    variants: [
+      {
+        name: 'Nuance',
+        type: 'color',
+        options: [
+          { label: 'Porcelaine', value: '#F5E0D3', inStock: true },
+          { label: 'Vanille', value: '#EDCDB5', inStock: true },
+          { label: 'Beige', value: '#D4A574', inStock: true },
+          { label: 'Abricot', value: '#B87A45', inStock: true },
+          { label: 'Miel', value: '#A66B30', inStock: true },
+          { label: 'Doré', value: '#8B5E2A', inStock: true },
+          { label: 'Caramel', value: '#6B4226', inStock: true },
+          { label: 'Chatain', value: '#4A2E14', inStock: true },
+          { label: 'Ébène', value: '#2C1810', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'mk-003',
@@ -112,6 +147,19 @@ export const products: Product[] = [
     isNew: false,
     isTrending: true,
     isBestseller: false,
+    variants: [
+      {
+        name: 'Teinte',
+        type: 'color',
+        options: [
+          { label: 'Gold', value: '#D4AF37', inStock: true },
+          { label: 'Rose', value: '#E8B4B8', inStock: true },
+          { label: 'Bronze', value: '#CD7F32', inStock: true },
+          { label: 'Pêche', value: '#FFCBA4', inStock: true },
+          { label: 'Champagne', value: '#F7E7CE', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'mk-004',
@@ -131,6 +179,21 @@ export const products: Product[] = [
     isNew: true,
     isTrending: false,
     isBestseller: false,
+    variants: [
+      {
+        name: 'Nuance',
+        type: 'color',
+        options: [
+          { label: 'Porcelaine', value: '#F5E0D3', inStock: true },
+          { label: 'Vanille', value: '#EDCDB5', inStock: true },
+          { label: 'Beige', value: '#D4A574', inStock: true },
+          { label: 'Abricot', value: '#B87A45', inStock: true },
+          { label: 'Miel', value: '#A66B30', inStock: true },
+          { label: 'Caramel', value: '#6B4226', inStock: true },
+          { label: 'Chatain', value: '#4A2E14', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'mk-005',
@@ -150,6 +213,22 @@ export const products: Product[] = [
     isNew: true,
     isTrending: true,
     isBestseller: true,
+    variants: [
+      {
+        name: 'Teinte',
+        type: 'color',
+        options: [
+          { label: 'Porcelaine', value: '#F5E0D3', inStock: true },
+          { label: 'Vanille', value: '#EDCDB5', inStock: true },
+          { label: 'Beige', value: '#D4A574', inStock: true },
+          { label: 'Abricot', value: '#B87A45', inStock: true },
+          { label: 'Miel', value: '#A66B30', inStock: true },
+          { label: 'Doré', value: '#8B5E2A', inStock: true },
+          { label: 'Caramel', value: '#6B4226', inStock: true },
+          { label: 'Ébène', value: '#2C1810', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'mk-006',
@@ -169,6 +248,19 @@ export const products: Product[] = [
     isNew: true,
     isTrending: true,
     isBestseller: false,
+    variants: [
+      {
+        name: 'Teinte',
+        type: 'color',
+        options: [
+          { label: 'Clair', value: '#F5E0D3', inStock: true },
+          { label: 'Moyen', value: '#D4A574', inStock: true },
+          { label: 'Foncé', value: '#8B5E2A', inStock: true },
+          { label: 'Ivoire', value: '#FFFFF0', inStock: true },
+          { label: 'Pêche', value: '#FFCBA4', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'mk-007',
@@ -226,6 +318,18 @@ export const products: Product[] = [
     isNew: true,
     isTrending: false,
     isBestseller: false,
+    variants: [
+      {
+        name: 'Couleur',
+        type: 'color',
+        options: [
+          { label: 'Noir', value: '#000000', inStock: true },
+          { label: 'Brun', value: '#3B2F2F', inStock: true },
+          { label: 'Bleu', value: '#1F3A5F', inStock: true },
+          { label: 'Marron', value: '#6B3A2A', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'mk-010',
@@ -283,6 +387,20 @@ export const products: Product[] = [
     isNew: true,
     isTrending: true,
     isBestseller: true,
+    variants: [
+      {
+        name: 'Couleur',
+        type: 'color',
+        options: [
+          { label: 'Noir', value: '#000000', inStock: true },
+          { label: 'Brun', value: '#3B2F2F', inStock: true },
+          { label: 'Blanc', value: '#FFFFFF', inStock: true },
+          { label: 'Bleu', value: '#1F3A5F', inStock: true },
+          { label: 'Rouge', value: '#8B0000', inStock: true },
+          { label: 'Nude', value: '#D2B48C', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'mk-013',
@@ -302,6 +420,21 @@ export const products: Product[] = [
     isNew: true,
     isTrending: true,
     isBestseller: true,
+    variants: [
+      {
+        name: 'Teinte',
+        type: 'color',
+        options: [
+          { label: 'Rouge Passion', value: '#CC0000', inStock: true },
+          { label: 'Rose', value: '#FF69B4', inStock: true },
+          { label: 'Nude', value: '#D2B48C', inStock: true },
+          { label: 'Bordeaux', value: '#722F37', inStock: true },
+          { label: 'Prune', value: '#4B0082', inStock: true },
+          { label: 'Corail', value: '#FF7F50', inStock: true },
+          { label: 'Mauve', value: '#E0B0FF', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'mk-014',
@@ -321,6 +454,20 @@ export const products: Product[] = [
     isNew: true,
     isTrending: false,
     isBestseller: false,
+    variants: [
+      {
+        name: 'Teinte',
+        type: 'color',
+        options: [
+          { label: 'Transparent', value: '#F5F5DC', inStock: true },
+          { label: 'Rose', value: '#FFB6C1', inStock: true },
+          { label: 'Pêche', value: '#FFCBA4', inStock: true },
+          { label: 'Corail', value: '#FF7F50', inStock: true },
+          { label: 'Miel', value: '#EB9605', inStock: true },
+          { label: 'Framboise', value: '#C72C48', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'mk-015',
@@ -398,6 +545,18 @@ export const products: Product[] = [
     isNew: true,
     isTrending: true,
     isBestseller: true,
+    variants: [
+      {
+        name: 'Volume',
+        type: 'text',
+        options: [
+          { label: 'Naturel', value: 'Naturel', inStock: true },
+          { label: 'Moyen', value: 'Moyen', inStock: true },
+          { label: 'Volume', value: 'Volume', inStock: true },
+          { label: 'Ultra Volume', value: 'Ultra Volume', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'ac-002',
@@ -475,6 +634,18 @@ export const products: Product[] = [
     isNew: true,
     isTrending: true,
     isBestseller: true,
+    variants: [
+      {
+        name: 'Taille',
+        type: 'text',
+        options: [
+          { label: 'S', value: 'S', inStock: true },
+          { label: 'M', value: 'M', inStock: true },
+          { label: 'L', value: 'L', inStock: true },
+          { label: 'XL', value: 'XL', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'lg-002',
@@ -494,6 +665,18 @@ export const products: Product[] = [
     isNew: true,
     isTrending: true,
     isBestseller: false,
+    variants: [
+      {
+        name: 'Motif',
+        type: 'text',
+        options: [
+          { label: 'Ankara Classique', value: 'Ankara Classique', inStock: true },
+          { label: 'Wax Moderne', value: 'Wax Moderne', inStock: true },
+          { label: 'Bazin', value: 'Bazin', inStock: true },
+          { label: 'Kita', value: 'Kita', inStock: true },
+        ],
+      },
+    ],
   },
   {
     id: 'lg-003',
@@ -513,6 +696,18 @@ export const products: Product[] = [
     isNew: true,
     isTrending: false,
     isBestseller: true,
+    variants: [
+      {
+        name: 'Motif',
+        type: 'text',
+        options: [
+          { label: 'Ankara Classique', value: 'Ankara Classique', inStock: true },
+          { label: 'Wax Moderne', value: 'Wax Moderne', inStock: true },
+          { label: 'Bazin', value: 'Bazin', inStock: true },
+          { label: 'Kita', value: 'Kita', inStock: true },
+        ],
+      },
+    ],
   },
 ];
 
