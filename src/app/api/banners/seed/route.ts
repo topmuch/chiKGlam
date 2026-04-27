@@ -17,65 +17,31 @@ export async function POST() {
     const heroBanners = [
       {
         type: 'hero',
-        title: 'Brillez Comme Jamais',
-        subtitle: 'Découvrez notre collection de soins et maquillage haut de gamme',
+        title: 'Nouvelle Collection Maquillage',
+        subtitle: 'Découvrez notre gamme hyper-pigmentée, minérale et végan — conçue pour toutes les carnations.',
         cta: 'Découvrir',
-        image: '/images/hero/hero-1.png',
+        image: '/images/hero/slide-1.png',
         link: 'makeup',
         sortOrder: 0,
         isActive: true,
       },
       {
         type: 'hero',
-        title: 'La Beauté Réinventée',
-        subtitle: 'Explorez les dernières tendances en cosmétiques de luxe',
-        cta: 'Voir la Collection',
-        image: '/images/hero/hero-2.png',
-        link: 'makeup',
-        sortOrder: 1,
-        isActive: true,
-      },
-      {
-        type: 'hero',
-        title: "L'Art du Maquillage",
-        subtitle: 'Sublimez votre beauté naturelle avec nos produits d\'exception',
-        cta: 'Acheter Maintenant',
-        image: '/images/hero/hero-3.png',
-        link: 'makeup',
-        sortOrder: 2,
-        isActive: true,
-      },
-    ];
-
-    // Seed Offer banners
-    const offerBanners = [
-      {
-        type: 'offer',
-        title: "Jusqu'à -30% sur le Maquillage",
-        subtitle: 'Offre limitée sur tous nos produits maquillage',
-        cta: 'Acheter',
-        image: '/images/banners/makeup-new.png',
-        link: 'makeup',
-        sortOrder: 0,
-        isActive: true,
-      },
-      {
-        type: 'offer',
-        title: 'Nouveautés en Lingerie',
-        subtitle: 'Soyez la première à découvrir notre collection',
-        cta: 'Découvrir',
-        image: '/images/banners/skincare-sale.png',
+        title: 'Secret de Dame — Lingerie Africaine',
+        subtitle: "L'élégance traditionnelle revisitée. Fait main par nos artisans sénégalais.",
+        cta: 'Explorer',
+        image: '/images/hero/slide-2.png',
         link: 'lingerie',
         sortOrder: 1,
         isActive: true,
       },
       {
-        type: 'offer',
-        title: 'Cartes Cadeaux — Offrez la Beauté',
-        subtitle: 'La carte cadeau parfaite pour toutes les occasions',
-        cta: 'Découvrir',
-        image: '/images/banners/gift-card-promo.png',
-        link: 'boutique',
+        type: 'hero',
+        title: 'Box de Séduction',
+        subtitle: 'Petits pagnes, kit nuisette, kimono et accessoires — le cadeau parfait.',
+        cta: 'Offrir',
+        image: '/images/hero/slide-3.png',
+        link: 'box-de-seduction',
         sortOrder: 2,
         isActive: true,
       },
@@ -88,14 +54,14 @@ export async function POST() {
         title: 'Offres',
         subtitle: 'Exclusives',
         cta: '',
-        image: '/images/banners/promo-spotlight.png',
+        image: '/images/banners/promo-1.png',
         link: 'boutique',
         sortOrder: 0,
         isActive: true,
       },
     ];
 
-    const allBanners = [...heroBanners, ...offerBanners, ...promoBanners];
+    const allBanners = [...heroBanners, ...promoBanners];
 
     const result = await db.banner.createMany({
       data: allBanners,

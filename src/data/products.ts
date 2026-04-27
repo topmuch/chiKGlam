@@ -5,7 +5,7 @@ export const categories: Category[] = [
     id: 'makeup',
     name: 'MAKEUP',
     slug: 'makeup',
-    image: '',
+    image: '/images/categories/makeup.png',
     subcategories: [
       { slug: 'teint', name: 'Teint' },
       { slug: 'yeux', name: 'Yeux' },
@@ -16,7 +16,7 @@ export const categories: Category[] = [
     id: 'lingerie',
     name: 'LINGERIE',
     slug: 'lingerie',
-    image: '',
+    image: '/images/categories/lingerie.png',
     subcategories: [
       { slug: 'ensembles', name: 'Ensembles' },
       { slug: 'nuisettes', name: 'Nuisettes' },
@@ -29,7 +29,7 @@ export const categories: Category[] = [
     id: 'accessoires',
     name: 'ACCESSOIRES',
     slug: 'accessoires',
-    image: '',
+    image: '/images/categories/accessoires.png',
     subcategories: [
       { slug: 'cils', name: 'Cils' },
       { slug: 'pinceaux', name: 'Pinceaux' },
@@ -39,7 +39,7 @@ export const categories: Category[] = [
     id: 'box-de-seduction',
     name: 'BOX DE SEDUCTION',
     slug: 'box-de-seduction',
-    image: '',
+    image: '/images/categories/box-de-seduction.png',
     subcategories: [
       { slug: 'petits-pagnes', name: 'Petits pagnes' },
       { slug: 'kit-nuisette', name: 'Kit nuisette' },
@@ -55,9 +55,46 @@ export const products: Product[] = [];
 
 export const reviews: Review[] = [];
 
-export const heroSlides: { title: string; subtitle: string; cta: string; image: string; link: string }[] = [];
+export const heroSlides: { title: string; subtitle: string; cta: string; image: string; link: string }[] = [
+  {
+    title: 'Nouvelle Collection Maquillage',
+    subtitle: 'Découvrez notre gamme hyper-pigmentée, minérale et végan — conçue pour toutes les carnations.',
+    cta: 'Découvrir',
+    image: '/images/hero/slide-1.png',
+    link: 'makeup',
+  },
+  {
+    title: 'Secret de Dame — Lingerie Africaine',
+    subtitle: "L'élégance traditionnelle revisitée. Fait main par nos artisans sénégalais.",
+    cta: 'Explorer',
+    image: '/images/hero/slide-2.png',
+    link: 'lingerie',
+  },
+  {
+    title: 'Box de Séduction',
+    subtitle: 'Petits pagnes, kit nuisette, kimono et accessoires — le cadeau parfait.',
+    cta: 'Offrir',
+    image: '/images/hero/slide-3.png',
+    link: 'box-de-seduction',
+  },
+];
 
-export const offerBanners: { title: string; subtitle: string; cta: string; image: string; link: string }[] = [];
+export const offerBanners: { title: string; subtitle: string; cta: string; image: string; link: string }[] = [
+  {
+    title: '-20% sur la Collection Maquillage',
+    subtitle: "Offre limitée sur toute la gamme maquillage CHIC GLAM BY EVA",
+    cta: 'En profiter',
+    image: '/images/banners/promo-1.png',
+    link: 'makeup',
+  },
+  {
+    title: 'Nouvelle Collection Lingerie',
+    subtitle: "Découvrez nos créations artisanales faites main au Sénégal",
+    cta: 'Découvrir',
+    image: '/images/banners/promo-2.png',
+    link: 'lingerie',
+  },
+];
 
 export function getProductsByCategory(category: string): Product[] {
   return products.filter(

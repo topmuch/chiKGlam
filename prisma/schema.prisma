@@ -135,15 +135,20 @@ model Review {
 }
 
 model Banner {
-  id        String   @id @default(cuid())
-  title     String
-  subtitle  String?
-  image     String
-  link      String?
-  position  Int      @default(0)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String    @id @default(cuid())
+  type            String    @default("hero")
+  title           String
+  subtitle        String    @default("")
+  cta             String    @default("")
+  image           String    @default("")
+  link            String    @default("")
+  sortOrder       Int       @default(0)
+  isActive        Boolean   @default(true)
+  promoProductIds String    @default("[]")
+  promoStartDate  DateTime?
+  promoEndDate    DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
 
 model WooCommerceImport {
