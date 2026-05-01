@@ -8,10 +8,20 @@ export async function GET() {
       where: { id: 'main' },
     });
 
+    // If no 'main' record, try to find any existing record and migrate it
     if (!settings) {
-      settings = await db.siteSettings.create({
-        data: { id: 'main' },
-      });
+      const anySettings = await db.siteSettings.findFirst();
+      if (anySettings && anySettings.id !== 'main') {
+        // Migrate old record to 'main' id
+        settings = await db.siteSettings.update({
+          where: { id: anySettings.id },
+          data: { id: 'main' },
+        });
+      } else {
+        settings = await db.siteSettings.create({
+          data: { id: 'main' },
+        });
+      }
     }
 
     return NextResponse.json({ success: true, settings });
