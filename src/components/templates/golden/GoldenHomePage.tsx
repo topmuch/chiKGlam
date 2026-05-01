@@ -8,6 +8,8 @@ import {
   ChevronRight,
   ArrowRight,
   Star,
+  Calendar,
+  Clock,
 } from 'lucide-react';
 import {
   categories,
@@ -642,6 +644,181 @@ function TestimonialsSection() {
   );
 }
 
+// ─── Section 11: Actus Beautés (Blog Posts) ──────────────
+interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  coverImage: string;
+  category: string;
+  readTime?: number;
+  createdAt?: string;
+  publishedAt?: string;
+  product?: { image?: string } | null;
+}
+
+function ActusSection() {
+  const navigateTo = useStore((s) => s.navigateTo);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch('/api/blog?published=true&limit=6');
+        if (res.ok) {
+          const data = await res.json();
+          setPosts(Array.isArray(data) ? data : data.posts ?? []);
+        }
+      } catch {
+        // silently fail
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPosts();
+  }, []);
+
+  return (
+    <Section style={{ backgroundColor: SECTION_BG }}>
+      <ScrollReveal>
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-10 md:mb-14">
+          <h2
+            className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight"
+            style={{ color: PRIMARY }}
+          >
+            ACTUS BEAUTÉS
+          </h2>
+          <button
+            className="mt-4 sm:mt-0 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider transition-colors duration-200"
+            style={{ color: '#000000' }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = PRIMARY)}
+            onMouseLeave={(e) => (e.currentTarget.style.color = '#000000')}
+            onClick={() => navigateTo('blog')}
+          >
+            Voir tous les articles
+            <ArrowRight size={14} />
+          </button>
+        </div>
+      </ScrollReveal>
+
+      {/* Loading Skeleton */}
+      {loading && (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div
+                className="aspect-[4/3] rounded-md mb-3"
+                style={{ backgroundColor: BORDER }}
+              />
+              <div className="h-3 w-16 rounded mb-2" style={{ backgroundColor: BORDER }} />
+              <div className="h-4 w-full rounded mb-1" style={{ backgroundColor: BORDER }} />
+              <div className="h-3 w-2/3 rounded" style={{ backgroundColor: BORDER }} />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!loading && posts.length === 0 && (
+        <div className="text-center py-12">
+          <p
+            className="text-sm font-medium"
+            style={{ color: TEXT_MUTED }}
+          >
+            Bientôt des articles beautés !
+          </p>
+        </div>
+      )}
+
+      {/* Blog Post Grid */}
+      {!loading && posts.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+          {posts.map((post, index) => {
+            const coverSrc = post.coverImage || post.product?.image || '/images/placeholder.jpg';
+            return (
+              <ScrollReveal key={post.id} delay={index * 0.08}>
+                <motion.article
+                  className="group cursor-pointer overflow-hidden"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.3 }}
+                  onClick={() => navigateTo('blog' as any, { slug: post.slug })}
+                >
+                  {/* Cover Image */}
+                  <div
+                    className="relative aspect-[4/3] overflow-hidden rounded-md"
+                    style={{ backgroundColor: QUATERNARY }}
+                  >
+                    <Image
+                      src={coverSrc}
+                      alt={post.title}
+                      fill
+                      unoptimized
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                    {/* Category Badge */}
+                    {post.category && (
+                      <span
+                        className="absolute top-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-3 py-1 rounded-full"
+                        style={{
+                          backgroundColor: 'rgba(188, 135, 82, 0.92)',
+                          color: '#ffffff',
+                        }}
+                      >
+                        {post.category}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className="pt-3">
+                    <h3
+                      className="text-xs sm:text-sm font-semibold uppercase tracking-wider line-clamp-1 mb-1.5"
+                      style={{ color: PRIMARY }}
+                    >
+                      {post.title}
+                    </h3>
+                    <p
+                      className="text-xs leading-relaxed line-clamp-2 mb-2"
+                      style={{ color: TEXT_LIGHT }}
+                    >
+                      {post.excerpt}
+                    </p>
+                    <div className="flex items-center gap-3">
+                      {post.readTime && (
+                        <span
+                          className="inline-flex items-center gap-1 text-[10px] font-medium"
+                          style={{ color: TEXT_MUTED }}
+                        >
+                          <Clock size={12} />
+                          {post.readTime} min
+                        </span>
+                      )}
+                      {post.createdAt && (
+                        <span
+                          className="inline-flex items-center gap-1 text-[10px] font-medium"
+                          style={{ color: TEXT_MUTED }}
+                        >
+                          <Calendar size={12} />
+                          {new Date(post.createdAt).toLocaleDateString('fr-FR', {
+                            day: 'numeric',
+                            month: 'short',
+                          })}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </motion.article>
+              </ScrollReveal>
+            );
+          })}
+        </div>
+      )}
+    </Section>
+  );
+}
+
 // ─── Main Component ──────────────────────────────────────
 export function GoldenHomePage() {
   return (
@@ -675,6 +852,9 @@ export function GoldenHomePage() {
 
       {/* Section 10: Testimonials */}
       <TestimonialsSection />
+
+      {/* Section 11: Actus Beautés */}
+      <ActusSection />
     </div>
   );
 }

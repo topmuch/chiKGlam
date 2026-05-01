@@ -45,6 +45,7 @@ import {
   FolderOpen,
   Mail,
   Palette,
+  Newspaper,
 } from 'lucide-react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -60,6 +61,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { BannerManagement } from '@/components/admin/BannerManagement';
 import { CategoryManagement } from '@/components/admin/CategoryManagement';
+import BlogManagement from '@/components/admin/BlogManagement';
 import { AdminOrderNotification } from '@/components/admin/AdminOrderNotification';
 import { ProductImport } from '@/components/admin/ProductImport';
 import {
@@ -296,7 +298,7 @@ function StatusBadge({ status }: { status: string }) {
 // AdminDashboard Component
 // ============================================================
 
-type Section = 'dashboard' | 'banners' | 'categories' | 'products' | 'orders' | 'customers' | 'users' | 'settings' | 'woocommerce' | 'media';
+type Section = 'dashboard' | 'banners' | 'categories' | 'products' | 'orders' | 'customers' | 'users' | 'settings' | 'woocommerce' | 'media' | 'blog';
 
 interface NavItem {
   key: Section;
@@ -335,6 +337,7 @@ const NAV_GROUPS: NavGroup[] = [
     title: 'Marketing',
     items: [
       { key: 'banners', label: 'Bannières', icon: <PanelTop className="h-4 w-4" /> },
+      { key: 'blog', label: 'Actus', icon: <Newspaper className="h-4 w-4" /> },
       { key: 'woocommerce', label: 'Import WooCommerce', icon: <Download className="h-4 w-4" /> },
     ],
   },
@@ -3636,6 +3639,7 @@ export default function AdminDashboard() {
     settings: renderSettings,
     woocommerce: renderWooCommerce,
     media: renderMedia,
+    blog: () => <BlogManagement />,
   };
 
   // Admin access guard

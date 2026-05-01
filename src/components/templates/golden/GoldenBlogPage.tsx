@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
@@ -44,72 +44,42 @@ interface BlogPost {
   image: string;
 }
 
-const blogPosts: BlogPost[] = [
+const defaultPosts: BlogPost[] = [
   {
     id: '1',
     title: 'Comment obtenir un teint parfait en 5 étapes',
-    excerpt:
-      'Découvrez notre routine quotidienne pour un teint lumineux et sans défaut. Du nettoyage à la finition, chaque étape compte pour un résultat professionnel.',
-    category: 'Conseils Beauté',
-    author: 'Marie Laurent',
-    date: '15 Janvier 2025',
-    readTime: '5 min',
-    image: '/images/products/makeup/fond-de-teint-allcover.png',
+    excerpt: 'Découvrez notre routine quotidienne pour un teint lumineux et sans défaut. Du nettoyage à la finition, chaque étape compte pour un résultat professionnel.',
+    category: 'Conseils Beauté', author: 'Marie Laurent', date: '15 Janvier 2025', readTime: '5 min', image: '/images/products/makeup/fond-de-teint-allcover.png',
   },
   {
     id: '2',
     title: 'Les tendances maquillage de cette saison',
-    excerpt:
-      'Le nude lumineux, les yeux ambrés et les lèvres givrées dominent cette saison. Voici comment adapter ces tendances à votre style personnel.',
-    category: 'Tendances',
-    author: 'Sophie Martin',
-    date: '8 Janvier 2025',
-    readTime: '4 min',
-    image: '/images/products/makeup/poudre-compacte.png',
+    excerpt: 'Le nude lumineux, les yeux ambrés et les lèvres givrées dominent cette saison. Voici comment adapter ces tendances à votre style personnel.',
+    category: 'Tendances', author: 'Sophie Martin', date: '8 Janvier 2025', readTime: '4 min', image: '/images/products/makeup/poudre-compacte.png',
   },
   {
     id: '3',
     title: 'Guide complet des pinceaux de maquillage',
-    excerpt:
-      'Quel pinceau utiliser pour chaque étape de votre maquillage ? Notre guide détaillé vous aide à constituer la trousse idéale.',
-    category: 'Tutoriels',
-    author: 'Camille Dubois',
-    date: '2 Janvier 2025',
-    readTime: '7 min',
-    image: '/images/products/makeup/highlighter.png',
+    excerpt: 'Quel pinceau utiliser pour chaque étape de votre maquillage ? Notre guide détaillé vous aide à constituer la trousse idéale.',
+    category: 'Tutoriels', author: 'Camille Dubois', date: '2 Janvier 2025', readTime: '7 min', image: '/images/products/makeup/highlighter.png',
   },
   {
     id: '4',
     title: 'Soirée glamour : notre routine beauté',
-    excerpt:
-      'Préparez votre peau et sublimez votre maquillage pour une soirée inoubliable. Des produits indispensables aux techniques de pro.',
-    category: 'Inspiration',
-    author: 'Léa Petit',
-    date: '20 Décembre 2024',
-    readTime: '6 min',
-    image: '/images/products/makeup/poudre-libre-translucide.png',
+    excerpt: 'Préparez votre peau et sublimez votre maquillage pour une soirée inoubliable. Des produits indispensables aux techniques de pro.',
+    category: 'Inspiration', author: 'Léa Petit', date: '20 Décembre 2024', readTime: '6 min', image: '/images/products/makeup/poudre-libre-translucide.png',
   },
   {
     id: '5',
     title: 'Prendre soin de sa peau en hiver',
-    excerpt:
-      "Le froid, le vent et le chauffage assèchent votre peau. Adoptez nos conseils pour maintenir une hydratation optimale tout au long de l'hiver.",
-    category: 'Conseils Beauté',
-    author: 'Marie Laurent',
-    date: '15 Décembre 2024',
-    readTime: '5 min',
-    image: '/images/products/makeup/flawless-finish-skin.jpeg',
+    excerpt: "Le froid, le vent et le chauffage assèchent votre peau. Adoptez nos conseils pour maintenir une hydratation optimale tout au long de l'hiver.",
+    category: 'Conseils Beauté', author: 'Marie Laurent', date: '15 Décembre 2024', readTime: '5 min', image: '/images/products/makeup/flawless-finish-skin.jpeg',
   },
   {
     id: '6',
     title: 'Les must-have de votre trousse à maquillage',
-    excerpt:
-      'Les 10 produits essentiels que chaque femme devrait posséder. Des bases indispensables aux touches de couleur qui font la différence.',
-    category: 'Tutoriels',
-    author: 'Sophie Martin',
-    date: '8 Décembre 2024',
-    readTime: '4 min',
-    image: '/images/products/makeup/flawless-finish-concealer.jpeg',
+    excerpt: 'Les 10 produits essentiels que chaque femme devrait posséder. Des bases indispensables aux touches de couleur qui font la différence.',
+    category: 'Tutoriels', author: 'Sophie Martin', date: '8 Décembre 2024', readTime: '4 min', image: '/images/products/makeup/flawless-finish-concealer.jpeg',
   },
 ];
 
@@ -122,7 +92,7 @@ const categories = [
   { name: 'Bien-être', count: 4 },
 ];
 
-const popularPosts = blogPosts.slice(0, 3);
+const popularPosts = defaultPosts.slice(0, 3);
 
 const categoryIcons: Record<string, React.ElementType> = {
   'Conseils Beauté': Sparkles,
@@ -136,6 +106,34 @@ export function GoldenBlogPage() {
   const navigateTo = useStore((s) => s.navigateTo);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(defaultPosts);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const res = await fetch('/api/blog?published=true');
+        const data = await res.json();
+        if (data.success && data.posts && data.posts.length > 0) {
+          setBlogPosts(data.posts.map((p: { id: string; title: string; excerpt: string; category: string; author: string; createdAt: string; readTime: string; coverImage: string }) => ({
+            id: p.id,
+            title: p.title,
+            excerpt: p.excerpt,
+            category: p.category,
+            author: p.author,
+            date: new Date(p.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
+            readTime: p.readTime,
+            image: p.coverImage,
+          })));
+        }
+      } catch (e) {
+        console.error('Failed to fetch blog posts:', e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPosts();
+  }, []);
 
   const filteredPosts = blogPosts.filter((post) => {
     const matchesSearch =
@@ -161,7 +159,7 @@ export function GoldenBlogPage() {
               className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4"
               style={{ color: C.primary }}
             >
-              NOTRE BLOG
+              ACTUS BEAUTÉS
             </h1>
             <p
               className="text-base sm:text-lg leading-relaxed max-w-lg mx-auto"
