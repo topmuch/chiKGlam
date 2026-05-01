@@ -3057,7 +3057,7 @@ export default function AdminDashboard() {
               <CardDescription>Choisissez le template de couleur pour votre boutique en ligne</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {/* Default Template */}
                 <div
                   onClick={() => setSettingsForm({ ...settingsForm, activeTemplate: 'default' })}
@@ -3093,16 +3093,16 @@ export default function AdminDashboard() {
                   </div>
                 </div>
 
-                {/* Gold Template */}
+                {/* Golden Template */}
                 <div
-                  onClick={() => setSettingsForm({ ...settingsForm, activeTemplate: 'gold' })}
+                  onClick={() => setSettingsForm({ ...settingsForm, activeTemplate: 'golden' })}
                   className={`relative cursor-pointer rounded-xl border-2 p-6 transition-all hover:shadow-md ${
-                    settingsForm.activeTemplate === 'gold'
+                    settingsForm.activeTemplate === 'golden'
                       ? 'border-[#bc8752] bg-[#bc8752]/5 shadow-md'
                       : 'border-border hover:border-[#bc8752]/50'
                   }`}
                 >
-                  {settingsForm.activeTemplate === 'gold' && (
+                  {settingsForm.activeTemplate === 'golden' && (
                     <div className="absolute top-3 right-3 bg-[#bc8752] text-white text-xs font-bold px-2 py-0.5 rounded-full">
                       Actif
                     </div>
@@ -3113,17 +3113,52 @@ export default function AdminDashboard() {
                         <Palette className="h-5 w-5 text-white" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-lg">Gold</h3>
+                        <h3 className="font-bold text-lg">Golden</h3>
                         <p className="text-xs text-muted-foreground">Template doré élégant</p>
                       </div>
                     </div>
                     <div className="flex gap-1.5">
                       <div className="w-6 h-6 rounded-full bg-[#bc8752] border border-neutral-300" />
-                      <div className="w-6 h-6 rounded-full bg-white border border-neutral-300" />
+                      <div className="w-6 h-6 rounded-full bg-[#FAF7F2] border border-neutral-300" />
                       <div className="w-6 h-6 rounded-full bg-[#bc8752]/80 border border-neutral-300" />
                     </div>
                     <p className="text-xs text-muted-foreground leading-relaxed">
-                      Thème doré luxueux avec des accents élégants
+                      Thème doré luxueux avec des accents élégants et une mise en page moderne
+                    </p>
+                  </div>
+                </div>
+
+                {/* Luxuria Template */}
+                <div
+                  onClick={() => setSettingsForm({ ...settingsForm, activeTemplate: 'luxuria' })}
+                  className={`relative cursor-pointer rounded-xl border-2 p-6 transition-all hover:shadow-md ${
+                    settingsForm.activeTemplate === 'luxuria'
+                      ? 'border-rose-500 bg-rose-50 shadow-md'
+                      : 'border-border hover:border-rose-300'
+                  }`}
+                >
+                  {settingsForm.activeTemplate === 'luxuria' && (
+                    <div className="absolute top-3 right-3 bg-rose-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                      Actif
+                    </div>
+                  )}
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-rose-500 flex items-center justify-center">
+                        <Palette className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-lg">Luxuria</h3>
+                        <p className="text-xs text-muted-foreground">Template luxe rose</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-1.5">
+                      <div className="w-6 h-6 rounded-full bg-rose-500 border border-neutral-300" />
+                      <div className="w-6 h-6 rounded-full bg-rose-50 border border-neutral-300" />
+                      <div className="w-6 h-6 rounded-full bg-rose-200 border border-neutral-300" />
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      Thème rose poudré luxueux inspiré des grandes marques de beauté
                     </p>
                   </div>
                 </div>

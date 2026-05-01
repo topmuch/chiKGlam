@@ -46,6 +46,20 @@
   --color-promo-foreground: #FFFFFF;
   --color-luxury: #000000;
   --color-luxury-foreground: #FFFFFF;
+  /* Amiy / Luxuria design tokens */
+  --color-amiy-primary: #663130;
+  --color-amiy-secondary: #000000;
+  --color-amiy-tertiary: #F4F2ED;
+  --color-amiy-quaternary: #FBEADE;
+  --color-amiy-primary-light: #7a3d3b;
+  --color-amiy-primary-dark: #4d2524;
+  --color-amiy-border: #E8E4DE;
+  --color-amiy-text-light: #666666;
+  --color-amiy-text-muted: #999999;
+  --color-amiy-card-bg: #FFFFFF;
+  --color-amiy-section-bg: #F9F7F4;
+  --color-amiy-sale: #cc3333;
+  --font-work-sans: var(--font-work-sans);
 }
 
 :root {

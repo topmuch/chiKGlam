@@ -1,0 +1,682 @@
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ArrowRight,
+  Star,
+} from 'lucide-react';
+import {
+  categories,
+  getTrendingProducts,
+  getBestsellers,
+  getProductsByCategory,
+  reviews,
+  heroSlides,
+  offerBanners,
+} from '@/data/products';
+import { useStore } from '@/store/use-store';
+import { ScrollReveal } from '@/components/shared/ScrollReveal';
+import { GoldenProductCard } from './GoldenProductCard';
+
+// ─── Design Tokens ───────────────────────────────────────
+const PRIMARY = '#bc8752';
+const TERTIARY = '#FAF7F2';
+const QUATERNARY = '#F5EDE3';
+const BORDER = '#E8E2DA';
+const SECTION_BG = '#F9F6F2';
+const TEXT_LIGHT = '#555555';
+const TEXT_MUTED = '#999999';
+
+// ─── Pre-compute data ─────────────────────────────────────
+const trendingProducts = getTrendingProducts().slice(0, 4);
+const bestsellerProducts = getBestsellers().slice(0, 8);
+const promoCards = getTrendingProducts().slice(0, 4);
+
+const hashtagTags = [
+  '#FondDeTeint',
+  '#Poudre',
+  '#Highlighter',
+  '#Palette',
+  '#Eyeliner',
+  '#Mascara',
+  '#Lipstick',
+  '#Gloss',
+  '#Cils',
+  '#Pinceaux',
+];
+
+// ─── Section Wrapper ──────────────────────────────────────
+function Section({
+  children,
+  className = '',
+  id,
+  style,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  id?: string;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <section id={id} className={`py-16 md:py-24 ${className}`} style={style}>
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        {children}
+      </div>
+    </section>
+  );
+}
+
+// ─── Section 1: Hero Slider ───────────────────────────────
+function HeroSlider() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((s) => (s + 1) % heroSlides.length);
+  }, []);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((s) => (s - 1 + heroSlides.length) % heroSlides.length);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 6000);
+    return () => clearInterval(timer);
+  }, [nextSlide]);
+
+  const safeSlide = Math.min(currentSlide, heroSlides.length - 1);
+
+  return (
+    <div className="relative w-full h-[420px] sm:h-[520px] md:h-[620px] lg:h-[700px] overflow-hidden bg-black">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={safeSlide}
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8, ease: 'easeInOut' }}
+        >
+          <Image
+            src={heroSlides[safeSlide].image}
+            alt={heroSlides[safeSlide].title}
+            fill
+            unoptimized
+            className="object-cover"
+            priority={safeSlide === 0}
+          />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Content */}
+      <div className="relative z-10 h-full flex items-center">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="max-w-xl">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={safeSlide}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              >
+                <h1
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight"
+                >
+                  {heroSlides[safeSlide].title}
+                </h1>
+                <p
+                  className="mt-4 text-sm sm:text-base md:text-lg max-w-md leading-relaxed"
+                  style={{ color: 'rgba(255,255,255,0.8)' }}
+                >
+                  {heroSlides[safeSlide].subtitle}
+                </p>
+                <button
+                  className="mt-8 text-xs sm:text-sm font-semibold uppercase tracking-wider px-8 py-3 transition-colors duration-300"
+                  style={{ backgroundColor: PRIMARY, color: '#000000' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#a67747')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = PRIMARY)}
+                >
+                  {heroSlides[safeSlide].cta}
+                </button>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Arrows */}
+      {heroSlides.length > 1 && (
+        <>
+          <button
+            onClick={prevSlide}
+            className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 h-11 w-11 items-center justify-center bg-white/90 text-black hover:bg-white transition-colors duration-200 z-10"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 h-11 w-11 items-center justify-center bg-white/90 text-black hover:bg-white transition-colors duration-200 z-10"
+            aria-label="Next slide"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </>
+      )}
+
+      {/* Navigation Dots */}
+      {heroSlides.length > 1 && (
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
+          {heroSlides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`h-1.5 transition-all duration-300 ${
+                index === safeSlide
+                  ? 'w-6 bg-white'
+                  : 'w-1.5 bg-white/40 hover:bg-white/60'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Section 2: Featured Products ─────────────────────────
+function FeaturedProductsSection() {
+  return (
+    <Section>
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-10 md:mb-14">
+        <div>
+          <h2
+            className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight"
+            style={{ color: PRIMARY }}
+          >
+            FEATURED PRODUCTS
+          </h2>
+        </div>
+        <button
+          className="mt-4 sm:mt-0 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider transition-colors duration-200"
+          style={{ color: '#000000' }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = PRIMARY)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = '#000000')}
+        >
+          Shop Now
+          <ArrowRight size={14} />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        {trendingProducts.map((product, index) => (
+          <ScrollReveal key={product.id} delay={index * 0.08}>
+            <GoldenProductCard product={product} />
+          </ScrollReveal>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+// ─── Section 3: Promo Banner Left ─────────────────────────
+function PromoBannerLeft() {
+  const banner = offerBanners[0];
+
+  return (
+    <Section className="!py-0">
+      <ScrollReveal>
+        <div className="grid grid-cols-1 md:grid-cols-2 min-h-[400px] md:min-h-[500px]">
+          {/* Left — Image */}
+          <div className="relative aspect-[4/5] md:aspect-auto" style={{ backgroundColor: TERTIARY }}>
+            <Image
+              src={banner?.image || '/images/products/makeup/fond-de-teint-allcover.png'}
+              alt="Premium Quality Makeup"
+              fill
+              unoptimized
+              className="object-cover"
+            />
+          </div>
+
+          {/* Right — Content */}
+          <div
+            className="flex flex-col justify-center p-8 md:p-12 lg:p-16"
+            style={{ backgroundColor: TERTIARY }}
+          >
+            <p
+              className="text-[11px] font-semibold uppercase tracking-[0.2em] mb-3"
+              style={{ color: TEXT_MUTED }}
+            >
+              Best Price
+            </p>
+            <h2
+              className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight tracking-tight"
+              style={{ color: PRIMARY }}
+            >
+              PREMIUM QUALITY<br />MAKEUP COLLECTION
+            </h2>
+            <p
+              className="mt-4 text-sm max-w-md leading-relaxed"
+              style={{ color: TEXT_LIGHT }}
+            >
+              {banner?.subtitle ||
+                'Discover our curated selection of premium cosmetics designed for every skin tone and type. Formulated with care for flawless results.'}
+            </p>
+            <button
+              className="mt-8 self-start text-xs font-semibold uppercase tracking-wider px-8 py-3 transition-colors duration-300"
+              style={{ backgroundColor: PRIMARY, color: '#000000' }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#a67747')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = PRIMARY)}
+            >
+              Explore More
+            </button>
+          </div>
+        </div>
+      </ScrollReveal>
+    </Section>
+  );
+}
+
+// ─── Section 4: Promo Banner Right ────────────────────────
+function PromoBannerRight() {
+  const banner = offerBanners[1];
+
+  return (
+    <Section className="!py-0">
+      <ScrollReveal>
+        <div className="grid grid-cols-1 md:grid-cols-2 min-h-[400px] md:min-h-[500px]">
+          {/* Left — Content */}
+          <div
+            className="flex flex-col justify-center p-8 md:p-12 lg:p-16 order-2 md:order-1"
+            style={{ backgroundColor: TERTIARY }}
+          >
+            <p
+              className="text-[11px] font-semibold uppercase tracking-[0.2em] mb-3"
+              style={{ color: TEXT_MUTED }}
+            >
+              New Collection
+            </p>
+            <h2
+              className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight tracking-tight"
+              style={{ color: PRIMARY }}
+            >
+              REDEFINE YOUR<br />BEAUTY ROUTINE
+            </h2>
+            <p
+              className="mt-4 text-sm max-w-md leading-relaxed"
+              style={{ color: TEXT_LIGHT }}
+            >
+              {banner?.subtitle ||
+                'Elevate your everyday look with our latest collection of handcrafted beauty essentials. Made with love and premium ingredients.'}
+            </p>
+            <button
+              className="mt-8 self-start text-xs font-semibold uppercase tracking-wider px-8 py-3 transition-colors duration-300"
+              style={{ backgroundColor: PRIMARY, color: '#000000' }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#a67747')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = PRIMARY)}
+            >
+              Explore More
+            </button>
+          </div>
+
+          {/* Right — Image */}
+          <div
+            className="relative aspect-[4/5] md:aspect-auto order-1 md:order-2"
+            style={{ backgroundColor: TERTIARY }}
+          >
+            <Image
+              src={banner?.image || '/images/products/lingerie/kit-nuisette.png'}
+              alt="Redefine Your Beauty"
+              fill
+              unoptimized
+              className="object-cover"
+            />
+          </div>
+        </div>
+      </ScrollReveal>
+    </Section>
+  );
+}
+
+// ─── Section 5: Dermatologist Tested ──────────────────────
+function DermatologistTestedSection() {
+  return (
+    <Section style={{ backgroundColor: SECTION_BG }}>
+      <ScrollReveal>
+        <div className="text-center max-w-2xl mx-auto">
+          <h2
+            className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight tracking-tight"
+            style={{ color: PRIMARY }}
+          >
+            DERMATOLOGIST TESTED<br />COSMETICS PRODUCTS
+          </h2>
+          <p
+            className="mt-4 text-sm max-w-lg mx-auto leading-relaxed"
+            style={{ color: TEXT_LIGHT }}
+          >
+            Every product in our collection has been carefully tested and approved by dermatologists. We prioritize safety, quality, and efficacy to deliver beauty products you can trust for your daily routine.
+          </p>
+          <button
+            className="mt-8 text-white text-xs font-semibold uppercase tracking-wider px-8 py-3 transition-colors duration-300"
+            style={{ backgroundColor: PRIMARY }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#a67747')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = PRIMARY)}
+          >
+            Explore More
+          </button>
+        </div>
+      </ScrollReveal>
+    </Section>
+  );
+}
+
+// ─── Section 6: Hashtag Tags ─────────────────────────────
+function HashtagTagsSection() {
+  return (
+    <div className="py-8 overflow-hidden" style={{ borderBottom: `1px solid ${BORDER}`, borderTop: `1px solid ${BORDER}`, backgroundColor: '#ffffff' }}>
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          className="flex gap-6 md:gap-8 overflow-x-auto pb-2"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
+          {hashtagTags.map((tag) => (
+            <span
+              key={tag}
+              className="flex-shrink-0 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.15em] transition-colors duration-200 cursor-pointer whitespace-nowrap"
+              style={{ color: TEXT_MUTED }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = PRIMARY)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = TEXT_MUTED)}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Section 7: Shop By Category ─────────────────────────
+function ShopByCategorySection() {
+  const navigateTo = useStore((s) => s.navigateTo);
+
+  return (
+    <Section>
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-10 md:mb-14">
+        <h2
+          className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight"
+          style={{ color: PRIMARY }}
+        >
+          SHOP BY CATEGORY
+        </h2>
+        <button
+          className="mt-4 sm:mt-0 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider transition-colors duration-200"
+          style={{ color: '#000000' }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = PRIMARY)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = '#000000')}
+        >
+          View All
+          <ArrowRight size={14} />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        {categories.map((category, index) => {
+          const productCount = getProductsByCategory(category.name).length;
+          return (
+            <ScrollReveal key={category.id} delay={index * 0.08}>
+              <motion.div
+                className="group cursor-pointer overflow-hidden"
+                whileHover={{ scale: 1.03 }}
+                transition={{ duration: 0.3 }}
+                onClick={() => navigateTo('category', { category: category.slug })}
+              >
+                {/* Category Image */}
+                <div
+                  className="relative aspect-square overflow-hidden"
+                  style={{ backgroundColor: SECTION_BG }}
+                >
+                  <Image
+                    src={category.image}
+                    alt={category.name}
+                    fill
+                    unoptimized
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                </div>
+
+                {/* Category Info */}
+                <div className="pt-3 text-center">
+                  <h3
+                    className="text-sm font-semibold uppercase tracking-wider"
+                    style={{ color: PRIMARY }}
+                  >
+                    {category.name}
+                  </h3>
+                  <p className="text-xs mt-1" style={{ color: TEXT_MUTED }}>
+                    {productCount} {productCount === 1 ? 'product' : 'products'}
+                  </p>
+                </div>
+              </motion.div>
+            </ScrollReveal>
+          );
+        })}
+      </div>
+    </Section>
+  );
+}
+
+// ─── Section 8: Long Lasting Promo Cards ─────────────────
+function LongLastingPromoCards() {
+  const navigateTo = useStore((s) => s.navigateTo);
+
+  return (
+    <Section style={{ backgroundColor: TERTIARY }}>
+      <ScrollReveal>
+        <h2
+          className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight mb-10 md:mb-14"
+          style={{ color: PRIMARY }}
+        >
+          LONG LASTING MAKEUP
+        </h2>
+      </ScrollReveal>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        {promoCards.map((product, index) => (
+          <ScrollReveal key={product.id} delay={index * 0.08}>
+            <motion.div
+              className="group overflow-hidden cursor-pointer"
+              style={{ backgroundColor: '#ffffff' }}
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => navigateTo('product', { product })}
+            >
+              {/* Product Image */}
+              <div className="relative aspect-square overflow-hidden" style={{ backgroundColor: SECTION_BG }}>
+                <Image
+                  src={product.image}
+                  alt={product.name}
+                  fill
+                  unoptimized
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </div>
+
+              {/* Info */}
+              <div className="p-4 flex flex-col items-start">
+                <h3 className="text-sm font-medium line-clamp-1 mb-2" style={{ color: '#000000' }}>
+                  {product.name}
+                </h3>
+                <span
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider transition-colors duration-200"
+                  style={{ color: '#000000' }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = PRIMARY)}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = '#000000')}
+                >
+                  Shop Now
+                  <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-200" />
+                </span>
+              </div>
+            </motion.div>
+          </ScrollReveal>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+// ─── Section 9: Top Rated Products ────────────────────────
+function TopRatedSection() {
+  const [showAll, setShowAll] = useState(false);
+  const displayedProducts = showAll ? bestsellerProducts : bestsellerProducts.slice(0, 4);
+
+  return (
+    <Section>
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-10 md:mb-14">
+        <h2
+          className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight"
+          style={{ color: PRIMARY }}
+        >
+          TOP RATED
+        </h2>
+        <button
+          onClick={() => setShowAll(!showAll)}
+          className="mt-4 sm:mt-0 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider transition-colors duration-200"
+          style={{ color: '#000000' }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = PRIMARY)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = '#000000')}
+        >
+          {showAll ? 'Show Less' : 'View All'}
+          <ArrowRight size={14} className={!showAll ? '' : 'rotate-180'} />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        {displayedProducts.map((product, index) => (
+          <ScrollReveal key={product.id} delay={index * 0.06}>
+            <GoldenProductCard product={product} />
+          </ScrollReveal>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+// ─── Section 10: Testimonials ──────────────────────────────
+function TestimonialsSection() {
+  return (
+    <section className="py-16 md:py-24" style={{ backgroundColor: PRIMARY }}>
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <ScrollReveal>
+          <h2
+            className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-center mb-10 md:mb-14"
+            style={{ color: '#000000' }}
+          >
+            CE QUE NOS CLIENTS DISENT
+          </h2>
+        </ScrollReveal>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {reviews.map((review, index) => (
+            <ScrollReveal key={review.id} delay={index * 0.1}>
+              <div
+                className="p-6 rounded-lg"
+                style={{ backgroundColor: 'rgba(255, 255, 255, 0.2)' }}
+              >
+                {/* Star Rating */}
+                <div className="flex gap-1 mb-4">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      fill={i < review.rating ? '#000000' : 'transparent'}
+                      stroke="#000000"
+                      strokeWidth={1.5}
+                    />
+                  ))}
+                </div>
+
+                {/* Review Text */}
+                <p
+                  className="text-sm leading-relaxed mb-4"
+                  style={{ color: '#000000' }}
+                >
+                  &ldquo;{review.content}&rdquo;
+                </p>
+
+                {/* Reviewer Info */}
+                <div className="flex items-center justify-between">
+                  <p
+                    className="text-sm font-semibold"
+                    style={{ color: '#000000' }}
+                  >
+                    {review.author}
+                  </p>
+                  {review.verified && (
+                    <span
+                      className="text-[11px] font-semibold uppercase tracking-wider"
+                      style={{ color: 'rgba(0, 0, 0, 0.6)' }}
+                    >
+                      Verified
+                    </span>
+                  )}
+                </div>
+              </div>
+            </ScrollReveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Main Component ──────────────────────────────────────
+export function GoldenHomePage() {
+  return (
+    <div style={{ backgroundColor: '#ffffff' }}>
+      {/* Section 1: Hero Slider */}
+      <HeroSlider />
+
+      {/* Section 2: Featured Products */}
+      <FeaturedProductsSection />
+
+      {/* Section 3: Premium Quality Makeup Promo Banner */}
+      <PromoBannerLeft />
+
+      {/* Section 4: Redefine Your Beauty Promo Banner */}
+      <PromoBannerRight />
+
+      {/* Section 5: Dermatologist Tested */}
+      <DermatologistTestedSection />
+
+      {/* Section 6: Hashtag Tags */}
+      <HashtagTagsSection />
+
+      {/* Section 7: Shop By Category */}
+      <ShopByCategorySection />
+
+      {/* Section 8: Long Lasting Makeup Promo Cards */}
+      <LongLastingPromoCards />
+
+      {/* Section 9: Top Rated Products */}
+      <TopRatedSection />
+
+      {/* Section 10: Testimonials */}
+      <TestimonialsSection />
+    </div>
+  );
+}
+
+export default GoldenHomePage;

@@ -3,6 +3,9 @@
 import { useStore } from '@/store/use-store';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
+import { useTemplate } from '@/hooks/use-template';
+
+// Default template components
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import CartSlidePanel from '@/components/layout/CartSlidePanel';
@@ -30,14 +33,38 @@ import {
 } from '@/components/pages/StaticPages';
 import OrderTrackingPage from '@/components/order/OrderTrackingPage';
 
+// Luxuria template components
+import LuxuriaHeader from '@/components/templates/luxuria/LuxuriaHeader';
+import LuxuriaFooter from '@/components/templates/luxuria/LuxuriaFooter';
+import LuxuriaHomePage from '@/components/templates/luxuria/LuxuriaHomePage';
+import LuxuriaShopPage from '@/components/templates/luxuria/LuxuriaShopPage';
+import LuxuriaProductPage from '@/components/templates/luxuria/LuxuriaProductPage';
+import LuxuriaCheckoutPage from '@/components/templates/luxuria/LuxuriaCheckoutPage';
+import LuxuriaCartPage from '@/components/templates/luxuria/LuxuriaCartPage';
+import LuxuriaBlogPage from '@/components/templates/luxuria/LuxuriaBlogPage';
+
+// Golden template components
+import GoldenHeader from '@/components/templates/golden/GoldenHeader';
+import GoldenFooter from '@/components/templates/golden/GoldenFooter';
+import { GoldenHomePage } from '@/components/templates/golden/GoldenHomePage';
+import GoldenShopPage from '@/components/templates/golden/GoldenShopPage';
+import GoldenProductPage from '@/components/templates/golden/GoldenProductPage';
+import GoldenCheckoutPage from '@/components/templates/golden/GoldenCheckoutPage';
+import { GoldenCartPage } from '@/components/templates/golden/GoldenCartPage';
+import { GoldenBlogPage } from '@/components/templates/golden/GoldenBlogPage';
+
 export default function Page() {
   const { currentPage, selectedCategory, selectedProduct } = useStore();
+  const { isLuxuria, isGolden } = useTemplate();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
 
-  const renderPage = () => {
+  // ============================================================
+  // Default Template Rendering
+  // ============================================================
+  const renderDefaultPage = () => {
     switch (currentPage) {
       case 'home':
         return <HomePage />;
@@ -82,8 +109,124 @@ export default function Page() {
     }
   };
 
-  const hideFooter = currentPage === 'checkout' || currentPage === 'customer-dashboard' || currentPage === 'admin-dashboard';
+  // ============================================================
+  // Shared template page renderer
+  // ============================================================
+  const renderTemplatePage = (template: 'luxuria' | 'golden') => {
+    const Shop = template === 'luxuria' ? LuxuriaShopPage : GoldenShopPage;
+    const Product = template === 'luxuria' ? LuxuriaProductPage : GoldenProductPage;
+    const Cart = template === 'luxuria' ? LuxuriaCartPage : GoldenCartPage;
+    const Checkout = template === 'luxuria' ? LuxuriaCheckoutPage : GoldenCheckoutPage;
+    const Blog = template === 'luxuria' ? LuxuriaBlogPage : GoldenBlogPage;
+    const Home = template === 'luxuria' ? LuxuriaHomePage : GoldenHomePage;
 
+    switch (currentPage) {
+      case 'home':
+        return <Home />;
+      case 'category':
+        return selectedCategory ? <Shop categorySlug={selectedCategory} /> : <Home />;
+      case 'product':
+        return selectedProduct ? <Product product={selectedProduct} /> : <Home />;
+      case 'cart':
+        return <Cart />;
+      case 'checkout':
+        return <Checkout />;
+      case 'blog':
+        return <Blog />;
+      case 'customer-dashboard':
+        return <CustomerDashboard />;
+      case 'admin-dashboard':
+        return <AdminDashboard />;
+      case 'about':
+        return <AboutPage />;
+      case 'cgv':
+        return <CGVPage />;
+      case 'privacy':
+        return <PrivacyPage />;
+      case 'contact-page':
+        return <ContactPage />;
+      case 'faq':
+        return <FAQPage />;
+      case 'shipping':
+        return <ShippingPage />;
+      case 'returns':
+        return <ReturnsPage />;
+      case 'order-tracking':
+        return <OrderTrackingPage />;
+      case 'cookies':
+        return <CookiesPage />;
+      case 'legal':
+        return <LegalPage />;
+      case 'careers':
+        return <CareersPage />;
+      case 'press':
+        return <PressPage />;
+      default:
+        return <Home />;
+    }
+  };
+
+  const hideFooter = currentPage === 'checkout' || currentPage === 'customer-dashboard' || currentPage === 'admin-dashboard' || currentPage === 'cart';
+
+  // ============================================================
+  // Golden Template Layout
+  // ============================================================
+  if (isGolden) {
+    return (
+      <div className="min-h-screen flex flex-col bg-white">
+        <GoldenHeader />
+        <main className="flex-1">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPage}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {renderTemplatePage('golden')}
+            </motion.div>
+          </AnimatePresence>
+        </main>
+        {!hideFooter && <GoldenFooter />}
+        <CartSlidePanel />
+        <AddToCartNotification />
+        <CookieConsentBanner />
+      </div>
+    );
+  }
+
+  // ============================================================
+  // Luxuria Template Layout
+  // ============================================================
+  if (isLuxuria) {
+    return (
+      <div className="min-h-screen flex flex-col bg-white">
+        <LuxuriaHeader />
+        <main className="flex-1">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentPage}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {renderTemplatePage('luxuria')}
+            </motion.div>
+          </AnimatePresence>
+        </main>
+        {!hideFooter && <LuxuriaFooter />}
+        <CartSlidePanel />
+        <AddToCartNotification />
+        <CookieConsentBanner />
+      </div>
+    );
+  }
+
+  // ============================================================
+  // Default Template Layout
+  // ============================================================
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Header />
@@ -96,7 +239,7 @@ export default function Page() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            {renderPage()}
+            {renderDefaultPage()}
           </motion.div>
         </AnimatePresence>
       </main>

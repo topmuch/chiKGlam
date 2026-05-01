@@ -6,6 +6,8 @@ import { useStore } from '@/store/use-store';
 export function useTemplate() {
   const activeTemplate = useStore((s) => s.activeTemplate);
   const isGold = activeTemplate === 'gold';
+  const isGolden = activeTemplate === 'golden';
+  const isLuxuria = activeTemplate === 'luxuria';
   const setActiveTemplate = useStore((s) => s.setActiveTemplate);
 
   // Fetch template setting from API on mount
@@ -24,5 +26,5 @@ export function useTemplate() {
     fetchTemplate();
   }, [setActiveTemplate]);
 
-  return { activeTemplate, isGold, setActiveTemplate };
+  return { activeTemplate, isGold, isGolden, isLuxuria, setActiveTemplate };
 }
