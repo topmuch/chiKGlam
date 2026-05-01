@@ -24,6 +24,10 @@ sleep 5
 echo "Seeding banners..."
 curl -sf -X POST "http://localhost:${APP_PORT}/api/banners/seed" > /dev/null 2>&1 && echo "Banner seed completed" || echo "Banner seed skipped (may already exist)"
 
+# Seed blog posts
+echo "Seeding blog posts..."
+curl -sf -X POST "http://localhost:${APP_PORT}/api/blog/seed" > /dev/null 2>&1 && echo "Blog seed completed" || echo "Blog seed skipped (may already exist)"
+
 echo "=== ChicGlam is ready on port ${APP_PORT} ==="
 
 # Wait for server
