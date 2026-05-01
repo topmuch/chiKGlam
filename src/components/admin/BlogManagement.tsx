@@ -110,7 +110,7 @@ const EMPTY_FORM: Omit<BlogPost, 'id' | 'createdAt' | 'updatedAt'> = {
   category: 'Conseils Beauté',
   author: 'Chic Glam',
   coverImage: '',
-  isPublished: false,
+  isPublished: true,
   readTime: '5 min',
 };
 

@@ -669,10 +669,14 @@ function ActusSection() {
         const res = await fetch('/api/blog?published=true&limit=6');
         if (res.ok) {
           const data = await res.json();
-          setPosts(Array.isArray(data) ? data : data.posts ?? []);
+          const postsList = Array.isArray(data) ? data : data.posts ?? [];
+          setPosts(postsList);
+          console.log('[ActusSection] Loaded', postsList.length, 'published posts');
+        } else {
+          console.error('[ActusSection] API error:', res.status);
         }
-      } catch {
-        // silently fail
+      } catch (err) {
+        console.error('[ActusSection] Fetch error:', err);
       } finally {
         setLoading(false);
       }

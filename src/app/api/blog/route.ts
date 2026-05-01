@@ -166,14 +166,29 @@ Le résultat ? Un regard de biche en quelques secondes !`,
   },
 ];
 
-// Auto-seed blog posts if none exist
+// Auto-seed blog posts if no PUBLISHED posts exist
 async function seedDefaultPosts() {
   try {
-    const count = await db.blogPost.count();
-    if (count > 0) return;
+    const publishedCount = await db.blogPost.count({ where: { isPublished: true } });
+    if (publishedCount > 0) return;
 
-    console.log('[Blog] No posts found, seeding default articles...');
+    console.log('[Blog] No published posts found, seeding default articles...');
 
+    // First, auto-publish any existing unpublished posts
+    const unpublishedPosts = await db.blogPost.findMany({ where: { isPublished: false } });
+    if (unpublishedPosts.length > 0) {
+      console.log(`[Blog] Auto-publishing ${unpublishedPosts.length} existing unpublished posts...`);
+      for (const post of unpublishedPosts) {
+        await db.blogPost.update({
+          where: { id: post.id },
+          data: { isPublished: true },
+        });
+      }
+      console.log(`[Blog] Published ${unpublishedPosts.length} existing posts`);
+      return;
+    }
+
+    // No posts at all — create default ones
     for (const post of DEFAULT_POSTS) {
       try {
         await db.blogPost.create({ data: post });
@@ -210,7 +225,7 @@ export async function GET(request: NextRequest) {
       take: limit,
     });
 
-    return NextResponse.json({ success: true, posts });
+    return NextResponse.json({ success: true, posts, total: posts.length });
   } catch (error) {
     console.error('Blog GET error:', error);
     return NextResponse.json({ success: false, error: 'Failed to fetch posts' }, { status: 500 });
