@@ -77,7 +77,7 @@ export function PromoDualBanner() {
 
                 {/* Promo image — matches height of product cards on the right */}
                 <motion.div
-                  className="relative w-full rounded-xl overflow-hidden shadow-lg flex-1 min-h-[280px] sm:min-h-[340px] lg:min-h-0"
+                  className={`relative w-full rounded-xl overflow-hidden shadow-lg flex-1 ${isGlamshop ? 'min-h-[400px] sm:min-h-[500px] lg:min-h-[520px]' : 'min-h-[280px] sm:min-h-[340px] lg:min-h-0'}`}
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}

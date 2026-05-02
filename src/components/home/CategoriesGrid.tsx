@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { categories } from '@/data/products';
 import { useStore } from '@/store/use-store';
+import { useTemplate } from '@/hooks/use-template';
 
 export function CategoriesGrid() {
   const navigateTo = useStore((s) => s.navigateTo);
+  const { isGlamshop } = useTemplate();
 
   return (
     <section className="py-12 md:py-20">
@@ -32,8 +34,8 @@ export function CategoriesGrid() {
                 transition={{ duration: 0.3 }}
                 onClick={() => navigateTo('category', { category: category.slug })}
               >
-                {/* Category card — aspect-square (same as product images) */}
-                <div className="relative w-full bg-gradient-to-br from-neutral-200 via-neutral-100 to-neutral-300" style={{ aspectRatio: '1/1' }}>
+                {/* Category card — matches product image ratio for Glamshop */}
+                <div className={`relative w-full bg-gradient-to-br from-neutral-200 via-neutral-100 to-neutral-300 ${isGlamshop ? 'aspect-[3/4] md:aspect-[4/5]' : ''}`} style={isGlamshop ? undefined : { aspectRatio: '1/1' }}>
                   {category.image && (
                     <img
                       src={category.image}
