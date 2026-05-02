@@ -319,3 +319,25 @@ Stage Summary:
 - Luxuria blog page upgraded from static hardcoded data to dynamic API fetch
 - All fixes verified through API testing and lint
 
+---
+Task ID: 2
+Agent: Main Agent
+Task: Integrate DB banners into category and product pages
+
+Work Log:
+- Audited banner system: DB Banner model (hero/offer/promo types), useBanners hook, seed endpoint
+- Found 0 banners in DB (seed needed on first deployment via docker-entrypoint.sh)
+- Updated banner seed to include 3 offer banners: Makeup (-20%), Lingerie (New Collection), Accessoires (Complete Your Look)
+- Created GoldenOfferBanner.tsx: shared component that fetches offer banners via useBanners hook, filters by category link, displays with gradient overlay
+- Integrated into GoldenShopPage: large banner at bottom of category/shop page, matched to current categorySlug
+- Integrated into GoldenProductPage: medium banner between product details and related products, matched to product.category
+- GoldenOfferBanner supports two sizes: large (220-320px) and medium (180-200px)
+- Run lint: 0 errors
+- Pushed commit 9092a0e to GitHub
+
+Stage Summary:
+- Banners now appear on both category pages and product detail pages
+- Category pages show relevant banner matching the category being browsed
+- Product pages show banner matching the product category
+- All banners are DB-driven (created via admin or seed) - fully manageable
+
