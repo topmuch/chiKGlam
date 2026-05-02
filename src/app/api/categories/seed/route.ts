@@ -16,7 +16,7 @@ const seedCategories = [
     name: 'Lingerie',
     slug: 'lingerie',
     image: '/images/categories/lingerie.png',
-    banner: '/images/banners/lingerie-banner.png',
+    banner: '/images/banners/lingerie-banner.webp',
     description: 'Notre collection de lingerie allie élégance et confort. Des ensembles en dentelle aux nuisettes en satin, chaque pièce est conçue pour vous faire sentir belle et confiante.',
     sortOrder: 2,
     isActive: true,

@@ -67,7 +67,7 @@ const categoryGradients: Record<string, string> = {
 // Glamshop-specific category banners
 const glamshopCategoryBanners: Record<string, string> = {
   makeup: '/images/categories/glamshop-makeup-banner.jpg',
-  lingerie: '/images/categories/glamshop-lingerie-banner.png',
+  lingerie: '/images/categories/glamshop-lingerie-banner.webp',
   accessoires: '/images/categories/glamshop-accessoires-banner.jpg',
 };
 

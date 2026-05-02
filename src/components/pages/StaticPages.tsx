@@ -122,7 +122,7 @@ export function AboutPage() {
             <div className="aspect-[3/4]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/about/notre-marque-2.png"
+                src="/images/about/notre-marque-2.webp"
                 alt="Artisan sénégalais créant de la lingerie africaine"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
