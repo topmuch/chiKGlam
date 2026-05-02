@@ -598,7 +598,6 @@ export async function POST() {
     // Clear ALL existing products (including broken ones)
     if (existingCount > 0) {
       await db.product.deleteMany({});
-      console.log(`[Seed] Cleared ${existingCount} existing products (including ${brokenProducts} with broken paths)`);
     }
 
     // Create all 24 products
@@ -613,8 +612,6 @@ export async function POST() {
     const result = await db.product.createMany({
       data: productsToCreate,
     });
-
-    console.log(`[Seed] Created ${result.count} products successfully`);
 
     return NextResponse.json({
       success: true,

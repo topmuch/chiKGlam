@@ -36,8 +36,7 @@ export function useBanners(type: string) {
           const active = data.banners.filter((b: BannerData) => b.isActive);
           setBanners(active);
         }
-      } catch (e) {
-        console.error(`Failed to fetch ${type} banners:`, e);
+      } catch {
       }
       setLoading(false);
     };

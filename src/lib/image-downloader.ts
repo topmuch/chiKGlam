@@ -67,8 +67,6 @@ export async function downloadImageToLocal(
     ensureUploadDir();
     fs.writeFileSync(filepath, buffer);
 
-    console.log(`  ✓ Image saved: ${filename} (${(buffer.length / 1024).toFixed(1)}KB) from ${imageUrl}`);
-
     // Return the public URL path
     return `/uploads/products/${filename}`;
   } catch (err) {

@@ -5,7 +5,6 @@ import {
   User,
   ShoppingBag,
   Menu,
-  Heart,
   X,
   ShieldCheck,
   LayoutDashboard,
@@ -221,21 +220,8 @@ export default function GoldenHeader() {
               </button>
             </div>
 
-            {/* ── RIGHT: Search + User + Heart + Bag ── */}
+            {/* ── RIGHT: User + Bag ── */}
             <div className="flex items-center gap-0.5 sm:gap-1.5 flex-1 justify-end min-w-0">
-              {/* Search (desktop only) */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hidden sm:inline-flex shrink-0 hover:bg-transparent"
-                style={{ color: C.black }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#000000')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = C.black)}
-                aria-label="Rechercher"
-              >
-                <Search className="size-[20px]" />
-              </Button>
-
               {/* Account / User button */}
               {currentUser ? (
                 <div className="relative group">
@@ -368,19 +354,6 @@ export default function GoldenHeader() {
                   <LogIn className="size-5" />
                 </Button>
               )}
-
-              {/* Heart / Favorites (desktop only) */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="hidden sm:inline-flex shrink-0 hover:bg-transparent"
-                style={{ color: C.black }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = C.primaryDark)}
-                onMouseLeave={(e) => (e.currentTarget.style.color = C.black)}
-                aria-label="Favoris"
-              >
-                <Heart className="size-[20px]" />
-              </Button>
 
               {/* Cart bag */}
               <Button
@@ -548,7 +521,7 @@ export default function GoldenHeader() {
                   </button>
                 ))}
                 <button
-                  onClick={() => handleMobileNavigate('category', { category: 'offers' })}
+                  onClick={() => handleMobileNavigate('category', { category: 'makeup' })}
                   className="flex items-center justify-between w-full py-2.5 px-3 rounded-lg text-sm font-medium transition-colors"
                   style={{ color: '#cc3333' }}
                   onMouseEnter={(e) => {
@@ -558,7 +531,7 @@ export default function GoldenHeader() {
                     e.currentTarget.style.backgroundColor = 'transparent';
                   }}
                 >
-                  <span>Offres</span>
+                  <span>Promotions</span>
                   <ChevronRight className="size-4" style={{ color: '#cc3333', opacity: 0.5 }} />
                 </button>
               </div>
@@ -630,21 +603,6 @@ export default function GoldenHeader() {
                 >
                   <User className="size-4" style={{ color: C.textMuted }} />
                   <span>{currentUser ? 'Mon Compte' : 'Se Connecter'}</span>
-                </button>
-                <button
-                  className="flex items-center gap-3 w-full py-2.5 px-3 rounded-lg text-sm transition-colors"
-                  style={{ color: C.textLight }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = C.tertiary;
-                    e.currentTarget.style.color = C.primary;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = C.textLight;
-                  }}
-                >
-                  <Heart className="size-4" style={{ color: C.textMuted }} />
-                  <span>Favoris</span>
                 </button>
                 <button
                   onClick={handleOpenCart}

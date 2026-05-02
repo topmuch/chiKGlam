@@ -5,7 +5,9 @@ import { useStore } from '@/store/use-store';
 
 export function useTemplate() {
   const activeTemplate = useStore((s) => s.activeTemplate);
-  const isGold = activeTemplate === 'gold';
+  // isGold is deprecated — Golden template uses separate GoldenHeader/GoldenFooter
+  // Kept for backward compatibility with default template components
+  const isGold = false;
   const isGolden = activeTemplate === 'golden';
   const isLuxuria = activeTemplate === 'luxuria';
   const setActiveTemplate = useStore((s) => s.setActiveTemplate);
@@ -19,8 +21,7 @@ export function useTemplate() {
         if (data.success && data.settings?.activeTemplate) {
           setActiveTemplate(data.settings.activeTemplate);
         }
-      } catch (e) {
-        console.error('Failed to fetch template:', e);
+      } catch {
       }
     }
     fetchTemplate();

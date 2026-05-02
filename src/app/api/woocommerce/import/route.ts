@@ -36,7 +36,6 @@ export async function POST(request: NextRequest) {
       for (const prod of result.products) {
         try {
           // Download images locally before importing
-          console.log(`Importing "${prod.name}" — downloading ${prod.images.length} image(s)...`);
           const localImages = await downloadImagesToLocal(prod.images, prod.sku);
           const localPrimaryImage = localImages[0] || prod.primaryImage;
 
@@ -115,7 +114,6 @@ export async function POST(request: NextRequest) {
 
         // Download images locally
         const sku = wp.sku || `WOO-${wp.id || Date.now()}`;
-        console.log(`Importing "${wp.name}" — downloading ${images.length} image(s)...`);
         const localImages = await downloadImagesToLocal(images, sku);
         const primaryImage = localImages[0] || '';
 

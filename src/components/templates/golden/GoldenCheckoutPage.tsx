@@ -111,10 +111,11 @@ export default function GoldenCheckoutPage() {
   };
 
   const handleApplyPromo = () => {
-    if (promoCode.trim().toUpperCase() === 'BIENVENUE10') {
+    const code = promoCode.trim().toUpperCase();
+    if (code === 'BIENVENUE10' || code === 'BIENVENUE') {
       setPromoDiscount(subtotal * 0.1);
       setPromoApplied(true);
-    } else if (promoCode.trim().toUpperCase() === 'LUXURIA20') {
+    } else if (code === 'LUXURIA20') {
       setPromoDiscount(subtotal * 0.2);
       setPromoApplied(true);
     } else {

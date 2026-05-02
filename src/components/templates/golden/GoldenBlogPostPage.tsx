@@ -338,8 +338,7 @@ export default function GoldenBlogPostPage({ slug: propSlug }: { slug?: string }
         } else {
           setNotFound(true);
         }
-      } catch (err) {
-        console.error('[GoldenBlogPostPage] Fetch error:', err);
+      } catch {
         if (!cancelled) setNotFound(true);
       } finally {
         if (!cancelled) setLoading(false);

@@ -26,12 +26,10 @@ export function RegisterSW() {
               navigator.serviceWorker.controller
             ) {
               // New service worker is active — a page reload will use the new version
-              console.log('[PWA] New content is available; please refresh.');
             }
           });
         });
-      } catch (error) {
-        console.error('[PWA] Service worker registration failed:', error);
+      } catch {
       }
     };
 

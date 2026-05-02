@@ -97,7 +97,6 @@ export async function sendEmail(
       html,
     });
 
-    console.log(`[EmailSender] Email sent successfully to ${to}: ${info.messageId}`);
     transport.close();
 
     return { success: true };

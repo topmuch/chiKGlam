@@ -204,7 +204,7 @@ function FeaturedProductsSection() {
             className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight"
             style={{ color: PRIMARY }}
           >
-            FEATURED PRODUCTS
+            PRODUITS PHARES
           </h2>
         </div>
         <button
@@ -213,7 +213,7 @@ function FeaturedProductsSection() {
           onMouseEnter={(e) => (e.currentTarget.style.color = PRIMARY)}
           onMouseLeave={(e) => (e.currentTarget.style.color = '#000000')}
         >
-          Shop Now
+          Découvrir
           <ArrowRight size={14} />
         </button>
       </div>
@@ -257,20 +257,20 @@ function PromoBannerLeft() {
               className="text-[11px] font-semibold uppercase tracking-[0.2em] mb-3"
               style={{ color: TEXT_MUTED }}
             >
-              Best Price
+              Meilleur Prix
             </p>
             <h2
               className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight tracking-tight"
               style={{ color: PRIMARY }}
             >
-              PREMIUM QUALITY<br />MAKEUP COLLECTION
+              COLLECTION MAQUILLAGE<br />HAUTE QUALITÉ
             </h2>
             <p
               className="mt-4 text-sm max-w-md leading-relaxed"
               style={{ color: TEXT_LIGHT }}
             >
               {banner?.subtitle ||
-                'Discover our curated selection of premium cosmetics designed for every skin tone and type. Formulated with care for flawless results.'}
+                'Découvrez notre sélection de cosmétiques premium conçus pour sublimer chaque carnation. Formulés avec soin pour un résultat impeccable.'}
             </p>
             <button
               className="mt-8 self-start text-xs font-semibold uppercase tracking-wider px-8 py-3 transition-colors duration-300"
@@ -278,7 +278,7 @@ function PromoBannerLeft() {
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#a67747')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = PRIMARY)}
             >
-              Explore More
+              Découvrir
             </button>
           </div>
         </div>
@@ -304,20 +304,20 @@ function PromoBannerRight() {
               className="text-[11px] font-semibold uppercase tracking-[0.2em] mb-3"
               style={{ color: TEXT_MUTED }}
             >
-              New Collection
+              Nouvelle Collection
             </p>
             <h2
               className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight tracking-tight"
               style={{ color: PRIMARY }}
             >
-              REDEFINE YOUR<br />BEAUTY ROUTINE
+              RÉINVENTEZ VOTRE<br />ROUTINE BEAUTÉ
             </h2>
             <p
               className="mt-4 text-sm max-w-md leading-relaxed"
               style={{ color: TEXT_LIGHT }}
             >
               {banner?.subtitle ||
-                'Elevate your everyday look with our latest collection of handcrafted beauty essentials. Made with love and premium ingredients.'}
+                'Sublimez votre quotidien avec notre dernière collection de produits beauté artisanaux. Fabriqués avec amour et des ingrédients premium.'}
             </p>
             <button
               className="mt-8 self-start text-xs font-semibold uppercase tracking-wider px-8 py-3 transition-colors duration-300"
@@ -325,7 +325,7 @@ function PromoBannerRight() {
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#a67747')}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = PRIMARY)}
             >
-              Explore More
+              Découvrir
             </button>
           </div>
 
@@ -358,13 +358,13 @@ function DermatologistTestedSection() {
             className="text-2xl sm:text-3xl md:text-4xl font-semibold leading-tight tracking-tight"
             style={{ color: PRIMARY }}
           >
-            DERMATOLOGIST TESTED<br />COSMETICS PRODUCTS
+            PRODUITS COSMÉTIQUES<br />TESTÉS PAR DES DERMATOLOGUES
           </h2>
           <p
             className="mt-4 text-sm max-w-lg mx-auto leading-relaxed"
             style={{ color: TEXT_LIGHT }}
           >
-            Every product in our collection has been carefully tested and approved by dermatologists. We prioritize safety, quality, and efficacy to deliver beauty products you can trust for your daily routine.
+            Chaque produit de notre collection a été minutieusement testé et approuvé par des dermatologues. Nous privilégions la sécurité, la qualité et l'efficacité pour vous offrir des produits beauté dignes de confiance au quotidien.
           </p>
           <button
             className="mt-8 text-white text-xs font-semibold uppercase tracking-wider px-8 py-3 transition-colors duration-300"
@@ -372,7 +372,7 @@ function DermatologistTestedSection() {
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#a67747')}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = PRIMARY)}
           >
-            Explore More
+            Découvrir
           </button>
         </div>
       </ScrollReveal>
@@ -421,7 +421,7 @@ function ShopByCategorySection() {
           className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight"
           style={{ color: PRIMARY }}
         >
-          SHOP BY CATEGORY
+          PAR CATÉGORIE
         </h2>
         <button
           className="mt-4 sm:mt-0 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider transition-colors duration-200"
@@ -429,7 +429,7 @@ function ShopByCategorySection() {
           onMouseEnter={(e) => (e.currentTarget.style.color = PRIMARY)}
           onMouseLeave={(e) => (e.currentTarget.style.color = '#000000')}
         >
-          View All
+          Tout voir
           <ArrowRight size={14} />
         </button>
       </div>
@@ -468,7 +468,7 @@ function ShopByCategorySection() {
                     {category.name}
                   </h3>
                   <p className="text-xs mt-1" style={{ color: TEXT_MUTED }}>
-                    {productCount} {productCount === 1 ? 'product' : 'products'}
+                    {productCount} {productCount === 1 ? 'produit' : 'produits'}
                   </p>
                 </div>
               </motion.div>
@@ -491,7 +491,7 @@ function LongLastingPromoCards() {
           className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight mb-10 md:mb-14"
           style={{ color: PRIMARY }}
         >
-          LONG LASTING MAKEUP
+          MAQUILLAGE LONGUE TENUE
         </h2>
       </ScrollReveal>
 
@@ -527,7 +527,7 @@ function LongLastingPromoCards() {
                   onMouseEnter={(e) => (e.currentTarget.style.color = PRIMARY)}
                   onMouseLeave={(e) => (e.currentTarget.style.color = '#000000')}
                 >
-                  Shop Now
+                  Découvrir
                   <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform duration-200" />
                 </span>
               </div>
@@ -551,7 +551,7 @@ function TopRatedSection() {
           className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight"
           style={{ color: PRIMARY }}
         >
-          TOP RATED
+          LES MIEUX NOTÉS
         </h2>
         <button
           onClick={() => setShowAll(!showAll)}
@@ -560,7 +560,7 @@ function TopRatedSection() {
           onMouseEnter={(e) => (e.currentTarget.style.color = PRIMARY)}
           onMouseLeave={(e) => (e.currentTarget.style.color = '#000000')}
         >
-          {showAll ? 'Show Less' : 'View All'}
+          {showAll ? 'Voir moins' : 'Tout voir'}
           <ArrowRight size={14} className={!showAll ? '' : 'rotate-180'} />
         </button>
       </div>
@@ -631,7 +631,7 @@ function TestimonialsSection() {
                       className="text-[11px] font-semibold uppercase tracking-wider"
                       style={{ color: 'rgba(0, 0, 0, 0.6)' }}
                     >
-                      Verified
+                      Vérifié
                     </span>
                   )}
                 </div>

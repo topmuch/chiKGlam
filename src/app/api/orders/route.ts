@@ -101,7 +101,6 @@ export async function POST(request: NextRequest) {
 
       // If product not found in DB, create it from cart data
       if (!product) {
-        console.log(`[Order] Product ${productId} not found in DB, creating from cart data...`);
         const slug = (productName || 'product')
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
@@ -125,7 +124,6 @@ export async function POST(request: NextRequest) {
             sku: 'CGE-' + productId.slice(0, 6).toUpperCase(),
           },
         });
-        console.log(`[Order] Created product ${product.id}: ${product.name}`);
       }
 
       const itemPrice = product.price;
@@ -163,7 +161,6 @@ export async function POST(request: NextRequest) {
     if (existingUser) {
       // Link order to existing user
       linkedUserId = existingUser.id;
-      console.log(`[Order] Linked to existing user ${existingUser.id} (${existingUser.email})`);
     } else {
       // Create a new customer account with a random password
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
@@ -182,7 +179,6 @@ export async function POST(request: NextRequest) {
 
       linkedUserId = newUser.id;
       accountCreated = true;
-      console.log(`[Order] Auto-created account for ${customerEmail} (id: ${newUser.id})`);
     }
 
     const order = await db.order.create({
