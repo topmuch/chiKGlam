@@ -13,7 +13,7 @@ export async function POST() {
       });
     }
 
-    // Seed Hero slides
+    // Seed Hero slides (homepage)
     const heroBanners = [
       {
         type: 'hero',
@@ -47,21 +47,55 @@ export async function POST() {
       },
     ];
 
-    // Seed Promo banner
+    // Seed Offer banners (displayed on category & product pages)
+    const offerBanners = [
+      {
+        type: 'offer',
+        title: '-20% sur la Collection Maquillage',
+        subtitle: 'Offre limitée sur toute la gamme maquillage CHIC GLAM BY EVA. Profitez-en !',
+        cta: 'En profiter',
+        image: '/images/banners/promo-1.png',
+        link: 'makeup',
+        sortOrder: 0,
+        isActive: true,
+      },
+      {
+        type: 'offer',
+        title: 'Nouvelle Collection Lingerie',
+        subtitle: "Découvrez nos créations artisanales faites main au Sénégal. Pièces uniques et élégantes.",
+        cta: 'Découvrir',
+        image: '/images/banners/promo-2.png',
+        link: 'lingerie',
+        sortOrder: 1,
+        isActive: true,
+      },
+      {
+        type: 'offer',
+        title: 'Completez Votre Look',
+        subtitle: 'Accessoires indispensables pour un maquillage professionnel. Cils, pinceaux et plus.',
+        cta: 'Voir les accessoires',
+        image: '/images/categories/accessoires-banner.jpg',
+        link: 'accessoires',
+        sortOrder: 2,
+        isActive: true,
+      },
+    ];
+
+    // Seed Promo banner (general)
     const promoBanners = [
       {
         type: 'promo',
-        title: 'Offres',
-        subtitle: 'Exclusives',
+        title: 'Livraison Gratuite',
+        subtitle: 'Dès 50€ d\'achat',
         cta: '',
         image: '/images/banners/promo-1.png',
-        link: 'boutique',
+        link: '',
         sortOrder: 0,
         isActive: true,
       },
     ];
 
-    const allBanners = [...heroBanners, ...promoBanners];
+    const allBanners = [...heroBanners, ...offerBanners, ...promoBanners];
 
     const result = await db.banner.createMany({
       data: allBanners,

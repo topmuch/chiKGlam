@@ -40,6 +40,7 @@ import { useStore } from '@/store/use-store';
 import { categories, products } from '@/data/products';
 import { Product } from '@/types';
 import { GoldenProductCard } from './GoldenProductCard';
+import OfferBannerSection from './GoldenOfferBanner';
 
 // ─── Design tokens (Golden) ───
 const PRIMARY = '#bc8752';
@@ -723,6 +724,9 @@ export default function GoldenShopPage({ categorySlug }: GoldenShopPageProps) {
           </div>
         </div>
       </section>
+
+      {/* ═══ PROMOTIONAL BANNER ═══ */}
+      <OfferBannerSection categorySlug={categorySlug} />
     </div>
   );
 }

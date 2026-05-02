@@ -22,6 +22,7 @@ import { getRelatedProducts } from '@/data/products';
 import { useStore } from '@/store/use-store';
 import { useCartStore } from '@/store/use-cart-store';
 import { GoldenProductCard } from './GoldenProductCard';
+import OfferBannerSection from './GoldenOfferBanner';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -702,6 +703,9 @@ export default function GoldenProductPage({ product }: GoldenProductPageProps) {
           </div>
         </motion.div>
       </section>
+
+      {/* ─── Category Offer Banner ─── */}
+      <OfferBannerSection categorySlug={product.category.toLowerCase()} size="medium" />
 
       {/* ─── Related Products ─── */}
       {relatedProducts.length > 0 && (
