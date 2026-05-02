@@ -80,7 +80,7 @@ export function GoldenProductCard({ product, className }: GoldenProductCardProps
               className="inline-block text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1"
               style={{ backgroundColor: '#cc3333' }}
             >
-              Sale
+              Promo
             </span>
           )}
           {isSoldOut && (
@@ -88,7 +88,7 @@ export function GoldenProductCard({ product, className }: GoldenProductCardProps
               className="inline-block text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1"
               style={{ backgroundColor: '#000000' }}
             >
-              Sold Out
+              Rupture
             </span>
           )}
           {isNew && !isSoldOut && !isOnSale && (
@@ -96,7 +96,7 @@ export function GoldenProductCard({ product, className }: GoldenProductCardProps
               className="inline-block text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1"
               style={{ backgroundColor: PRIMARY }}
             >
-              New
+              Nouveau
             </span>
           )}
         </div>
@@ -114,7 +114,7 @@ export function GoldenProductCard({ product, className }: GoldenProductCardProps
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = PRIMARY)}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}
           >
-            Quick View
+            Aperçu rapide
           </button>
           {!isSoldOut && (
             <button
@@ -123,7 +123,7 @@ export function GoldenProductCard({ product, className }: GoldenProductCardProps
               onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = PRIMARY)}
               onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#ffffff')}
             >
-              Select Options
+              Choisir les options
             </button>
           )}
         </motion.div>
@@ -168,7 +168,7 @@ export function GoldenProductCard({ product, className }: GoldenProductCardProps
             ))}
           </div>
           <span className="text-[11px]" style={{ color: TEXT_MUTED }}>
-            Rated {product.rating} out of 5
+            Note {product.rating}/5
           </span>
         </div>
 
@@ -206,7 +206,7 @@ export function GoldenProductCard({ product, className }: GoldenProductCardProps
           onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = PRIMARY)}
         >
           <ShoppingBag size={14} />
-          Add to Cart
+          Ajouter au panier
         </button>
       )}
       {isSoldOut && (
@@ -214,7 +214,7 @@ export function GoldenProductCard({ product, className }: GoldenProductCardProps
           className="w-full text-xs font-semibold uppercase tracking-wider py-3 flex items-center justify-center gap-2"
           style={{ backgroundColor: BORDER, color: TEXT_MUTED }}
         >
-          Sold Out
+          Rupture
         </div>
       )}
     </motion.div>
