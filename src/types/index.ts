@@ -57,7 +57,7 @@ export interface Review {
 export type PageType =
   | 'home' | 'category' | 'product' | 'cart' | 'checkout' | 'customer-dashboard' | 'admin-dashboard'
   | 'about' | 'cgv' | 'privacy' | 'contact-page' | 'faq' | 'shipping' | 'returns'
-  | 'order-tracking' | 'careers' | 'press' | 'blog' | 'cookies' | 'legal';
+  | 'order-tracking' | 'careers' | 'press' | 'blog' | 'blog-post' | 'cookies' | 'legal';
 
 export interface NavigationState {
   currentPage: PageType;

@@ -36,6 +36,7 @@ const C = {
 interface BlogPost {
   id: string;
   title: string;
+  slug: string;
   excerpt: string;
   category: string;
   author: string;
@@ -47,58 +48,55 @@ interface BlogPost {
 const defaultPosts: BlogPost[] = [
   {
     id: '1',
+    slug: 'teint-parfait-5-etapes',
     title: 'Comment obtenir un teint parfait en 5 étapes',
     excerpt: 'Découvrez notre routine quotidienne pour un teint lumineux et sans défaut. Du nettoyage à la finition, chaque étape compte pour un résultat professionnel.',
     category: 'Conseils Beauté', author: 'Marie Laurent', date: '15 Janvier 2025', readTime: '5 min', image: '/images/products/makeup/fond-de-teint-allcover.png',
   },
   {
     id: '2',
+    slug: 'tendances-maquillage-saison',
     title: 'Les tendances maquillage de cette saison',
     excerpt: 'Le nude lumineux, les yeux ambrés et les lèvres givrées dominent cette saison. Voici comment adapter ces tendances à votre style personnel.',
     category: 'Tendances', author: 'Sophie Martin', date: '8 Janvier 2025', readTime: '4 min', image: '/images/products/makeup/poudre-compacte.png',
   },
   {
     id: '3',
+    slug: 'guide-pinceaux-maquillage',
     title: 'Guide complet des pinceaux de maquillage',
     excerpt: 'Quel pinceau utiliser pour chaque étape de votre maquillage ? Notre guide détaillé vous aide à constituer la trousse idéale.',
     category: 'Tutoriels', author: 'Camille Dubois', date: '2 Janvier 2025', readTime: '7 min', image: '/images/products/makeup/highlighter.png',
   },
   {
     id: '4',
+    slug: 'soiree-glamour-routine',
     title: 'Soirée glamour : notre routine beauté',
     excerpt: 'Préparez votre peau et sublimez votre maquillage pour une soirée inoubliable. Des produits indispensables aux techniques de pro.',
     category: 'Inspiration', author: 'Léa Petit', date: '20 Décembre 2024', readTime: '6 min', image: '/images/products/makeup/poudre-libre-translucide.png',
   },
   {
     id: '5',
+    slug: 'soin-peau-hiver',
     title: 'Prendre soin de sa peau en hiver',
     excerpt: "Le froid, le vent et le chauffage assèchent votre peau. Adoptez nos conseils pour maintenir une hydratation optimale tout au long de l'hiver.",
     category: 'Conseils Beauté', author: 'Marie Laurent', date: '15 Décembre 2024', readTime: '5 min', image: '/images/products/makeup/flawless-finish-skin.jpeg',
   },
   {
     id: '6',
+    slug: 'must-have-trousse-maquillage',
     title: 'Les must-have de votre trousse à maquillage',
     excerpt: 'Les 10 produits essentiels que chaque femme devrait posséder. Des bases indispensables aux touches de couleur qui font la différence.',
     category: 'Tutoriels', author: 'Sophie Martin', date: '8 Décembre 2024', readTime: '4 min', image: '/images/products/makeup/flawless-finish-concealer.jpeg',
   },
 ];
 
-const categories = [
-  { name: 'Conseils Beauté', count: 12 },
-  { name: 'Tutoriels', count: 8 },
-  { name: 'Tendances', count: 6 },
-  { name: 'Inspiration', count: 5 },
-  { name: 'Soins Peau', count: 9 },
-  { name: 'Bien-être', count: 4 },
-];
-
-const popularPosts = defaultPosts.slice(0, 3);
-
 const categoryIcons: Record<string, React.ElementType> = {
   'Conseils Beauté': Sparkles,
   Tendances: TrendingUp,
   Tutoriels: BookOpen,
   Inspiration: Lightbulb,
+  Collection: Sparkles,
+  Nouveautés: TrendingUp,
 };
 
 // ─── Component ───────────────────────────────────────────
@@ -109,15 +107,25 @@ export function GoldenBlogPage() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>(defaultPosts);
   const [loading, setLoading] = useState(true);
 
+  // Derive categories and popular posts from API data
+  const dynamicCategories = blogPosts.length > 0
+    ? Array.from(new Set(blogPosts.map(p => p.category))).map(name => ({
+        name,
+        count: blogPosts.filter(p => p.category === name).length,
+      }))
+    : [];
+  const popularPosts = blogPosts.slice(0, 3);
+
   useEffect(() => {
     async function fetchPosts() {
       try {
         const res = await fetch('/api/blog?published=true');
         const data = await res.json();
         if (data.success && data.posts && data.posts.length > 0) {
-          setBlogPosts(data.posts.map((p: { id: string; title: string; excerpt: string; category: string; author: string; createdAt: string; readTime: string; coverImage: string }) => ({
+          setBlogPosts(data.posts.map((p: { id: string; title: string; slug: string; excerpt: string; category: string; author: string; createdAt: string; readTime: string; coverImage: string }) => ({
             id: p.id,
             title: p.title,
+            slug: p.slug,
             excerpt: p.excerpt,
             category: p.category,
             author: p.author,
@@ -219,6 +227,7 @@ export function GoldenBlogPage() {
                       transition={{ duration: 0.45, delay: 0.08 + index * 0.08 }}
                       className="group cursor-pointer overflow-hidden"
                       style={{ border: `1px solid ${C.border}`, borderRadius: '2px' }}
+                      onClick={() => navigateTo('blog-post', { slug: post.slug })}
                     >
                       {/* Blog Post Image — 16/10 aspect ratio with hover zoom */}
                       <div
@@ -326,7 +335,7 @@ export function GoldenBlogPage() {
                   Catégories
                 </h4>
                 <div className="space-y-1">
-                  {categories.map((cat) => {
+                  {dynamicCategories.map((cat) => {
                     const Icon = categoryIcons[cat.name];
                     return (
                       <button

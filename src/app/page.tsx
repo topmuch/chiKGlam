@@ -52,6 +52,7 @@ import GoldenProductPage from '@/components/templates/golden/GoldenProductPage';
 import GoldenCheckoutPage from '@/components/templates/golden/GoldenCheckoutPage';
 import { GoldenCartPage } from '@/components/templates/golden/GoldenCartPage';
 import { GoldenBlogPage } from '@/components/templates/golden/GoldenBlogPage';
+import GoldenBlogPostPage from '@/components/templates/golden/GoldenBlogPostPage';
 
 export default function Page() {
   const { currentPage, selectedCategory, selectedProduct } = useStore();
@@ -104,6 +105,8 @@ export default function Page() {
         return <PressPage />;
       case 'blog':
         return <BlogPage />;
+      case 'blog-post':
+        return <BlogPage />;
       default:
         return <HomePage />;
     }
@@ -118,6 +121,7 @@ export default function Page() {
     const Cart = template === 'luxuria' ? LuxuriaCartPage : GoldenCartPage;
     const Checkout = template === 'luxuria' ? LuxuriaCheckoutPage : GoldenCheckoutPage;
     const Blog = template === 'luxuria' ? LuxuriaBlogPage : GoldenBlogPage;
+    const BlogPost = template === 'luxuria' ? GoldenBlogPostPage : GoldenBlogPostPage;
     const Home = template === 'luxuria' ? LuxuriaHomePage : GoldenHomePage;
 
     switch (currentPage) {
@@ -133,6 +137,8 @@ export default function Page() {
         return <Checkout />;
       case 'blog':
         return <Blog />;
+      case 'blog-post':
+        return <BlogPost />;
       case 'customer-dashboard':
         return <CustomerDashboard />;
       case 'admin-dashboard':

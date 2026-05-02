@@ -652,7 +652,7 @@ interface BlogPost {
   excerpt: string;
   coverImage: string;
   category: string;
-  readTime?: number;
+  readTime?: string;
   createdAt?: string;
   publishedAt?: string;
   product?: { image?: string } | null;
@@ -747,7 +747,7 @@ function ActusSection() {
                   className="group cursor-pointer overflow-hidden"
                   whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.3 }}
-                  onClick={() => navigateTo('blog' as any, { slug: post.slug })}
+                  onClick={() => navigateTo('blog-post', { slug: post.slug })}
                 >
                   {/* Cover Image */}
                   <div
@@ -796,7 +796,7 @@ function ActusSection() {
                           style={{ color: TEXT_MUTED }}
                         >
                           <Clock size={12} />
-                          {post.readTime} min
+                          {post.readTime}
                         </span>
                       )}
                       {post.createdAt && (

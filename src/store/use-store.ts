@@ -6,6 +6,7 @@ interface StoreState {
   currentPage: PageType;
   selectedCategory: string | null;
   selectedProduct: Product | null;
+  selectedBlogSlug: string | null;
   previousPage: PageType;
   currentUser: User | null;
   activeTemplate: string;
@@ -21,6 +22,7 @@ export const useStore = create<StoreState>()(
       currentPage: 'home',
       selectedCategory: null,
       selectedProduct: null,
+      selectedBlogSlug: null,
       previousPage: 'home',
       currentUser: null,
       activeTemplate: 'default',
@@ -28,6 +30,7 @@ export const useStore = create<StoreState>()(
         currentPage: page,
         selectedCategory: data?.category || null,
         selectedProduct: data?.product || null,
+        selectedBlogSlug: data?.slug || null,
         previousPage: state.currentPage,
       })),
       goBack: () => set((state) => ({
