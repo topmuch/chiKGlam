@@ -30,3 +30,29 @@ Stage Summary:
 - Category images now square (same size as product images)
 - Lint: 0 errors, 3 pre-existing warnings
 - Dev server: GET / 200 OK
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Glamshop template refinements - promo bar color, feedbacks bg, category banners
+
+Work Log:
+- Confirmed GlamshopHeader promo bar already has #bc8752 background ✅
+- Updated CustomerFeedback.tsx: Added isGlamshop check, feedbacks section bg is now #bc8752 for Glamshop template
+- Copied 3 uploaded category banner images to public/images/categories/:
+  - 1121.jpg → glamshop-makeup-banner.jpg (Makeup category)
+  - 112.png → glamshop-lingerie-banner.png (Lingerie category)
+  - 112133.jpg → glamshop-accessoires-banner.jpg (Accessoires category)
+- Updated CategoryPage.tsx: When Glamshop is active, shows full-width image banner with gradient overlay instead of gradient bg
+- Updated ProductPage.tsx: When Glamshop is active, shows category banner image at top of product page with gradient overlay
+- Added useTemplate hook import to both CategoryPage and ProductPage
+- All banners are responsive: h-[200px]/sm:h-[280px]/md:h-[340px] for categories, h-[160px]/sm:h-[220px]/md:h-[280px] for products
+
+Stage Summary:
+- Top promo bar: already #bc8752 ✅
+- "Nos Feedbacks" section: bg #bc8752 for Glamshop ✅
+- Category banners: 3 images uploaded and mapped (makeup, lingerie, accessoires)
+- Category pages: show image banner with breadcrumb overlay when Glamshop is active
+- Product pages: show category-specific image banner at top when Glamshop is active
+- Lint: 0 errors, 3 pre-existing warnings
+- Dev server: GET / 200 OK

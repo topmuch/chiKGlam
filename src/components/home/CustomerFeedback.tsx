@@ -20,7 +20,7 @@ const feedbackImages = [
 
 export function CustomerFeedback() {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { isGold } = useTemplate();
+  const { isGold, isGlamshop } = useTemplate();
   const [isPaused, setIsPaused] = useState(false);
   const animFrameRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
@@ -70,7 +70,7 @@ export function CustomerFeedback() {
   }, [isPaused]);
 
   return (
-    <section className={`py-12 md:py-20 ${isGold ? 'bg-[#bc8752]' : 'bg-neutral-950'}`}>
+    <section className={`py-12 md:py-20 ${isGold || isGlamshop ? 'bg-[#bc8752]' : 'bg-neutral-950'}`}>
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div className="text-center mb-8 md:mb-12">

@@ -39,6 +39,7 @@ import { ProductCard } from '@/components/shared/ProductCard';
 import { ProductGallery } from './ProductGallery';
 import { useCartStore } from '@/store/use-cart-store';
 import { useStore } from '@/store/use-store';
+import { useTemplate } from '@/hooks/use-template';
 import { getRelatedProducts } from '@/data/products';
 import { Product, Review } from '@/types';
 import { cn } from '@/lib/utils';
@@ -63,6 +64,13 @@ const benefits = [
   { icon: Award, text: 'Produits authentiques' },
   { icon: Shield, text: 'Paiement sécurisé' },
 ];
+
+// Glamshop-specific category banners
+const glamshopCategoryBanners: Record<string, string> = {
+  makeup: '/images/categories/glamshop-makeup-banner.jpg',
+  lingerie: '/images/categories/glamshop-lingerie-banner.png',
+  accessoires: '/images/categories/glamshop-accessoires-banner.jpg',
+};
 
 
 
@@ -131,6 +139,7 @@ export function ProductPage({ product }: ProductPageProps) {
   const addItem = useCartStore((s) => s.addItem);
   const setCartOpen = useCartStore((s) => s.setCartOpen);
   const navigateTo = useStore((s) => s.navigateTo);
+  const { isGlamshop } = useTemplate();
   const [quantity, setQuantity] = useState(1);
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
   const reviewsRef = useRef<HTMLDivElement>(null);
@@ -146,6 +155,10 @@ export function ProductPage({ product }: ProductPageProps) {
 
   const avgRating = product.rating || 0;
 
+  // Get category banner for Glamshop
+  const categoryLower = product.category.toLowerCase();
+  const categoryBanner = glamshopCategoryBanners[categoryLower];
+
   const handleAddToCart = () => {
     addItem(product, quantity);
     setCartOpen(true);
@@ -159,6 +172,25 @@ export function ProductPage({ product }: ProductPageProps) {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Glamshop Category Banner */}
+      {isGlamshop && categoryBanner && (
+        <div className="relative w-full">
+          <img
+            src={categoryBanner}
+            alt={`Bannière ${product.category}`}
+            className="w-full h-[160px] sm:h-[220px] md:h-[280px] object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent" />
+          <div className="absolute inset-0 flex items-center max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight drop-shadow-lg">
+                {product.category}
+              </h1>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
         <Breadcrumb>

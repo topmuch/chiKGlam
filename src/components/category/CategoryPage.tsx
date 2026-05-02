@@ -35,6 +35,7 @@ import {
   defaultFilterState,
 } from './FilterSidebar';
 import { useStore } from '@/store/use-store';
+import { useTemplate } from '@/hooks/use-template';
 import { categories, getProductsByCategory, products } from '@/data/products';
 import { Product } from '@/types';
 
@@ -63,8 +64,16 @@ const categoryGradients: Record<string, string> = {
   nailcare: 'from-pink-100 via-fuchsia-50 to-purple-50',
 };
 
+// Glamshop-specific category banners
+const glamshopCategoryBanners: Record<string, string> = {
+  makeup: '/images/categories/glamshop-makeup-banner.jpg',
+  lingerie: '/images/categories/glamshop-lingerie-banner.png',
+  accessoires: '/images/categories/glamshop-accessoires-banner.jpg',
+};
+
 export function CategoryPage({ categorySlug }: CategoryPageProps) {
   const navigateTo = useStore((s) => s.navigateTo);
+  const { isGlamshop } = useTemplate();
   const [filters, setFilters] = useState<FilterState>(defaultFilterState);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
@@ -174,35 +183,39 @@ export function CategoryPage({ categorySlug }: CategoryPageProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Category Banner */}
-      <section
-        className={`relative bg-gradient-to-r ${gradient} py-12 sm:py-16 px-4 sm:px-6 lg:px-8`}
-      >
-        <div className="max-w-[1440px] mx-auto">
-          <Breadcrumb className="mb-4">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink
-                  onClick={() => navigateTo('home')}
-                  className="cursor-pointer"
-                >
-                  <Home className="size-3.5 mr-1" />
-                  Accueil
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage className="font-medium">
-                  {boutiqueCategory.name}
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <div className="flex items-end justify-between">
-            <div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-heading text-foreground tracking-tight">
+      {isGlamshop && glamshopCategoryBanners[lowerSlug] ? (
+        <section className="relative">
+          <div className="relative w-full">
+            <img
+              src={glamshopCategoryBanners[lowerSlug]}
+              alt={`Bannière ${boutiqueCategory.name}`}
+              className="w-full h-[200px] sm:h-[280px] md:h-[340px] object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-transparent" />
+            <div className="absolute inset-0 flex flex-col justify-center max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+              <Breadcrumb className="mb-4">
+                <BreadcrumbList>
+                  <BreadcrumbItem>
+                    <BreadcrumbLink
+                      onClick={() => navigateTo('home')}
+                      className="cursor-pointer text-white/80 hover:text-white"
+                    >
+                      <Home className="size-3.5 mr-1" />
+                      Accueil
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator className="text-white/60" />
+                  <BreadcrumbItem>
+                    <BreadcrumbPage className="font-medium text-white">
+                      {boutiqueCategory.name}
+                    </BreadcrumbPage>
+                  </BreadcrumbItem>
+                </BreadcrumbList>
+              </Breadcrumb>
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-heading text-white tracking-tight drop-shadow-lg">
                 {boutiqueCategory.name}
               </h1>
-              <p className="text-muted-foreground mt-2 text-sm sm:text-base max-w-xl">
+              <p className="text-white/80 mt-2 text-sm sm:text-base max-w-xl drop-shadow">
                 {isBoutique
                   ? 'Découvrez tous nos produits des meilleures marques de luxe'
                   : `Découvrez notre collection de ${boutiqueCategory.name.toLowerCase()} produits des meilleures marques de luxe`
@@ -210,31 +223,70 @@ export function CategoryPage({ categorySlug }: CategoryPageProps) {
               </p>
             </div>
           </div>
-          {/* Subcategory chips */}
-          {boutiqueCategory.subcategories.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-4">
-              {boutiqueCategory.subcategories.map((sub) => (
-                <button
-                  key={sub.slug}
-                  onClick={() =>
-                    handleFilterChange({
-                      ...filters,
-                      categories: [sub.name],
-                    })
+        </section>
+      ) : (
+        <section
+          className={`relative bg-gradient-to-r ${gradient} py-12 sm:py-16 px-4 sm:px-6 lg:px-8`}
+        >
+          <div className="max-w-[1440px] mx-auto">
+            <Breadcrumb className="mb-4">
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink
+                    onClick={() => navigateTo('home')}
+                    className="cursor-pointer"
+                  >
+                    <Home className="size-3.5 mr-1" />
+                    Accueil
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="font-medium">
+                    {boutiqueCategory.name}
+                  </BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+            <div className="flex items-end justify-between">
+              <div>
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-heading text-foreground tracking-tight">
+                  {boutiqueCategory.name}
+                </h1>
+                <p className="text-muted-foreground mt-2 text-sm sm:text-base max-w-xl">
+                  {isBoutique
+                    ? 'Découvrez tous nos produits des meilleures marques de luxe'
+                    : `Découvrez notre collection de ${boutiqueCategory.name.toLowerCase()} produits des meilleures marques de luxe`
                   }
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 ${
-                    filters.categories.includes(sub.name)
-                      ? 'bg-foreground text-background border-foreground'
-                      : 'bg-white/60 text-foreground border-border hover:border-foreground/50'
-                  }`}
-                >
-                  {sub.name}
-                </button>
-              ))}
+                </p>
+              </div>
             </div>
-          )}
-        </div>
-      </section>
+            {/* Subcategory chips */}
+            {boutiqueCategory.subcategories.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-4">
+                {boutiqueCategory.subcategories.map((sub) => (
+                  <button
+                    key={sub.slug}
+                    onClick={() =>
+                      handleFilterChange({
+                        ...filters,
+                        categories: [sub.name],
+                      })
+                    }
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 ${
+                      filters.categories.includes(sub.name)
+                        ? 'bg-foreground text-background border-foreground'
+                        : 'bg-white/60 text-foreground border-border hover:border-foreground/50'
+                    }`}
+                  >
+                    {sub.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Main Content */}
       <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
