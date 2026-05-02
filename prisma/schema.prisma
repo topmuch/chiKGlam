@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -17,16 +11,161 @@ model User {
   id        String   @id @default(cuid())
   email     String   @unique
   name      String?
+  password  String?
+  role      String   @default("customer")
+  phone     String?
+  avatar    String?
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  orders    Order[]
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model SiteSettings {
+  id              String   @id @default("main")
+  siteName        String   @default("CHIC GLAM BY EVA")
+  siteDescription String   @default("")
+  siteUrl         String   @default("")
+  ogImage         String?
+  contactEmail    String?
+  activeTemplate  String   @default("glamshop")
+  stripeKey       String?
+  stripeSecret    String?
+  sumupKey        String?
+  sumUpMerchantId String?
+  smtpHost        String?
+  smtpPort        Int?
+  smtpUser        String?
+  smtpPass        String?
+  updatedAt       DateTime @updatedAt
+}
+
+model Category {
+  id            String   @id @default(cuid())
+  name          String
+  slug          String   @unique
+  image         String
+  banner        String?
+  description   String?
+  sortOrder     Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  subcategories String   @default("[]")
+}
+
+model Product {
+  id               String      @id @default(cuid())
+  name             String
+  slug             String      @unique
+  brand            String      @default("CHIC GLAM BY EVA")
+  price            Float
+  originalPrice    Float?
+  description      String
+  shortDescription String?
+  image            String
+  images           String      @default("[]")
+  category         String
+  subcategory      String      @default("")
+  rating           Float       @default(4.5)
+  reviewCount      Int         @default(0)
+  inStock          Boolean     @default(true)
+  stockCount       Int         @default(100)
+  isNew            Boolean     @default(false)
+  isTrending       Boolean     @default(false)
+  isBestseller     Boolean     @default(false)
+  isFeatured       Boolean     @default(false)
+  isActive         Boolean     @default(true)
+  tags             String      @default("[]")
+  sku              String      @default("")
+  seoTitle         String?
+  seoDescription   String?
+  weight           Float?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  orderNumber     String      @unique
+  userId          String?
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  shippingAddress String
+  billingAddress  String?
+  subtotal        Float
+  shippingCost    Float       @default(0)
+  tax             Float       @default(0)
+  total           Float
+  status          String      @default("processing")
+  paymentMethod   String?
+  paymentId       String?
+  paymentStatus   String      @default("pending")
+  shippingCarrier String?
+  trackingNumber  String?
+  trackingUrl     String?
+  notes           String?
+  shippedAt       DateTime?
+  deliveredAt     DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+  user            User?       @relation(fields: [userId], references: [id])
+}
+
+model OrderItem {
+  id           String  @id @default(cuid())
+  productId    String
+  productName  String
+  productImage String
+  brand        String  @default("")
+  price        Float
+  quantity     Int
+  total        Float
+  orderId      String
+  order        Order   @relation(fields: [orderId], references: [id])
+}
+
+model Banner {
+  id              String    @id @default(cuid())
+  type            String    @default("hero")
+  title           String
+  subtitle        String?
+  cta             String?
+  image           String
+  link            String?
+  sortOrder       Int       @default(0)
+  isActive        Boolean   @default(true)
+  promoProductIds String    @default("[]")
+  promoStartDate  DateTime?
+  promoEndDate    DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String   @default("")
+  category    String   @default("Beauté")
+  author      String   @default("Eva")
+  coverImage  String?
+  isPublished Boolean  @default(false)
+  readTime    String   @default("5 min")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MediaFile {
+  id           String   @id @default(cuid())
+  name         String
+  url          String
+  folder       String   @default("uploads")
+  size         Int      @default(0)
+  type         String   @default("image")
+  source       String?
+  lastModified DateTime @default(now())
 }
