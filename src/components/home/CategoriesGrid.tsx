@@ -1,118 +1,59 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Card, CardContent } from '@/components/ui/card';
-import ScrollReveal from '@/components/shared/ScrollReveal';
+import { ScrollReveal } from '@/components/shared/ScrollReveal';
+import { categories } from '@/data/products';
 import { useStore } from '@/store/use-store';
 
-interface CategoryData {
-  id?: string;
-  slug: string;
-  name: string;
-  image?: string;
-  productCount?: number;
-}
-
-export default function CategoriesGrid() {
-  const [categories, setCategories] = useState<CategoryData[]>([]);
-  const { navigateTo } = useStore();
-
-  useEffect(() => {
-    fetch('/api/categories')
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setCategories(data);
-        } else {
-          // Fallback
-          setCategories([
-            { slug: 'maquillage', name: 'Maquillage', productCount: 42 },
-            { slug: 'soin-visage', name: 'Soin Visage', productCount: 38 },
-            { slug: 'soin-corps', name: 'Soin Corps', productCount: 25 },
-            { slug: 'parfums', name: 'Parfums', productCount: 18 },
-            { slug: 'accessoires', name: 'Accessoires', productCount: 15 },
-            { slug: 'cheveux', name: 'Cheveux', productCount: 22 },
-            { slug: 'ongles', name: 'Ongles', productCount: 12 },
-            { slug: 'wellness', name: 'Bien-être', productCount: 10 },
-          ]);
-        }
-      })
-      .catch(() => {
-        setCategories([
-          { slug: 'maquillage', name: 'Maquillage', productCount: 42 },
-          { slug: 'soin-visage', name: 'Soin Visage', productCount: 38 },
-          { slug: 'soin-corps', name: 'Soin Corps', productCount: 25 },
-          { slug: 'parfums', name: 'Parfums', productCount: 18 },
-          { slug: 'accessoires', name: 'Accessoires', productCount: 15 },
-          { slug: 'cheveux', name: 'Cheveux', productCount: 22 },
-          { slug: 'ongles', name: 'Ongles', productCount: 12 },
-          { slug: 'wellness', name: 'Bien-être', productCount: 10 },
-        ]);
-      });
-  }, []);
-
-  const handleCategoryClick = (cat: CategoryData) => {
-    navigateTo('category', { slug: cat.slug, name: cat.name });
-  };
+export function CategoriesGrid() {
+  const navigateTo = useStore((s) => s.navigateTo);
 
   return (
-    <section className="py-12 md:py-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="py-12 md:py-20">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
-          <div className="mb-8 text-center">
-            <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">Nos Catégories</h2>
-            <p className="mt-2 text-gray-500">Explorez notre sélection de produits beauté</p>
+          <div className="text-center mb-10 md:mb-14">
+            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight" style={{ color: '#bc8752' }}>
+              DÉCOUVREZ
+            </h2>
+            <p className="mt-3 text-muted-foreground text-base md:text-lg max-w-lg mx-auto">
+              Découvrez nos collections
+            </p>
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
-          {categories.map((category, idx) => (
-            <ScrollReveal key={category.slug} delay={idx * 0.05}>
-              <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }}>
-                <Card
-                  className="cursor-pointer overflow-hidden border-0 shadow-sm hover:shadow-lg transition-shadow duration-300"
-                  onClick={() => handleCategoryClick(category)}
-                >
-                  <CardContent className="p-0">
-                    <div className="relative aspect-square overflow-hidden bg-gray-100">
-                      {category.image ? (
-                        <Image
-                          src={category.image}
-                          alt={category.name}
-                          fill
-                          className="object-cover transition-transform duration-500 hover:scale-110"
-                          sizes="(max-width: 768px) 50vw, 25vw"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center">
-                          <div
-                            className="h-full w-full flex items-center justify-center"
-                            style={{
-                              background: `linear-gradient(135deg, ${
-                                ['#f5e6d3', '#e8d5c4', '#d4c4b0', '#c9b8a5', '#bfae98', '#b5a68c', '#ab9e80', '#a19674'][idx % 8]
-                              }, #fff)`,
-                            }}
-                          >
-                            <span className="text-xl font-bold text-gray-700">
-                              {category.name.charAt(0)}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                      <div className="absolute bottom-0 left-0 right-0 p-4">
-                        <h3 className="text-sm font-semibold text-white md:text-base">
-                          {category.name}
-                        </h3>
-                        {category.productCount && (
-                          <p className="text-xs text-white/70">{category.productCount} articles</p>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+          {categories.map((category, index) => (
+            <ScrollReveal key={category.id} delay={index * 0.1}>
+              <motion.div
+                className="relative overflow-hidden cursor-pointer group rounded-xl"
+                whileHover={{ scale: 1.03, boxShadow: '0 12px 40px rgba(0,0,0,0.12)' }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.3 }}
+                onClick={() => navigateTo('category', { category: category.slug })}
+              >
+                {/* Category card — aspect-square (same as product images) */}
+                <div className="relative w-full bg-gradient-to-br from-neutral-200 via-neutral-100 to-neutral-300" style={{ aspectRatio: '1/1' }}>
+                  {category.image && (
+                    <img
+                      src={category.image}
+                      alt={category.name}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/5" />
+                  <div className="absolute inset-0 flex flex-col justify-end p-3 sm:p-4 md:p-6 text-white">
+                    <h3 className="font-heading text-base sm:text-lg md:text-2xl lg:text-3xl font-bold drop-shadow-lg leading-tight">
+                      {category.name}
+                    </h3>
+                    <span className="mt-1 sm:mt-2 text-xs sm:text-sm md:text-base font-semibold text-white/90 group-hover:text-white transition-colors drop-shadow-sm flex items-center gap-1">
+                      Acheter
+                      <svg className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
               </motion.div>
             </ScrollReveal>
           ))}

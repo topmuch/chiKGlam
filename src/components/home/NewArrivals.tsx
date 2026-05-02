@@ -1,65 +1,60 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import ScrollReveal from '@/components/shared/ScrollReveal';
-import ProductCard from '@/components/shared/ProductCard';
-import { getTrendingProducts } from '@/data/products';
+import { ChevronRight } from 'lucide-react';
+import { ScrollReveal } from '@/components/shared/ScrollReveal';
+import { ProductCard } from '@/components/shared/ProductCard';
+import { getNewArrivals } from '@/data/products';
 import { useStore } from '@/store/use-store';
-import type { Product } from '@/types';
 
-export default function NewArrivals() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const { navigateTo } = useStore();
-
-  useEffect(() => {
-    const data = getTrendingProducts?.() || [];
-    setProducts(data.slice(0, 4));
-  }, []);
+export function NewArrivals() {
+  const products = getNewArrivals().slice(0, 4); // Only 4 products
+  const navigateTo = useStore((s) => s.navigateTo);
 
   return (
-    <section className="py-12 md:py-16 bg-gray-50/50">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="bg-white py-12 md:py-20">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
-          <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-end justify-between mb-10">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">Nouveautés</h2>
-              <p className="mt-1 text-gray-500">Découvrez nos dernières arrivées</p>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold tracking-tight" style={{ color: '#bc8752' }}>
+                COSMÉTIQUES BY EVA
+              </h2>
+              <div className="mt-2 h-1 w-16 rounded-full" style={{ backgroundColor: '#bc8752' }} />
+              <p className="mt-3 text-muted-foreground text-base">
+                Notre sélection maquillage choisie pour vous
+              </p>
             </div>
-            <Button
-              variant="outline"
-              className="flex items-center gap-2 font-medium text-sm"
-              style={{ borderColor: '#bc8752', color: '#bc8752' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#bc8752';
-                e.currentTarget.style.color = 'white';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#bc8752';
-              }}
-              onClick={() => navigateTo('category', { slug: 'all', name: 'Tous les produits' })}
-            >
-              Voir tout
-              <ArrowRight className="h-4 w-4" />
-            </Button>
+            <div className="hidden sm:flex items-center gap-2">
+              <button
+                onClick={() => navigateTo('category', { category: 'makeup' })}
+                className="flex items-center gap-1.5 text-sm font-medium hover:opacity-70 transition-colors"
+                style={{ color: '#bc8752' }}
+              >
+                Voir Tout
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         </ScrollReveal>
 
-        {products.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {products.map((product, idx) => (
-              <ScrollReveal key={product.id || idx} delay={idx * 0.1}>
-                <ProductCard product={product} />
-              </ScrollReveal>
-            ))}
-          </div>
-        ) : (
-          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-            <p className="text-lg">Aucun produit disponible pour le moment</p>
-          </div>
-        )}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+          {products.map((product, index) => (
+            <ScrollReveal key={product.id} delay={index * 0.05}>
+              <ProductCard product={product} />
+            </ScrollReveal>
+          ))}
+        </div>
+
+        <div className="sm:hidden mt-8 flex items-center justify-center">
+          <button
+            onClick={() => navigateTo('category', { category: 'makeup' })}
+            className="flex items-center gap-1.5 text-sm font-medium hover:opacity-70 transition-colors"
+            style={{ color: '#bc8752' }}
+          >
+            Voir Tout
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
       </div>
     </section>
   );

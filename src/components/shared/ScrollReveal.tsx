@@ -1,62 +1,48 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { motion, useInView, useAnimation } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 
 interface ScrollRevealProps {
   children: React.ReactNode;
   className?: string;
+  direction?: 'up' | 'down' | 'left' | 'right' | 'none';
   delay?: number;
-  direction?: 'up' | 'down' | 'left' | 'right';
   duration?: number;
+  once?: boolean;
 }
 
-export default function ScrollReveal({
+export function ScrollReveal({
   children,
   className = '',
-  delay = 0,
   direction = 'up',
+  delay = 0,
   duration = 0.5,
+  once = true,
 }: ScrollRevealProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-50px' });
-  const controls = useAnimation();
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once, margin: '-50px' });
 
-  const directionOffset = {
+  const directionMap = {
     up: { y: 40, x: 0 },
     down: { y: -40, x: 0 },
-    left: { x: 40, y: 0 },
-    right: { x: -40, y: 0 },
+    left: { y: 0, x: 40 },
+    right: { y: 0, x: -40 },
+    none: { y: 0, x: 0 },
   };
 
-  useEffect(() => {
-    if (isInView) {
-      controls.start('visible');
-    }
-  }, [isInView, controls]);
+  const { x, y } = directionMap[direction];
 
   return (
     <motion.div
       ref={ref}
       className={className}
-      initial="hidden"
-      animate={controls}
-      variants={{
-        hidden: {
-          opacity: 0,
-          x: directionOffset[direction].x,
-          y: directionOffset[direction].y,
-        },
-        visible: {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          transition: {
-            duration,
-            delay,
-            ease: 'easeOut',
-          },
-        },
+      initial={{ opacity: 0, x, y }}
+      animate={isInView ? { opacity: 1, x: 0, y: 0 } : { opacity: 0, x, y }}
+      transition={{
+        duration,
+        delay,
+        ease: [0.25, 0.46, 0.45, 0.94],
       }}
     >
       {children}

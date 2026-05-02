@@ -1,7 +1,10 @@
 'use client';
 
-import { X, Minus, Plus, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
+import { ShoppingBag, X, Minus, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Sheet,
   SheetContent,
@@ -9,160 +12,173 @@ import {
   SheetTitle,
   SheetFooter,
 } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useCartStore } from '@/store/use-cart-store';
 import { useStore } from '@/store/use-store';
 
-interface CartSlidePanelProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+export default function CartSlidePanel() {
+  const items = useCartStore((s) => s.items);
+  const isCartOpen = useCartStore((s) => s.isCartOpen);
+  const setCartOpen = useCartStore((s) => s.setCartOpen);
+  const updateQuantity = useCartStore((s) => s.updateQuantity);
+  const removeItem = useCartStore((s) => s.removeItem);
+  const getTotal = useCartStore((s) => s.getTotal);
+  const getItemCount = useCartStore((s) => s.getItemCount);
+  const navigateTo = useStore((s) => s.navigateTo);
 
-export default function CartSlidePanel({ open, onOpenChange }: CartSlidePanelProps) {
-  const { items, removeItem, updateQuantity, getTotal, getItemCount, clearCart } =
-    useCartStore();
-  const { navigateTo, setCartOpen } = useStore();
-
-  const total = getTotal();
   const itemCount = getItemCount();
+  const subtotal = getTotal();
 
   const handleCheckout = () => {
-    onOpenChange(false);
+    setCartOpen(false);
     navigateTo('checkout');
   };
 
-  const handleContinueShopping = () => {
-    onOpenChange(false);
-  };
-
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="flex w-full flex-col sm:max-w-md">
-        <SheetHeader>
-          <SheetTitle className="flex items-center gap-2 text-lg font-semibold">
-            <ShoppingBag className="h-5 w-5" style={{ color: '#bc8752' }} />
-            Mon Panier ({itemCount})
+    <Sheet open={isCartOpen} onOpenChange={(open) => setCartOpen(open)}>
+      <SheetContent side="right" className="w-full sm:max-w-md flex flex-col p-0">
+        {/* Header */}
+        <SheetHeader className="px-6 py-4 border-b border-border flex-shrink-0">
+          <SheetTitle className="font-heading text-lg font-semibold text-foreground">
+            Panier ({itemCount} {itemCount === 1 ? 'article' : 'articles'})
           </SheetTitle>
         </SheetHeader>
 
         {items.length === 0 ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4">
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gray-100">
-              <ShoppingBag className="h-10 w-10 text-gray-300" />
+          /* Empty Cart State */
+          <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
+            <div className="w-20 h-20 rounded-full bg-secondary flex items-center justify-center mb-6">
+              <ShoppingBag className="size-8 text-muted-foreground" />
             </div>
-            <p className="text-center text-gray-500">Votre panier est vide</p>
+            <h3 className="font-heading font-semibold text-lg text-foreground mb-2">
+              Votre panier est vide
+            </h3>
+            <p className="text-sm text-muted-foreground text-center mb-6">
+              Vous n'avez pas encore ajouté d'articles à votre panier.
+            </p>
             <Button
-              className="text-white font-medium"
+              onClick={() => setCartOpen(false)}
+              className="w-full rounded-full px-6 h-11 font-semibold text-white hover:opacity-90"
               style={{ backgroundColor: '#bc8752' }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#a07040')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#bc8752')}
-              onClick={handleContinueShopping}
             >
-              Continuer mes achats
+              Commencer vos achats
             </Button>
           </div>
         ) : (
           <>
-            <ScrollArea className="flex-1 px-4">
-              <div className="flex flex-col gap-4 pb-4">
-                {items.map((item: any) => (
-                  <div key={item.id} className="flex gap-4">
-                    <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                      <Image
-                        src={item.image || '/placeholder.jpg'}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="flex flex-1 flex-col justify-between">
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-900 line-clamp-1">
-                          {item.name}
-                        </h4>
-                        <p className="text-sm font-semibold text-gray-700 mt-0.5">
-                          {item.price?.toFixed(2)} €
+            {/* Cart Items */}
+            <ScrollArea className="flex-1">
+              <div className="px-6 py-4 space-y-0">
+                {items.map((item, index) => (
+                  <div key={item.product.id}>
+                    <div className="flex gap-4 py-4">
+                      {/* Product Image */}
+                      <button
+                        onClick={() => {
+                          setCartOpen(false);
+                          navigateTo('product', { product: item.product });
+                        }}
+                        className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-secondary"
+                      >
+                        <Image
+                          src={item.product.image}
+                          alt={item.product.name}
+                          width={80}
+                          height={80}
+                          unoptimized
+                          className="w-full h-full object-cover hover:scale-105 transition-transform"
+                        />
+                      </button>
+
+                      {/* Product Details */}
+                      <div className="flex-1 min-w-0">
+                        <button
+                          onClick={() => {
+                            setCartOpen(false);
+                            navigateTo('product', { product: item.product });
+                          }}
+                          className="text-left"
+                        >
+                          <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+                            {item.product.brand}
+                          </p>
+                          <p className="text-sm font-medium text-foreground truncate mt-0.5">
+                            {item.product.name}
+                          </p>
+                        </button>
+                        <p className="text-sm font-semibold text-foreground mt-1">
+                          {item.product.price.toFixed(2)}€
                         </p>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-1">
+
+                        {/* Quantity Controls */}
+                        <div className="flex items-center justify-between mt-2">
+                          <div className="flex items-center border border-border rounded-full">
+                            <button
+                              onClick={() =>
+                                updateQuantity(item.product.id, item.quantity - 1)
+                              }
+                              className="size-7 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                              aria-label="Decrease quantity"
+                            >
+                              <Minus className="size-3" />
+                            </button>
+                            <span className="w-8 text-center text-sm font-medium">
+                              {item.quantity}
+                            </span>
+                            <button
+                              onClick={() =>
+                                updateQuantity(item.product.id, item.quantity + 1)
+                              }
+                              className="size-7 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+                              aria-label="Increase quantity"
+                            >
+                              <Plus className="size-3" />
+                            </button>
+                          </div>
+
+                          {/* Remove Button */}
                           <button
-                            className="flex h-7 w-7 items-center justify-center rounded-md border border-gray-200 text-gray-600 hover:border-[#bc8752] hover:text-[#bc8752] transition-colors"
-                            onClick={() =>
-                              item.quantity > 1
-                                ? updateQuantity(item.id, item.quantity - 1)
-                                : removeItem(item.id)
-                            }
+                            onClick={() => removeItem(item.product.id)}
+                            className="size-7 flex items-center justify-center text-muted-foreground hover:text-destructive transition-colors rounded-full hover:bg-secondary"
+                            aria-label="Remove item"
                           >
-                            <Minus className="h-3 w-3" />
-                          </button>
-                          <span className="w-8 text-center text-sm font-medium">
-                            {item.quantity}
-                          </span>
-                          <button
-                            className="flex h-7 w-7 items-center justify-center rounded-md border border-gray-200 text-gray-600 hover:border-[#bc8752] hover:text-[#bc8752] transition-colors"
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          >
-                            <Plus className="h-3 w-3" />
+                            <X className="size-4" />
                           </button>
                         </div>
-                        <button
-                          className="text-gray-400 hover:text-red-500 transition-colors"
-                          onClick={() => removeItem(item.id)}
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
                       </div>
                     </div>
+                    {index < items.length - 1 && (
+                      <Separator className="bg-border" />
+                    )}
                   </div>
                 ))}
               </div>
             </ScrollArea>
 
-            <SheetFooter className="border-t bg-white px-4 py-4">
-              <div className="w-full space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">Sous-total</span>
-                  <span className="text-sm font-semibold">{total.toFixed(2)} €</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-500">Livraison</span>
-                  <span className="text-sm font-semibold text-green-600">Gratuite</span>
-                </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                  <span className="text-base font-bold">Total</span>
-                  <span className="text-base font-bold">{total.toFixed(2)} €</span>
-                </div>
-                <Button
-                  className="w-full text-white font-semibold py-5"
-                  style={{ backgroundColor: '#bc8752' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#a07040')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#bc8752')}
-                  onClick={handleCheckout}
-                  size="lg"
-                >
-                  Passer à la caisse
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full font-medium"
-                  style={{ borderColor: '#bc8752', color: '#bc8752' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#bc8752';
-                    e.currentTarget.style.color = 'white';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = '#bc8752';
-                  }}
-                  onClick={handleContinueShopping}
-                >
-                  Continuer mes achats
-                </Button>
+            {/* Footer */}
+            <SheetFooter className="border-t border-border px-6 py-4 flex-col gap-3 flex-shrink-0">
+              <div className="flex items-center justify-between w-full">
+                <span className="text-sm text-muted-foreground">Sous-total</span>
+                <span className="text-lg font-heading font-semibold text-foreground">
+                  {subtotal.toFixed(2)}€
+                </span>
               </div>
+              <p className="text-xs text-muted-foreground">
+                Frais de port et taxes calculés à la validation
+              </p>
+              <Button
+                onClick={handleCheckout}
+                className="w-full rounded-full h-11 font-semibold text-white hover:opacity-90"
+                style={{ backgroundColor: '#bc8752' }}
+              >
+                Valider la commande
+              </Button>
+              <Button
+                variant="ghost"
+                className="w-full text-sm text-muted-foreground hover:text-foreground"
+                onClick={() => setCartOpen(false)}
+              >
+                Continuer les achats
+              </Button>
             </SheetFooter>
           </>
         )}

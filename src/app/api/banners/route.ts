@@ -1,51 +1,109 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 
+// ============================================================
+// GET /api/banners — List all banners (optionally filtered by type)
+// ============================================================
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const type = searchParams.get('type') || '';
-    const activeOnly = searchParams.get('active') !== 'false';
-
-    const where: Record<string, unknown> = {};
-    if (type) where.type = type;
-    if (activeOnly) where.isActive = true;
+    const type = searchParams.get('type');
 
     const banners = await db.banner.findMany({
-      where: Object.keys(where).length > 0 ? where : undefined,
-      orderBy: { sortOrder: 'asc' },
+      where: type ? { type } : undefined,
+      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }],
     });
 
-    return NextResponse.json({ banners });
+    return NextResponse.json({ success: true, banners });
   } catch (error) {
-    console.error('Error fetching banners:', error);
-    return NextResponse.json({ error: 'Failed to fetch banners' }, { status: 500 });
+    console.error('Banners list error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch banners' },
+      { status: 500 }
+    );
   }
 }
+
+// ============================================================
+// POST /api/banners — Create a new banner
+// ============================================================
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const { type, title, subtitle, cta, image, link, sortOrder, isActive, promoProductIds, promoStartDate, promoEndDate } = body;
+
+    if (!type || !['hero', 'offer', 'promo'].includes(type)) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid banner type. Must be "hero", "offer", or "promo".' },
+        { status: 400 }
+      );
+    }
 
     const banner = await db.banner.create({
       data: {
-        type: body.type || 'hero',
-        title: body.title,
-        subtitle: body.subtitle,
-        cta: body.cta,
-        image: body.image,
-        link: body.link,
-        sortOrder: body.sortOrder || 0,
-        isActive: body.isActive !== undefined ? body.isActive : true,
-        promoProductIds: body.promoProductIds || '[]',
-        promoStartDate: body.promoStartDate ? new Date(body.promoStartDate) : null,
-        promoEndDate: body.promoEndDate ? new Date(body.promoEndDate) : null,
+        type,
+        title: title || '',
+        subtitle: subtitle || '',
+        cta: cta || '',
+        image: image || '',
+        link: link || '',
+        sortOrder: typeof sortOrder === 'number' ? sortOrder : 0,
+        isActive: typeof isActive === 'boolean' ? isActive : true,
+        ...(promoProductIds !== undefined && { promoProductIds: promoProductIds || '' }),
+        ...(promoStartDate !== undefined && promoStartDate ? { promoStartDate: new Date(promoStartDate) } : {}),
+        ...(promoEndDate !== undefined && promoEndDate ? { promoEndDate: new Date(promoEndDate) } : {}),
       },
     });
 
-    return NextResponse.json({ banner }, { status: 201 });
+    return NextResponse.json({ success: true, banner });
   } catch (error) {
-    console.error('Error creating banner:', error);
-    return NextResponse.json({ error: 'Failed to create banner' }, { status: 500 });
+    console.error('Banner create error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to create banner' },
+      { status: 500 }
+    );
+  }
+}
+
+// ============================================================
+// PUT /api/banners — Bulk update or reorder (optional)
+// ============================================================
+
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { orders } = body; // [{id, sortOrder, isActive, ...}]
+
+    if (!Array.isArray(orders)) {
+      return NextResponse.json(
+        { success: false, error: 'Expected "orders" array' },
+        { status: 400 }
+      );
+    }
+
+    for (const item of orders) {
+      await db.banner.update({
+        where: { id: item.id },
+        data: {
+          ...(item.sortOrder !== undefined && { sortOrder: item.sortOrder }),
+          ...(item.isActive !== undefined && { isActive: item.isActive }),
+          ...(item.promoProductIds !== undefined && { promoProductIds: item.promoProductIds || '' }),
+          ...(item.promoStartDate !== undefined && item.promoStartDate ? { promoStartDate: new Date(item.promoStartDate) } : {}),
+          ...(item.promoEndDate !== undefined && item.promoEndDate ? { promoEndDate: new Date(item.promoEndDate) } : {}),
+          ...((item.promoStartDate === null) && { promoStartDate: null }),
+          ...((item.promoEndDate === null) && { promoEndDate: null }),
+        },
+      });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Banners bulk update error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to update banners' },
+      { status: 500 }
+    );
   }
 }

@@ -1,231 +1,160 @@
 'use client';
 
-import { useState } from 'react';
-import {
-  X,
-  Home,
-  ShoppingBag,
-  User,
-  Package,
-  Heart,
-  HelpCircle,
-  Phone,
-  ChevronDown,
-  ChevronRight,
-  Truck,
-  RotateCcw,
-  FileText,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+import { Search, User, Heart, ShoppingBag, ChevronRight } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { useStore } from '@/store/use-store';
-import { useCartStore } from '@/store/use-cart-store';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import { categories } from '@/data/products';
+import { useCartStore } from '@/store/use-cart-store';
+import { useStore } from '@/store/use-store';
 
 interface MobileMenuProps {
   open: boolean;
   onClose: () => void;
 }
 
-export default function MobileMenu({ open, onClose }: MobileMenuProps) {
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  const { navigateTo, currentUser } = useStore();
-  const { getItemCount } = useCartStore();
+const menuLinks = [
+  { label: 'Boutique', icon: ChevronRight, page: 'category' as const, data: { category: 'boutique' } },
+  { label: 'Espace Client', icon: ChevronRight, page: 'espace-client' as const },
+  { label: 'Contact', icon: ChevronRight, page: 'contact-page' as const },
+];
 
-  const toggleCategory = (slug: string) => {
-    setExpandedCategory(expandedCategory === slug ? null : slug);
-  };
+export default function MobileMenu({ open, onClose }: MobileMenuProps) {
+  const navigateTo = useStore((s) => s.navigateTo);
+  const setCartOpen = useCartStore((s) => s.setCartOpen);
+  const getItemCount = useCartStore((s) => s.getItemCount);
+  const itemCount = getItemCount();
 
   const handleNavigate = (page: string, data?: any) => {
+    if (page === 'espace-client') {
+      onClose();
+      // Dispatch custom event to open login dialog
+      window.dispatchEvent(new CustomEvent('open-login-dialog'));
+      return;
+    }
     navigateTo(page as any, data);
     onClose();
   };
 
-  const menuItems = [
-    { icon: Home, label: 'Accueil', action: () => handleNavigate('home') },
-    { icon: ShoppingBag, label: 'Boutique', action: () => handleNavigate('category', { slug: 'all', name: 'Boutique' }) },
-    { icon: Heart, label: 'Favoris', action: () => handleNavigate('home') },
-    { icon: Package, label: 'Mes commandes', action: () => handleNavigate('orders') },
-    { icon: User, label: 'Mon compte', action: () => handleNavigate('account') },
-  ];
-
-  const helpItems = [
-    { icon: Truck, label: 'Livraison', action: () => handleNavigate('page', 'shipping') },
-    { icon: RotateCcw, label: 'Retours', action: () => handleNavigate('page', 'returns') },
-    { icon: FileText, label: 'CGV', action: () => handleNavigate('page', 'cgv') },
-    { icon: HelpCircle, label: 'FAQ', action: () => handleNavigate('page', 'faq') },
-    { icon: Phone, label: 'Contact', action: () => handleNavigate('page', 'contact') },
-  ];
+  const handleOpenCart = () => {
+    onClose();
+    setTimeout(() => setCartOpen(true), 200);
+  };
 
   return (
-    <AnimatePresence>
-      {open && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/50"
-            onClick={onClose}
-          />
-          <motion.div
-            initial={{ x: '-100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '-100%' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed left-0 top-0 bottom-0 z-50 w-[85%] max-w-sm bg-white overflow-y-auto"
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-100">
-              <h2 className="text-lg font-bold" style={{ color: '#bc8752' }}>
-                CHIC GLAM
-              </h2>
+    <Sheet open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <SheetContent side="left" className="w-full sm:max-w-sm flex flex-col p-0">
+        {/* Header */}
+        <SheetHeader className="px-6 py-4 border-b border-border flex-shrink-0">
+          <SheetTitle className="font-heading font-bold text-xl tracking-tight text-foreground">
+            CHIC GLAM BY EVA
+          </SheetTitle>
+        </SheetHeader>
+
+        <ScrollArea className="flex-1">
+          {/* Search */}
+          <div className="px-6 py-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+              <Input
+                type="text"
+                placeholder="Rechercher des produits..."
+                className="pl-9 h-10 rounded-full bg-secondary border-0 focus-visible:ring-1 focus-visible:ring-ring text-sm"
+              />
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Categories */}
+          <div className="px-6 py-4">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+              Catégories
+            </h3>
+            <div className="space-y-1">
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() =>
+                    handleNavigate('category', { category: category.slug })
+                  }
+                  className="flex items-center justify-between w-full py-2.5 px-3 rounded-lg text-sm font-medium text-foreground hover:bg-secondary transition-colors"
+                >
+                  <span>{category.name}</span>
+                  <ChevronRight className="size-4 text-muted-foreground" />
+                </button>
+              ))}
               <button
-                onClick={onClose}
-                className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
+                onClick={() =>
+                  handleNavigate('category', { category: 'offers' })
+                }
+                className="flex items-center justify-between w-full py-2.5 px-3 rounded-lg text-sm font-medium text-promo hover:bg-secondary transition-colors"
               >
-                <X className="h-5 w-5" />
+                <span>Offres</span>
+                <ChevronRight className="size-4" />
               </button>
             </div>
+          </div>
 
-            {/* User info */}
-            {currentUser ? (
-              <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
-                <p className="text-sm font-medium text-gray-900">{currentUser.name}</p>
-                <p className="text-xs text-gray-500">{currentUser.email}</p>
-              </div>
-            ) : (
-              <div className="px-4 py-3 border-b border-gray-100">
-                <Button
-                  className="w-full text-white text-sm"
-                  style={{ backgroundColor: '#bc8752' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#a07040')}
-                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#bc8752')}
-                  onClick={() => handleNavigate('login')}
+          <Separator />
+
+          {/* Quick Links */}
+          <div className="px-6 py-4">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+              Liens rapides
+            </h3>
+            <div className="space-y-1">
+              {menuLinks.map((link) => (
+                <button
+                  key={link.label}
+                  onClick={() => handleNavigate(link.page, link.data)}
+                  className="flex items-center justify-between w-full py-2.5 px-3 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors"
                 >
-                  Se connecter / S&apos;inscrire
-                </Button>
-              </div>
-            )}
-
-            {/* Main menu */}
-            <div className="p-4">
-              <div className="space-y-1">
-                {menuItems.map((item) => (
-                  <button
-                    key={item.label}
-                    onClick={item.action}
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-[#bc8752] transition-colors"
-                  >
-                    <item.icon className="h-5 w-5" />
-                    <span>{item.label}</span>
-                    {item.label === 'Mon compte' && (
-                      <span className="ml-auto rounded-full px-2 py-0.5 bg-[#bc8752] text-white text-xs">
-                        0
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
+                  <span>{link.label}</span>
+                  <link.icon className="size-4 text-muted-foreground" />
+                </button>
+              ))}
             </div>
+          </div>
 
-            <Separator />
+          <Separator />
 
-            {/* Categories */}
-            <div className="p-4">
-              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                Catégories
-              </h3>
-              <div className="space-y-1">
-                {categories.map((cat: any) => (
-                  <div key={cat.id || cat.slug}>
-                    <button
-                      onClick={() => {
-                        if (cat.subcategories?.length) {
-                          toggleCategory(cat.slug);
-                        } else {
-                          handleNavigate('category', { slug: cat.slug, name: cat.name });
-                        }
-                      }}
-                      className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#bc8752] transition-colors"
-                    >
-                      <span>{cat.name}</span>
-                      {cat.subcategories?.length ? (
-                        expandedCategory === cat.slug ? (
-                          <ChevronDown className="h-4 w-4" />
-                        ) : (
-                          <ChevronRight className="h-4 w-4" />
-                        )
-                      ) : null}
-                    </button>
-                    <AnimatePresence>
-                      {expandedCategory === cat.slug && cat.subcategories && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="overflow-hidden ml-4"
-                        >
-                          {cat.subcategories.map((sub: any, idx: number) => (
-                            <button
-                              key={idx}
-                              onClick={() =>
-                                handleNavigate('category', {
-                                  slug: cat.slug,
-                                  name: sub.name,
-                                  subcategory: sub.slug,
-                                })
-                              }
-                              className="flex w-full items-center px-3 py-2 text-sm text-gray-500 hover:text-[#bc8752] transition-colors"
-                            >
-                              {sub.name}
-                            </button>
-                          ))}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Help */}
-            <div className="p-4">
-              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                Aide
-              </h3>
-              <div className="space-y-1">
-                {helpItems.map((item) => (
-                  <button
-                    key={item.label}
-                    onClick={item.action}
-                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#bc8752] transition-colors"
-                  >
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="p-4 mt-4">
-              <Button
-                className="w-full text-white font-medium"
-                style={{ backgroundColor: '#bc8752' }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#a07040')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#bc8752')}
-                onClick={() => handleNavigate('category', { slug: 'all', name: 'Boutique' })}
+          {/* Account Actions */}
+          <div className="px-6 py-4">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">
+              Compte
+            </h3>
+            <div className="space-y-1">
+              <button className="flex items-center gap-3 w-full py-2.5 px-3 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
+                <User className="size-4 text-muted-foreground" />
+                <span>Mon Compte</span>
+              </button>
+              <button className="flex items-center gap-3 w-full py-2.5 px-3 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors">
+                <Heart className="size-4 text-muted-foreground" />
+                <span>Favoris</span>
+              </button>
+              <button
+                onClick={handleOpenCart}
+                className="flex items-center gap-3 w-full py-2.5 px-3 rounded-lg text-sm text-foreground hover:bg-secondary transition-colors"
               >
-                <ShoppingBag className="h-4 w-4 mr-2" />
-                Explorer la boutique
-              </Button>
+                <ShoppingBag className="size-4 text-muted-foreground" />
+                <span>Panier</span>
+                {itemCount > 0 && (
+                  <span className="ml-auto text-xs font-medium bg-luxury text-luxury-foreground px-2 py-0.5 rounded-full">
+                    {itemCount}
+                  </span>
+                )}
+              </button>
             </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+          </div>
+        </ScrollArea>
+      </SheetContent>
+    </Sheet>
   );
 }

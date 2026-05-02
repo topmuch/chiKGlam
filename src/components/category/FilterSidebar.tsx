@@ -1,215 +1,309 @@
 'use client';
 
-import { useState } from 'react';
-import { ChevronDown, ChevronRight, Star, SlidersHorizontal } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Star, X } from 'lucide-react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Slider } from '@/components/ui/slider';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { brands, categories } from '@/data/products';
+import { cn } from '@/lib/utils';
 
-interface FilterSidebarProps {
-  onFilterChange?: (filters: any) => void;
-  categories?: { name: string; slug: string; count?: number }[];
-  priceRange?: [number, number];
+export interface FilterState {
+  priceRange: [number, number];
+  brands: string[];
+  categories: string[];
+  concerns: string[];
+  rating: number | null;
+  sortBy: string;
 }
 
-export default function FilterSidebar({
+export const defaultFilterState: FilterState = {
+  priceRange: [0, 200],
+  brands: [],
+  categories: [],
+  concerns: [],
+  rating: null,
+  sortBy: 'featured',
+};
+
+const skinConcerns = [
+  'Acne',
+  'Aging',
+  'Dryness',
+  'Dark Spots',
+  'Sensitivity',
+  'Oiliness',
+];
+
+interface FilterSidebarProps {
+  filters: FilterState;
+  onFilterChange: (filters: FilterState) => void;
+  onReset: () => void;
+}
+
+function FilterSidebarContent({
+  filters,
   onFilterChange,
-  categories = [],
-  priceRange = [0, 200],
+  onReset,
 }: FilterSidebarProps) {
-  const [priceMin, setPriceMin] = useState(priceRange[0]);
-  const [priceMax, setPriceMax] = useState(priceRange[1]);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
-  const [expandedSections, setExpandedSections] = useState({
-    categories: true,
-    price: true,
-    rating: true,
-  });
+  const hasActiveFilters =
+    filters.priceRange[0] > 0 ||
+    filters.priceRange[1] < 200 ||
+    filters.brands.length > 0 ||
+    filters.categories.length > 0 ||
+    filters.concerns.length > 0 ||
+    filters.rating !== null;
 
-  const defaultCategories = categories.length > 0
-    ? categories
-    : [
-        { name: 'Maquillage', slug: 'maquillage', count: 42 },
-        { name: 'Soin Visage', slug: 'soin-visage', count: 38 },
-        { name: 'Soin Corps', slug: 'soin-corps', count: 25 },
-        { name: 'Parfums', slug: 'parfums', count: 18 },
-        { name: 'Cheveux', slug: 'cheveux', count: 22 },
-        { name: 'Accessoires', slug: 'accessoires', count: 15 },
-      ];
-
-  const toggleSection = (section: keyof typeof expandedSections) => {
-    setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
+  const toggleBrand = (brand: string) => {
+    const updated = filters.brands.includes(brand)
+      ? filters.brands.filter((b) => b !== brand)
+      : [...filters.brands, brand];
+    onFilterChange({ ...filters, brands: updated });
   };
 
-  const toggleCategory = (slug: string) => {
-    const newCategories = selectedCategories.includes(slug)
-      ? selectedCategories.filter((c) => c !== slug)
-      : [...selectedCategories, slug];
-    setSelectedCategories(newCategories);
-    onFilterChange?.({ categories: newCategories, price: [priceMin, priceMax], ratings: selectedRatings });
+  const toggleCategory = (category: string) => {
+    const updated = filters.categories.includes(category)
+      ? filters.categories.filter((c) => c !== category)
+      : [...filters.categories, category];
+    onFilterChange({ ...filters, categories: updated });
   };
 
-  const toggleRating = (rating: number) => {
-    const newRatings = selectedRatings.includes(rating)
-      ? selectedRatings.filter((r) => r !== rating)
-      : [...selectedRatings, rating];
-    setSelectedRatings(newRatings);
-    onFilterChange?.({ categories: selectedCategories, price: [priceMin, priceMax], ratings: newRatings });
+  const toggleConcern = (concern: string) => {
+    const updated = filters.concerns.includes(concern)
+      ? filters.concerns.filter((c) => c !== concern)
+      : [...filters.concerns, concern];
+    onFilterChange({ ...filters, concerns: updated });
   };
 
-  const clearFilters = () => {
-    setPriceMin(priceRange[0]);
-    setPriceMax(priceRange[1]);
-    setSelectedCategories([]);
-    setSelectedRatings([]);
-    onFilterChange?.({ categories: [], price: priceRange, ratings: [] });
+  const setRating = (rating: number | null) => {
+    onFilterChange({ ...filters, rating: filters.rating === rating ? null : rating });
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-          <SlidersHorizontal className="h-5 w-5" style={{ color: '#bc8752' }} />
+    <div className="space-y-2">
+      {/* Header */}
+      <div className="flex items-center justify-between pb-2">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-foreground font-heading">
           Filtres
-        </h3>
-        <button
-          onClick={clearFilters}
-          className="text-xs font-medium text-[#bc8752] hover:text-[#a07040] transition-colors"
-        >
-          Réinitialiser
-        </button>
+        </h2>
+        {hasActiveFilters && (
+          <button
+            onClick={onReset}
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+          >
+            <X className="size-3" />
+            Tout effacer
+          </button>
+        )}
       </div>
 
-      <Separator />
-
-      {/* Categories */}
-      <div>
-        <button
-          onClick={() => toggleSection('categories')}
-          className="flex w-full items-center justify-between py-2 text-sm font-semibold text-gray-900"
-        >
-          Catégories
-          {expandedSections.categories ? (
-            <ChevronDown className="h-4 w-4" />
-          ) : (
-            <ChevronRight className="h-4 w-4" />
-          )}
-        </button>
-        {expandedSections.categories && (
-          <div className="mt-2 space-y-2">
-            {defaultCategories.map((cat) => (
-              <label
-                key={cat.slug}
-                className="flex items-center gap-2 cursor-pointer group"
-              >
-                <Checkbox
-                  checked={selectedCategories.includes(cat.slug)}
-                  onCheckedChange={() => toggleCategory(cat.slug)}
-                  className="data-[state=checked]:bg-[#bc8752] data-[state=checked]:border-[#bc8752]"
-                />
-                <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors flex-1">
-                  {cat.name}
+      <Accordion
+        type="multiple"
+        defaultValue={['price', 'brand', 'category', 'concerns', 'rating']}
+        className="w-full"
+      >
+        {/* Price Range */}
+        <AccordionItem value="price">
+          <AccordionTrigger className="text-xs font-semibold uppercase tracking-wider py-3">
+            Gamme de prix
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-4 px-1">
+              <Slider
+                value={filters.priceRange}
+                onValueChange={(value) =>
+                  onFilterChange({
+                    ...filters,
+                    priceRange: value as [number, number],
+                  })
+                }
+                min={0}
+                max={200}
+                step={5}
+                className="w-full"
+              />
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground bg-muted px-2 py-1 rounded text-xs font-medium">
+                  {filters.priceRange[0]}€
                 </span>
-                {cat.count !== undefined && (
-                  <span className="text-xs text-gray-400">({cat.count})</span>
-                )}
-              </label>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <Separator />
-
-      {/* Price Range */}
-      <div>
-        <button
-          onClick={() => toggleSection('price')}
-          className="flex w-full items-center justify-between py-2 text-sm font-semibold text-gray-900"
-        >
-          Prix
-          {expandedSections.price ? (
-            <ChevronDown className="h-4 w-4" />
-          ) : (
-            <ChevronRight className="h-4 w-4" />
-          )}
-        </button>
-        {expandedSections.price && (
-          <div className="mt-3">
-            <Slider
-              min={priceRange[0]}
-              max={priceRange[1]}
-              step={5}
-              value={[priceMin, priceMax]}
-              onValueChange={(value) => {
-                setPriceMin(value[0]);
-                setPriceMax(value[1]);
-                onFilterChange?.({
-                  categories: selectedCategories,
-                  price: value as [number, number],
-                  ratings: selectedRatings,
-                });
-              }}
-              className="[&_[role=slider]]:bg-[#bc8752] [&_[role=slider]]:border-[#bc8752] [&>.bg-primary]:bg-[#bc8752]"
-            />
-            <div className="mt-2 flex items-center justify-between">
-              <span className="text-sm text-gray-500">{priceMin} €</span>
-              <span className="text-sm text-gray-500">{priceMax} €</span>
+                <span className="text-muted-foreground">—</span>
+                <span className="text-muted-foreground bg-muted px-2 py-1 rounded text-xs font-medium">
+                  {filters.priceRange[1]}€
+                </span>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          </AccordionContent>
+        </AccordionItem>
 
-      <Separator />
-
-      {/* Rating */}
-      <div>
-        <button
-          onClick={() => toggleSection('rating')}
-          className="flex w-full items-center justify-between py-2 text-sm font-semibold text-gray-900"
-        >
-          Note
-          {expandedSections.rating ? (
-            <ChevronDown className="h-4 w-4" />
-          ) : (
-            <ChevronRight className="h-4 w-4" />
-          )}
-        </button>
-        {expandedSections.rating && (
-          <div className="mt-2 space-y-2">
-            {[4, 3, 2, 1].map((rating) => (
-              <label
-                key={rating}
-                className="flex items-center gap-2 cursor-pointer group"
-              >
-                <Checkbox
-                  checked={selectedRatings.includes(rating)}
-                  onCheckedChange={() => toggleRating(rating)}
-                  className="data-[state=checked]:bg-[#bc8752] data-[state=checked]:border-[#bc8752]"
-                />
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: 5 }, (_, i) => (
-                    <Star
-                      key={i}
-                      size={14}
-                      className={
-                        i < rating
-                          ? 'fill-[#bc8752] text-[#bc8752]'
-                          : 'fill-gray-200 text-gray-200'
-                      }
-                    />
-                  ))}
-                  <span className="ml-1 text-xs text-gray-400">& plus</span>
+        {/* Brand - only show if brands exist */}
+        {brands.length > 0 && (
+        <AccordionItem value="brand">
+          <AccordionTrigger className="text-xs font-semibold uppercase tracking-wider py-3">
+            Marque
+            {filters.brands.length > 0 && (
+              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">
+                {filters.brands.length}
+              </Badge>
+            )}
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3 max-h-48 overflow-y-auto px-1">
+              {brands.map((brand) => (
+                <div key={brand} className="flex items-center gap-2.5">
+                  <Checkbox
+                    id={`brand-${brand}`}
+                    checked={filters.brands.includes(brand)}
+                    onCheckedChange={() => toggleBrand(brand)}
+                    className="size-4"
+                  />
+                  <Label
+                    htmlFor={`brand-${brand}`}
+                    className="text-sm text-foreground cursor-pointer font-normal hover:text-foreground/80 transition-colors"
+                  >
+                    {brand}
+                  </Label>
                 </div>
-              </label>
-            ))}
-          </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
         )}
-      </div>
+
+        {/* Category */}
+        <AccordionItem value="category">
+          <AccordionTrigger className="text-xs font-semibold uppercase tracking-wider py-3">
+            Catégorie
+            {filters.categories.length > 0 && (
+              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">
+                {filters.categories.length}
+              </Badge>
+            )}
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-3 px-1">
+              {categories.map((cat) => (
+                <div key={cat.id} className="flex items-center gap-2.5">
+                  <Checkbox
+                    id={`cat-${cat.id}`}
+                    checked={filters.categories.includes(cat.name)}
+                    onCheckedChange={() => toggleCategory(cat.name)}
+                    className="size-4"
+                  />
+                  <Label
+                    htmlFor={`cat-${cat.id}`}
+                    className="text-sm text-foreground cursor-pointer font-normal hover:text-foreground/80 transition-colors"
+                  >
+                    {cat.name}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Skin Concerns */}
+        <AccordionItem value="concerns">
+          <AccordionTrigger className="text-xs font-semibold uppercase tracking-wider py-3">
+            Préoccupations
+            {filters.concerns.length > 0 && (
+              <Badge variant="secondary" className="ml-2 text-[10px] px-1.5 py-0">
+                {filters.concerns.length}
+              </Badge>
+            )}
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="flex flex-wrap gap-2 px-1">
+              {skinConcerns.map((concern) => (
+                <button
+                  key={concern}
+                  onClick={() => toggleConcern(concern)}
+                  className={cn(
+                    'px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200',
+                    filters.concerns.includes(concern)
+                      ? 'bg-foreground text-background border-foreground'
+                      : 'bg-transparent text-foreground border-border hover:border-foreground/50'
+                  )}
+                >
+                  {concern}
+                </button>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Rating */}
+        <AccordionItem value="rating">
+          <AccordionTrigger className="text-xs font-semibold uppercase tracking-wider py-3">
+            Note
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-2 px-1">
+              {[4, 3, 2, 1].map((star) => (
+                <button
+                  key={star}
+                  onClick={() => setRating(star)}
+                  className={cn(
+                    'flex items-center gap-2 w-full px-2 py-1.5 rounded-md text-sm transition-colors',
+                    filters.rating === star
+                      ? 'bg-muted font-medium'
+                      : 'hover:bg-muted/50'
+                  )}
+                >
+                  <div className="flex items-center">
+                    {Array.from({ length: star }, (_, i) => (
+                      <Star
+                        key={i}
+                        size={14}
+                        className="text-amber-400 fill-amber-400"
+                      />
+                    ))}
+                    {Array.from({ length: 5 - star }, (_, i) => (
+                      <Star
+                        key={i}
+                        size={14}
+                        className="text-gray-200 fill-gray-200"
+                      />
+                    ))}
+                  </div>
+                  <span className="text-muted-foreground">et plus</span>
+                </button>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+
+      {/* Clear All Filters Button */}
+      {hasActiveFilters && (
+        <div className="pt-4 border-t mt-4">
+          <Button
+            onClick={onReset}
+            variant="outline"
+            className="w-full text-sm"
+          >
+            Tout effacer
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
+
+export function FilterSidebar(props: FilterSidebarProps) {
+  return (
+    <aside className="hidden lg:block w-64 shrink-0">
+      <div className="sticky top-24">
+        <FilterSidebarContent {...props} />
+      </div>
+    </aside>
+  );
+}
+
+export { FilterSidebarContent };
