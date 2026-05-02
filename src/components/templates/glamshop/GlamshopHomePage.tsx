@@ -4,7 +4,6 @@ import { useEffect, useRef } from 'react';
 import { Truck, RotateCcw, ShieldCheck, Star } from 'lucide-react';
 import { HeroSlider } from '@/components/home/HeroSlider';
 import { CategoriesGrid } from '@/components/home/CategoriesGrid';
-import { OffersBanner } from '@/components/home/OffersBanner';
 import { NewArrivals } from '@/components/home/NewArrivals';
 import { CustomerFeedback } from '@/components/home/CustomerFeedback';
 import { PromoDualBanner } from '@/components/home/PromoDualBanner';
@@ -130,15 +129,13 @@ export function GlamshopHomePage() {
       {/* 4. Categories (images same size as products) */}
       <CategoriesGrid />
       {/* NO TrendingProducts — removed per user request */}
-      {/* 5. Offers Banner */}
-      <OffersBanner />
-      {/* 6. Cosmétiques by Eva (4 products only) */}
+      {/* 5. Cosmétiques by Eva (4 products only) */}
       <NewArrivals />
-      {/* 7. Promotional Dual Banner */}
+      {/* 6. Promotional Dual Banner */}
       <PromoDualBanner />
-      {/* 8. Customer Feedback */}
+      {/* 7. Customer Feedback */}
       <CustomerFeedback />
-      {/* 9. Newsletter */}
+      {/* 8. Newsletter */}
       <NewsletterBanner />
     </main>
   );

@@ -28,7 +28,7 @@ const PROMO_PRODUCTS = [
 
 export function PromoDualBanner() {
   const navigateTo = useStore((s) => s.navigateTo);
-  const { isGold } = useTemplate();
+  const { isGold, isGlamshop } = useTemplate();
 
   return (
     <section className="py-8 md:py-16">
@@ -92,23 +92,23 @@ export function PromoDualBanner() {
               </div>
 
               {/* Right: Two product cards side by side */}
-              <div className="w-full lg:w-[55%] p-4 sm:p-6 lg:p-8 flex flex-col justify-center">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+              <div className={`w-full lg:w-[55%] p-4 sm:p-6 lg:p-8 flex flex-col justify-center ${isGlamshop ? 'p-6 sm:p-10 lg:p-12' : ''}`}>
+                <div className={`grid grid-cols-1 ${isGlamshop ? 'sm:grid-cols-2 gap-6 sm:gap-8' : 'sm:grid-cols-2 gap-4 sm:gap-5'}`}>
                   {PROMO_PRODUCTS.map((product, index) => (
                     <motion.div
                       key={product.id}
-                      className="flex flex-col h-full bg-white rounded-lg border border-border/60 p-3 sm:p-4 hover:shadow-md transition-shadow duration-300 group"
+                      className={`flex flex-col h-full bg-white rounded-lg border border-border/60 ${isGlamshop ? 'p-5 sm:p-6 hover:shadow-lg' : 'p-3 sm:p-4 hover:shadow-md'} transition-shadow duration-300 group`}
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: index * 0.15 }}
                     >
                       {/* Product image */}
-                      <div className="relative flex-shrink-0 aspect-square bg-[#F7F7F7] rounded-md overflow-hidden mb-3">
+                      <div className={`relative flex-shrink-0 bg-[#F7F7F7] rounded-md overflow-hidden mb-4 ${isGlamshop ? 'aspect-[4/5]' : 'aspect-square mb-3'}`}>
                         <img
                           src={product.image}
                           alt={product.name}
-                          className="w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                          className={`w-full h-full object-contain ${isGlamshop ? 'p-6 sm:p-8' : 'p-2'} group-hover:scale-105 transition-transform duration-500`}
                         />
                       </div>
 
@@ -137,7 +137,7 @@ export function PromoDualBanner() {
                           {/* ACHETER button */}
                           <button
                             onClick={() => navigateTo('product', { product })}
-                            className={`flex-shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold rounded transition-colors ${isGold ? 'bg-[#bc8752] text-white hover:bg-[#bc8752]/90' : 'bg-foreground text-background hover:bg-foreground/90'}`}
+                            className={`flex-shrink-0 px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-semibold rounded transition-colors ${(isGold || isGlamshop) ? 'bg-[#bc8752] text-white hover:bg-[#bc8752]/90' : 'bg-foreground text-background hover:bg-foreground/90'}`}
                           >
                             ACHETER
                           </button>
