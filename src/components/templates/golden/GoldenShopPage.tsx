@@ -264,12 +264,8 @@ export default function GoldenShopPage({ categorySlug }: GoldenShopPageProps) {
       ? categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1)
       : 'Tous les produits';
 
-  // Find category image for banner
-  const categoryIndex = categories.findIndex(
-    (c) => c.slug === categorySlug
-  );
-  const bannerImage =
-    categoryIndex >= 0 ? categories[categoryIndex].image : null;
+  // Find category banner image
+  const bannerImage = activeCategory?.banner || activeCategory?.image || null;
 
   // Filter & sort products
   const allFilteredProducts = useMemo(() => {

@@ -40,6 +40,7 @@ export interface Category {
   id: string;
   name: string;
   image: string;
+  banner?: string;
   slug: string;
   subcategories: { name: string; slug: string }[];
 }

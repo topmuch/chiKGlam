@@ -6,6 +6,7 @@ export const categories: Category[] = [
     name: 'MAKEUP',
     slug: 'makeup',
     image: '/images/categories/makeup.png',
+    banner: '/images/categories/makeup-banner.jpg',
     subcategories: [
       { slug: 'teint', name: 'Teint' },
       { slug: 'yeux', name: 'Yeux' },
@@ -17,6 +18,7 @@ export const categories: Category[] = [
     name: 'LINGERIE',
     slug: 'lingerie',
     image: '/images/categories/lingerie.png',
+    banner: '/images/categories/lingerie-banner.png',
     subcategories: [
       { slug: 'ensembles', name: 'Ensembles' },
       { slug: 'nuisettes', name: 'Nuisettes' },
@@ -30,6 +32,7 @@ export const categories: Category[] = [
     name: 'ACCESSOIRES',
     slug: 'accessoires',
     image: '/images/categories/accessoires.png',
+    banner: '/images/categories/accessoires-banner.jpg',
     subcategories: [
       { slug: 'cils', name: 'Cils' },
       { slug: 'pinceaux', name: 'Pinceaux' },
