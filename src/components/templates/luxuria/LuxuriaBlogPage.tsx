@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
@@ -37,6 +37,7 @@ const C = {
 interface BlogPost {
   id: string;
   title: string;
+  slug: string;
   excerpt: string;
   category: string;
   author: string;
@@ -45,9 +46,10 @@ interface BlogPost {
   image: string;
 }
 
-const blogPosts: BlogPost[] = [
+const defaultPosts: BlogPost[] = [
   {
     id: '1',
+    slug: 'teint-parfait-5-etapes',
     title: 'Comment obtenir un teint parfait en 5 étapes',
     excerpt:
       'Découvrez notre routine quotidienne pour un teint lumineux et sans défaut. Du nettoyage à la finition, chaque étape compte pour un résultat professionnel.',
@@ -59,6 +61,7 @@ const blogPosts: BlogPost[] = [
   },
   {
     id: '2',
+    slug: 'tendances-maquillage-saison',
     title: 'Les tendances maquillage de cette saison',
     excerpt:
       'Le nude lumineux, les yeux ambrés et les lèvres givrées dominent cette saison. Voici comment adapter ces tendances à votre style personnel.',
@@ -70,6 +73,7 @@ const blogPosts: BlogPost[] = [
   },
   {
     id: '3',
+    slug: 'guide-pinceaux-maquillage',
     title: 'Guide complet des pinceaux de maquillage',
     excerpt:
       'Quel pinceau utiliser pour chaque étape de votre maquillage ? Notre guide détaillé vous aide à constituer la trousse idéale.',
@@ -81,6 +85,7 @@ const blogPosts: BlogPost[] = [
   },
   {
     id: '4',
+    slug: 'soiree-glamour-routine',
     title: 'Soirée glamour : notre routine beauté',
     excerpt:
       'Préparez votre peau et sublimez votre maquillage pour une soirée inoubliable. Des produits indispensables aux techniques de pro.',
@@ -92,6 +97,7 @@ const blogPosts: BlogPost[] = [
   },
   {
     id: '5',
+    slug: 'soin-peau-hiver',
     title: 'Prendre soin de sa peau en hiver',
     excerpt:
       'Le froid, le vent et le chauffage assèchent votre peau. Adoptez nos conseils pour maintenir une hydratation optimale tout au long de l\'hiver.',
@@ -103,6 +109,7 @@ const blogPosts: BlogPost[] = [
   },
   {
     id: '6',
+    slug: 'must-have-trousse-maquillage',
     title: 'Les must-have de votre trousse à maquillage',
     excerpt:
       'Les 10 produits essentiels que chaque femme devrait posséder. Des bases indispensables aux touches de couleur qui font la différence.',
@@ -113,17 +120,6 @@ const blogPosts: BlogPost[] = [
     image: '/images/products/makeup/flawless-finish-concealer.jpeg',
   },
 ];
-
-const categories = [
-  { name: 'Conseils Beauté', count: 12 },
-  { name: 'Tutoriels', count: 8 },
-  { name: 'Tendances', count: 6 },
-  { name: 'Inspiration', count: 5 },
-  { name: 'Soins Peau', count: 9 },
-  { name: 'Bien-être', count: 4 },
-];
-
-const popularPosts = blogPosts.slice(0, 3);
 
 const categoryIcons: Record<string, React.ElementType> = {
   'Conseils Beauté': Sparkles,
@@ -137,6 +133,44 @@ export function LuxuriaBlogPage() {
   const navigateTo = useStore((s) => s.navigateTo);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(defaultPosts);
+  const [loading, setLoading] = useState(true);
+
+  // Derive categories and popular posts from API data
+  const dynamicCategories = blogPosts.length > 0
+    ? Array.from(new Set(blogPosts.map(p => p.category))).map(name => ({
+        name,
+        count: blogPosts.filter(p => p.category === name).length,
+      }))
+    : [];
+  const popularPosts = blogPosts.slice(0, 3);
+
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const res = await fetch('/api/blog?published=true');
+        const data = await res.json();
+        if (data.success && data.posts && data.posts.length > 0) {
+          setBlogPosts(data.posts.map((p: { id: string; title: string; slug: string; excerpt: string; category: string; author: string; createdAt: string; readTime: string; coverImage: string }) => ({
+            id: p.id,
+            title: p.title,
+            slug: p.slug,
+            excerpt: p.excerpt,
+            category: p.category,
+            author: p.author,
+            date: new Date(p.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }),
+            readTime: p.readTime,
+            image: p.coverImage,
+          })));
+        }
+      } catch {
+        // silently fail — defaultPosts provides fallback data
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPosts();
+  }, []);
 
   const filteredPosts = blogPosts.filter((post) => {
     const matchesSearch =
@@ -219,6 +253,7 @@ export function LuxuriaBlogPage() {
                       transition={{ duration: 0.45, delay: 0.08 + index * 0.08 }}
                       className="group cursor-pointer overflow-hidden"
                       style={{ border: `1px solid ${C.border}`, borderRadius: '2px' }}
+                      onClick={() => navigateTo('blog-post', { slug: post.slug })}
                     >
                       {/* Blog Post Image */}
                       <div
@@ -326,7 +361,7 @@ export function LuxuriaBlogPage() {
                   Catégories
                 </h4>
                 <div className="space-y-1">
-                  {categories.map((cat) => (
+                  {dynamicCategories.map((cat) => (
                     <button
                       key={cat.name}
                       onClick={() =>
@@ -370,7 +405,7 @@ export function LuxuriaBlogPage() {
                 <div className="space-y-4">
                   {popularPosts.map((post, index) => {
                     return (
-                      <div key={post.id} className="flex gap-3 group cursor-pointer">
+                      <div key={post.id} className="flex gap-3 group cursor-pointer" onClick={() => navigateTo('blog-post', { slug: post.slug })}>
                         {/* Thumbnail */}
                         <div
                           className="w-16 h-16 flex-shrink-0 overflow-hidden relative"

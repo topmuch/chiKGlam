@@ -121,7 +121,8 @@ export default function Page() {
     const Cart = template === 'luxuria' ? LuxuriaCartPage : GoldenCartPage;
     const Checkout = template === 'luxuria' ? LuxuriaCheckoutPage : GoldenCheckoutPage;
     const Blog = template === 'luxuria' ? LuxuriaBlogPage : GoldenBlogPage;
-    const BlogPost = template === 'luxuria' ? GoldenBlogPostPage : GoldenBlogPostPage;
+    // Note: Luxuria uses GoldenBlogPostPage for blog post detail (no dedicated LuxuriaBlogPostPage yet)
+    const BlogPost = GoldenBlogPostPage;
     const Home = template === 'luxuria' ? LuxuriaHomePage : GoldenHomePage;
 
     switch (currentPage) {

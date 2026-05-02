@@ -671,12 +671,9 @@ function ActusSection() {
           const data = await res.json();
           const postsList = Array.isArray(data) ? data : data.posts ?? [];
           setPosts(postsList);
-          console.log('[ActusSection] Loaded', postsList.length, 'published posts');
-        } else {
-          console.error('[ActusSection] API error:', res.status);
         }
-      } catch (err) {
-        console.error('[ActusSection] Fetch error:', err);
+      } catch {
+        // silently fail — loading state handles empty display
       } finally {
         setLoading(false);
       }

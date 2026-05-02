@@ -134,8 +134,8 @@ export function GoldenBlogPage() {
             image: p.coverImage,
           })));
         }
-      } catch (e) {
-        console.error('Failed to fetch blog posts:', e);
+      } catch {
+        // silently fail — defaultPosts provides fallback data
       } finally {
         setLoading(false);
       }
@@ -385,7 +385,11 @@ export function GoldenBlogPage() {
                 <div className="space-y-4">
                   {popularPosts.map((post, index) => {
                     return (
-                      <div key={post.id} className="flex gap-3 group cursor-pointer">
+                      <div
+                        key={post.id}
+                        className="flex gap-3 group cursor-pointer"
+                        onClick={() => navigateTo('blog-post', { slug: post.slug })}
+                      >
                         {/* Thumbnail */}
                         <div
                           className="w-16 h-16 flex-shrink-0 overflow-hidden relative"

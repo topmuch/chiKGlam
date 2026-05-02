@@ -42,7 +42,13 @@ export const useStore = create<StoreState>()(
     }),
     {
       name: 'chicglam-store',
-      partialize: (state) => ({ currentUser: state.currentUser, activeTemplate: state.activeTemplate }),
+      partialize: (state) => ({
+        currentUser: state.currentUser,
+        activeTemplate: state.activeTemplate,
+        currentPage: state.currentPage,
+        selectedBlogSlug: state.selectedBlogSlug,
+        selectedCategory: state.selectedCategory,
+      }),
     }
   )
 );

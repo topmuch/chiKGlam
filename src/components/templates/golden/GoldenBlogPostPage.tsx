@@ -320,16 +320,21 @@ export default function GoldenBlogPostPage({ slug: propSlug }: { slug?: string }
 
     async function fetchPost() {
       try {
-        const res = await fetch('/api/blog?published=true&limit=50');
-        if (!res.ok) throw new Error('Failed to fetch');
+        const res = await fetch(`/api/blog?slug=${encodeURIComponent(slug)}&published=true`);
+        if (!res.ok) {
+          if (res.status === 404) {
+            if (!cancelled) setNotFound(true);
+          } else {
+            throw new Error('Failed to fetch');
+          }
+          return;
+        }
         const data = await res.json();
-        const posts: BlogPostData[] = data.posts ?? [];
-        const match = posts.find((p) => p.slug === slug);
 
         if (cancelled) return;
 
-        if (match) {
-          setPost(match);
+        if (data.success && data.post) {
+          setPost(data.post);
         } else {
           setNotFound(true);
         }

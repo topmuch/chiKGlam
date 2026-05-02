@@ -7,6 +7,20 @@ export async function GET(request: NextRequest) {
     const published = searchParams.get('published');
     const limit = parseInt(searchParams.get('limit') || '50');
     const category = searchParams.get('category');
+    const slug = searchParams.get('slug');
+
+    // Single post lookup by slug
+    if (slug) {
+      const where: Record<string, unknown> = { slug };
+      if (published === 'true') where.isPublished = true;
+      const post = await db.blogPost.findFirst({
+        where,
+      });
+      if (!post) {
+        return NextResponse.json({ success: false, error: 'Post not found' }, { status: 404 });
+      }
+      return NextResponse.json({ success: true, post });
+    }
 
     const where: Record<string, unknown> = {};
     if (published === 'true') where.isPublished = true;
