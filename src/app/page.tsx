@@ -61,7 +61,7 @@ import GoldenBlogPostPage from '@/components/templates/golden/GoldenBlogPostPage
 
 export default function Page() {
   const { currentPage, selectedCategory, selectedProduct } = useStore();
-  const { isLuxuria, isGolden, isGlamshop } = useTemplate();
+  const { isLuxuria, isGolden, isGlamshop, isReady } = useTemplate();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -179,6 +179,17 @@ export default function Page() {
   };
 
   const hideFooter = currentPage === 'checkout' || currentPage === 'customer-dashboard' || currentPage === 'admin-dashboard' || currentPage === 'cart';
+
+  // Wait for template to be determined before rendering (prevents flash of wrong template)
+  if (!isReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#F7F7F7' }}>
+        <div className="flex flex-col items-center gap-3">
+          <div className="size-8 border-2 rounded-full animate-spin" style={{ borderColor: '#bc875240', borderTopColor: '#bc8752' }} />
+        </div>
+      </div>
+    );
+  }
 
   // ============================================================
   // Glamshop Template Layout
