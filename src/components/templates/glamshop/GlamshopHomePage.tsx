@@ -555,7 +555,21 @@ function PromoCodePopup() {
 // ─── Glamshop Home Page ────────────────────────────────────
 export function GlamshopHomePage() {
   return (
-    <main className="min-h-screen" style={{ background: '#F7F7F7' }}>
+    <main id="glamshop-root" className="min-h-screen" style={{ background: '#F7F7F7' }}>
+      {/* Glamshop-wide override: force shared components to 1920px */}
+      <style>{`
+        #glamshop-root .max-w-\[1440px\] {
+          max-width: 1920px !important;
+          padding-left: 2.5rem !important;
+          padding-right: 2.5rem !important;
+        }
+        @media (min-width: 1024px) {
+          #glamshop-root .lg\:px-8 {
+            padding-left: 2.5rem !important;
+            padding-right: 2.5rem !important;
+          }
+        }
+      `}</style>
       {/* 1. Hero Slider */}
       <HeroSlider />
       {/* 2. Marquee Banner (#bc8752) */}

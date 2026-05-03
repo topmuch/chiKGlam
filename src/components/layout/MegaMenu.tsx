@@ -72,7 +72,7 @@ export default function MegaMenu({ isOpen, onClose, activeCategory }: MegaMenuPr
           onMouseEnter={handleMouseEnter}
           className="absolute left-0 right-0 top-full z-40 bg-white shadow-lg rounded-b-xl border-t border-border"
         >
-          <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10 py-6">
+          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Column 1: Subcategories */}
               <div>

@@ -17,7 +17,7 @@ export function CategoriesGrid() {
 
   return (
     <section className="py-12 md:py-20">
-      <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div className="text-center mb-10 md:mb-14">
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight" style={{ color: '#bc8752' }}>

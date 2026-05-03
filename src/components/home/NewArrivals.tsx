@@ -12,7 +12,7 @@ export function NewArrivals() {
 
   return (
     <section className="bg-white py-12 md:py-20">
-      <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
           <div className="flex items-end justify-between mb-10">
             <div>
