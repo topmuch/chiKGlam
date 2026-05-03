@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Truck, RotateCcw, ShieldCheck, Star, Clock, Sparkles, Gift,
   Instagram, Facebook, ChevronLeft, ChevronRight, X, Zap,
-  Award, Heart,
+  Heart,
 } from 'lucide-react';
 import { HeroSlider } from '@/components/home/HeroSlider';
 import { CategoriesGrid } from '@/components/home/CategoriesGrid';
@@ -21,42 +21,34 @@ const GLAM_DARK = '#a06e3f';
 
 // ─── 1. Marquee Banner Component (#bc8752) ─────────────────
 function MarqueeBanner() {
-  const marqueeRef = useRef<HTMLDivElement>(null);
-  const animFrameRef = useRef<number>(0);
-
-  useEffect(() => {
-    const el = marqueeRef.current;
-    if (!el) return;
-    let scrollPos = 0;
-    const speed = 0.8;
-    const animate = () => {
-      scrollPos += speed;
-      if (scrollPos >= el.scrollWidth / 2) scrollPos = 0;
-      el.scrollLeft = scrollPos;
-      animFrameRef.current = requestAnimationFrame(animate);
-    };
-    animFrameRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animFrameRef.current);
-  }, []);
-
   const items = ['Makeup', 'Lingerie africaine', 'Accessoires de beautes', 'Maquillages'];
+  const content = items.map((item, i) => (
+    <span
+      key={i}
+      className="inline-flex items-center text-white font-semibold text-sm uppercase tracking-widest mx-4 shrink-0"
+    >
+      <span className="mx-3 text-white/40">✦</span>
+      {item}
+    </span>
+  ));
 
   return (
     <div className="w-full py-3 overflow-hidden" style={{ backgroundColor: GLAM }}>
-      <div
-        ref={marqueeRef}
-        className="flex whitespace-nowrap"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {[...items, ...items, ...items, ...items, ...items, ...items].map((item, index) => (
-          <span
-            key={index}
-            className="inline-flex items-center text-white font-semibold text-sm uppercase tracking-widest mx-4"
-          >
-            <span className="mx-3 text-white/40">✦</span>
-            {item}
-          </span>
-        ))}
+      <style>{`
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .glamshop-marquee {
+          animation: marquee 25s linear infinite;
+        }
+      `}</style>
+      <div className="flex glamshop-marquee whitespace-nowrap">
+        {/* Duplicate for seamless loop */}
+        {content}
+        {content}
+        {content}
+        {content}
       </div>
     </div>
   );
@@ -143,7 +135,7 @@ function TrustBar() {
     { icon: Truck, label: 'Livraison Gratuite', sublabel: "Dès 50€ d'achat" },
     { icon: RotateCcw, label: 'Retours Gratuits', sublabel: 'Politique de retour 30 jours' },
     { icon: ShieldCheck, label: 'Paiement Sécurisé', sublabel: '100% protégé' },
-    { icon: Award, label: 'Trustpilot 4,8/5', sublabel: '+10 000 clientes satisfaites' },
+    { icon: Star, label: 'Trustpilot 4,8/5', sublabel: '+10 000 clientes satisfaites' },
   ];
 
   return (
@@ -154,7 +146,7 @@ function TrustBar() {
             const Icon = item.icon;
             return (
               <div key={item.label} className="flex flex-col items-center text-center gap-1.5">
-                <Icon className="size-6 md:size-7" style={{ color: GLAM }} strokeWidth={1.5} />
+                <Icon className="size-10 md:size-12" style={{ color: GLAM }} strokeWidth={1.5} />
                 <span className="text-sm md:text-base font-semibold text-foreground">{item.label}</span>
                 <span className="text-xs text-muted-foreground">{item.sublabel}</span>
               </div>
@@ -297,131 +289,7 @@ function CategoryPromoCarousel() {
   );
 }
 
-// ─── 6. Featured Brands Section ────────────────────────────
-function FeaturedBrands() {
-  const brands = [
-    { name: 'ChicGlam by Eva', tagline: 'Notre marque signature' },
-    { name: 'Miss Glam', tagline: 'Palettes & Fards' },
-    { name: 'Diongue Beauty', tagline: 'Maquillage professionnel' },
-    { name: 'Flawless Finish', tagline: 'Base & Correcteur' },
-  ];
-
-  return (
-    <section className="py-12 md:py-16 bg-white">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-        <ScrollReveal>
-          <div className="text-center mb-10">
-            <h2 className="font-heading text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight" style={{ color: GLAM }}>
-              NOS MARQUES
-            </h2>
-            <p className="mt-2 text-muted-foreground text-sm md:text-base">
-              Découvrez les marques que nous aimons
-            </p>
-            <div className="mt-3 h-1 w-16 rounded-full mx-auto" style={{ backgroundColor: GLAM }} />
-          </div>
-        </ScrollReveal>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {brands.map((brand, index) => (
-            <ScrollReveal key={brand.name} delay={index * 0.1}>
-              <motion.div
-                className="relative bg-[#F7F7F7] rounded-xl p-6 md:p-8 text-center cursor-pointer group hover:shadow-lg transition-all duration-300 border border-transparent hover:border-border"
-                whileHover={{ y: -4 }}
-              >
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: `${GLAM}15` }}>
-                  <Sparkles className="size-7" style={{ color: GLAM }} />
-                </div>
-                <h3 className="font-heading text-sm md:text-base font-bold text-foreground group-hover:text-primary transition-colors">
-                  {brand.name}
-                </h3>
-                <p className="mt-1 text-xs text-muted-foreground">{brand.tagline}</p>
-              </motion.div>
-            </ScrollReveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── 7. Gift Ideas Section ─────────────────────────────────
-function GiftIdeas() {
-  const navigateTo = useStore((s) => s.navigateTo);
-
-  const ideas = [
-    {
-      title: 'Coffret Maquillage',
-      subtitle: 'Tout pour un look complet',
-      emoji: '💄',
-      link: 'makeup',
-    },
-    {
-      title: 'Coffret Soin',
-      subtitle: 'Hydratation & éclat',
-      emoji: '✨',
-      link: 'makeup',
-    },
-    {
-      title: 'Coffret Lingerie',
-      subtitle: "L'élégance en cadeau",
-      emoji: '🎀',
-      link: 'lingerie',
-    },
-    {
-      title: 'Kit Accessoires',
-      subtitle: 'Les essentiels beauté',
-      emoji: '🎁',
-      link: 'accessoires',
-    },
-  ];
-
-  return (
-    <section className="py-12 md:py-16">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-        <ScrollReveal>
-          <div className="flex items-end justify-between mb-10">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Gift className="size-5" style={{ color: GLAM }} />
-                <h2 className="font-heading text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight" style={{ color: GLAM }}>
-                  IDÉES CADEAUX
-                </h2>
-              </div>
-              <p className="text-muted-foreground text-sm md:text-base">
-                Des coffrets pensés pour faire plaisir
-              </p>
-            </div>
-          </div>
-        </ScrollReveal>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
-          {ideas.map((idea, index) => (
-            <ScrollReveal key={idea.title} delay={index * 0.1}>
-              <motion.div
-                className="relative rounded-xl overflow-hidden cursor-pointer group"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => navigateTo('category', { category: idea.link })}
-              >
-                <div className="bg-white border border-border p-5 md:p-6 text-center h-full hover:shadow-lg transition-shadow duration-300">
-                  <div className="text-4xl md:text-5xl mb-3">{idea.emoji}</div>
-                  <h3 className="font-heading text-sm md:text-base font-bold text-foreground">{idea.title}</h3>
-                  <p className="mt-1 text-xs text-muted-foreground">{idea.subtitle}</p>
-                  <div className="mt-3 inline-flex items-center gap-1 text-xs font-semibold" style={{ color: GLAM }}>
-                    Découvrir
-                    <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </div>
-              </motion.div>
-            </ScrollReveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ─── 8. Social Media Banner ───────────────────────────────
+// ─── 6. Social Media Banner ───────────────────────────────
 function SocialBanner() {
   return (
     <section className="py-10 md:py-14">
@@ -465,7 +333,7 @@ function SocialBanner() {
   );
 }
 
-// ─── 9. Newsletter Banner (#bc8752) ───────────────────────
+// ─── 7. Newsletter Banner (#bc8752) ───────────────────────
 function NewsletterBanner() {
   return (
     <section className="py-12 md:py-20">
@@ -501,7 +369,7 @@ function NewsletterBanner() {
   );
 }
 
-// ─── 10. Promo Code Popup ──────────────────────────────────
+// ─── 8. Promo Code Popup ──────────────────────────────────
 function PromoCodePopup() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -612,19 +480,15 @@ export function GlamshopHomePage() {
       <CategoryPromoCarousel />
       {/* 9. Promo Strip */}
       <PromoStrip text="Retours gratuits sous 15 jours — Satisfait ou remboursé" />
-      {/* 10. Featured Brands */}
-      <FeaturedBrands />
-      {/* 11. Promotional Dual Banner (Offres Exclusives) */}
+      {/* 10. Promotional Dual Banner (Offres Exclusives) */}
       <PromoDualBanner />
-      {/* 12. Gift Ideas */}
-      <GiftIdeas />
-      {/* 13. Customer Feedback */}
+      {/* 11. Customer Feedback */}
       <CustomerFeedback />
-      {/* 14. Social Media */}
+      {/* 12. Social Media */}
       <SocialBanner />
-      {/* 15. Newsletter */}
+      {/* 13. Newsletter */}
       <NewsletterBanner />
-      {/* 16. Promo Code Popup */}
+      {/* 14. Promo Code Popup */}
       <PromoCodePopup />
     </main>
   );

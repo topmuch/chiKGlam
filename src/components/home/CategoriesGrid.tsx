@@ -31,7 +31,7 @@ export function CategoriesGrid() {
 
         {/* Glamshop: 3 centered categories in a max-width container */}
         {isGlamshop ? (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-8 max-w-6xl mx-auto">
             {displayCategories.map((category, index) => (
               <ScrollReveal key={category.id} delay={index * 0.1}>
                 <motion.div
@@ -41,7 +41,7 @@ export function CategoriesGrid() {
                   transition={{ duration: 0.3 }}
                   onClick={() => navigateTo('category', { category: category.slug })}
                 >
-                  <div className="relative w-full bg-gradient-to-br from-neutral-200 via-neutral-100 to-neutral-300 aspect-[3/4] md:aspect-[4/5]">
+                  <div className="relative w-full bg-gradient-to-br from-neutral-200 via-neutral-100 to-neutral-300 aspect-[3/4] md:aspect-[3/4]">
                     <img
                       src={category.glamshopImage || category.image}
                       alt={category.name}

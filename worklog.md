@@ -125,3 +125,26 @@ Stage Summary:
 - Trust badge icons (Truck, ShieldCheck, RotateCcw, Lock) are now size-10 (40px) — significantly larger
 - Trust badge labels increased to text-sm, subtitles to text-xs
 - Payment method badges increased from tiny 10px to text-xs (12px) with more padding
+
+---
+Task ID: 2
+Agent: Main
+Task: Fix marquee + increase trust icons + increase category images + remove Nos Marques + remove Idées Cadeaux
+
+Work Log:
+- Read GlamshopHomePage.tsx (634 lines) and CategoriesGrid.tsx (108 lines) to understand full code
+- Fixed MarqueeBanner: replaced broken `scrollLeft`+`requestAnimationFrame` approach with CSS `@keyframes` animation using `transform: translateX(-50%)` — reliable infinite scroll
+- Increased Trust Bar icons from `size-6 md:size-7` to `size-10 md:size-12` (40px/48px)
+- Increased category images: container from `max-w-4xl` to `max-w-6xl`, aspect ratio from `md:aspect-[4/5]` to `md:aspect-[3/4]`, gap from `md:gap-6` to `md:gap-8`
+- Removed FeaturedBrands component entirely (lines 300-343) and its call from page render
+- Removed GiftIdeas component entirely (lines 346-422) and its call from page render
+- Removed unused imports: Award (was only in FeaturedBrands), Gift (was only in GiftIdeas)
+- Verified: ✓ Compiled in 138ms, 0 errors in lint
+
+Stage Summary:
+- Marquee now scrolls smoothly with CSS animation
+- Trust bar icons now 40px mobile / 48px desktop
+- Category images now much larger (max-w-6xl container)
+- "Nos Marques" section completely removed
+- "Idées Cadeaux" section completely removed
+- Page now has cleaner layout: Hero → Marquee → FlashSale → TrustBar → Categories → PromoStrip → NewArrivals → Carousel → PromoStrip → PromoDual → Feedback → Social → Newsletter → Popup
