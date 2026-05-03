@@ -5,8 +5,13 @@ import { X, Shield } from 'lucide-react';
 import { useStore } from '@/store/use-store';
 
 const COOKIE_CONSENT_KEY = 'chicglam_cookie_consent';
+const GLAM = '#bc8752';
 
-export function CookieConsentBanner() {
+interface CookieConsentBannerProps {
+  isGlamshop?: boolean;
+}
+
+export function CookieConsentBanner({ isGlamshop = false }: CookieConsentBannerProps) {
   const [visible, setVisible] = useState(false);
   const navigateTo = useStore((s) => s.navigateTo);
 
@@ -37,6 +42,70 @@ export function CookieConsentBanner() {
 
   if (!visible) return null;
 
+  // Glamshop-styled cookie banner
+  if (isGlamshop) {
+    return (
+      <div className="fixed bottom-0 left-0 right-0 z-[100] animate-in slide-in-from-bottom duration-500">
+        <div className="relative md:max-w-4xl md:mx-auto md:mb-6 md:mx-10 bg-white border border-black/10 rounded-t-2xl md:rounded-2xl shadow-2xl">
+          {/* Close button */}
+          <button
+            onClick={handleDecline}
+            className="absolute top-3 right-3 p-1 text-black/40 hover:text-black/70 transition-colors"
+            aria-label="Fermer"
+          >
+            <X className="size-4" />
+          </button>
+
+          <div className="p-5 md:p-7">
+            <div className="flex items-start gap-4">
+              {/* Icon */}
+              <div
+                className="flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center mt-0.5"
+                style={{ backgroundColor: `${GLAM}15` }}
+              >
+                <Shield className="size-5" style={{ color: GLAM }} />
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                <h3 className="font-heading font-bold text-sm md:text-base text-black">
+                  🍪 Nous respectons votre vie privée
+                </h3>
+                <p className="mt-1.5 text-xs md:text-sm text-black/60 leading-relaxed">
+                  Nous utilisons des cookies pour améliorer votre expérience, analyser le trafic et afficher du contenu personnalisé. En cliquant sur &quot;Tout accepter&quot;, vous consentez à notre utilisation des cookies.
+                </p>
+              </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 mt-5">
+              <button
+                onClick={handleAccept}
+                className="flex-1 sm:flex-none px-7 py-2.5 rounded-full text-white text-xs md:text-sm font-bold hover:opacity-90 transition-all shadow-lg"
+                style={{ backgroundColor: GLAM }}
+              >
+                Tout accepter
+              </button>
+              <button
+                onClick={handleCustomize}
+                className="flex-1 sm:flex-none px-7 py-2.5 rounded-full border border-black/15 text-black text-xs md:text-sm font-medium hover:bg-black/5 transition-colors"
+              >
+                Personnaliser
+              </button>
+              <button
+                onClick={handleDecline}
+                className="flex-1 sm:flex-none px-7 py-2.5 rounded-full text-black/50 text-xs md:text-sm font-medium hover:text-black/80 transition-colors"
+              >
+                Refuser
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Default cookie banner
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[100] animate-in slide-in-from-bottom duration-500">
       {/* Backdrop on mobile */}

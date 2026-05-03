@@ -236,9 +236,14 @@ export default function Page() {
   ) : null;
 
   // ============================================================
-  // Glamshop Template Layout
+  // Glamshop Template Layout — ALL pages use Glamshop styling
   // ============================================================
   if (isGlamshop) {
+    const renderGlamshopPage = () => {
+      if (currentPage === 'home') return <GlamshopHomePage />;
+      return renderDefaultPage();
+    };
+
     return (
       <div className="min-h-screen flex flex-col bg-white">
         {maintenanceBanner}
@@ -252,18 +257,14 @@ export default function Page() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              {currentPage === 'home' ? (
-                <GlamshopHomePage />
-              ) : (
-                renderDefaultPage()
-              )}
+              {renderGlamshopPage()}
             </motion.div>
           </AnimatePresence>
         </main>
         {!hideFooter && <GlamshopFooter />}
         <CartSlidePanel />
         <AddToCartNotification />
-        <CookieConsentBanner />
+        <CookieConsentBanner isGlamshop />
       </div>
     );
   }
