@@ -36,10 +36,10 @@ function GlamshopHero() {
       />
 
       {/* Content — 3-column grid */}
-      <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 min-h-screen items-center w-full">
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 min-h-screen items-start w-full">
         {/* ── Left Column: Gloss Product ── */}
         <motion.div
-          className="flex items-center justify-center px-6 md:px-8 lg:px-12 py-12 md:py-0"
+          className="flex items-start justify-center px-6 md:px-8 lg:px-12 pt-16 md:pt-24 lg:pt-32"
           initial={{ opacity: 0, x: -60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, ease: 'easeOut' }}
@@ -59,7 +59,6 @@ function GlamshopHero() {
               src="/images/products/glamshop-hero-gloss.png"
               alt="Gloss à lèvres CHIC GLAM BY EVA"
               className="relative h-[60vh] sm:h-[65vh] md:h-[75vh] lg:h-[80vh] xl:h-[85vh] w-auto object-contain drop-shadow-2xl"
-              style={{ mixBlendMode: 'multiply' }}
             />
           </div>
         </motion.div>
@@ -112,7 +111,7 @@ function GlamshopHero() {
 
         {/* ── Right Column: Mascara Product ── */}
         <motion.div
-          className="flex items-center justify-center px-6 md:px-8 lg:px-12 py-12 md:py-0"
+          className="flex items-start justify-center px-6 md:px-8 lg:px-12 pt-16 md:pt-24 lg:pt-32"
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, ease: 'easeOut', delay: 0.3 }}
@@ -132,7 +131,6 @@ function GlamshopHero() {
               src="/images/products/glamshop-hero-mascara.png"
               alt="Mascara Bleu Saphir CHIC GLAM BY EVA"
               className="relative h-[60vh] sm:h-[65vh] md:h-[75vh] lg:h-[80vh] xl:h-[85vh] w-auto object-contain drop-shadow-2xl"
-              style={{ mixBlendMode: 'multiply' }}
             />
           </div>
         </motion.div>
