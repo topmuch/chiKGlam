@@ -7,7 +7,7 @@ export const categories: Category[] = [
     slug: 'makeup',
     image: '/images/categories/makeup.png',
     banner: '/images/categories/makeup-banner.jpg',
-    glamshopImage: '/images/categories/glamshop-makeup.webp',
+    glamshopImage: '/images/categories/glamshop-makeup.jpg',
     subcategories: [
       { slug: 'teint', name: 'Teint' },
       { slug: 'yeux', name: 'Yeux' },
@@ -20,7 +20,7 @@ export const categories: Category[] = [
     slug: 'lingerie',
     image: '/images/categories/lingerie.png',
     banner: '/images/categories/lingerie-banner.webp',
-    glamshopImage: '/images/categories/glamshop-lingerie.webp',
+    glamshopImage: '/images/categories/glamshop-lingerie.png',
     subcategories: [
       { slug: 'ensembles', name: 'Ensembles' },
       { slug: 'nuisettes', name: 'Nuisettes' },
@@ -35,7 +35,7 @@ export const categories: Category[] = [
     slug: 'accessoires',
     image: '/images/categories/accessoires.png',
     banner: '/images/categories/accessoires-banner.jpg',
-    glamshopImage: '/images/categories/glamshop-accessoires.webp',
+    glamshopImage: '/images/categories/glamshop-accessoires.jpg',
     subcategories: [
       { slug: 'cils', name: 'Cils' },
       { slug: 'pinceaux', name: 'Pinceaux' },
