@@ -508,94 +508,83 @@ function ProductSplitSection() {
   );
 }
 
-// ─── 6b. Product Split Section — Cils Magnétiques (Accessoires) ──
-function AccessoireSplitSection() {
+// ─── 6b. Accessoires Product Grid (4 products) ────────────
+function AccessoiresGrid() {
   const navigateTo = useStore((s) => s.navigateTo);
-  const cilsProduct = products.find(p => p.id === 'ac-001');
-
-  const features = [
-    { icon: Wand2, text: 'Pose facile sans colle' },
-    { icon: Eye, text: '4 volumes naturels' },
-    { icon: RefreshCw, text: 'Réutilisable & waterproof' },
-    { icon: ShieldCheck, text: 'Hypoallergénique' },
-  ];
+  const accessoiresProducts = getProductsByCategory('Accessoires');
 
   return (
     <section className="py-12 md:py-20 lg:py-24">
       <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
         <ScrollReveal>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
-            {/* Left — Text Content (reversed order) */}
-            <motion.div
-              className="flex flex-col justify-center text-center lg:text-right order-2 lg:order-1"
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.7, ease: 'easeOut' }}
+          {/* Section header */}
+          <div className="text-center mb-10 md:mb-14">
+            <span
+              className="inline-block px-4 py-1.5 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest mb-4 text-white"
+              style={{ backgroundColor: GLAM }}
             >
-              <span
-                className="inline-block self-center lg:self-end px-4 py-1.5 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest mb-6 text-white"
-                style={{ backgroundColor: GLAM }}
+              ✨ Accessoires
+            </span>
+            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
+              Nos <span style={{ color: GLAM }}>Accessoires</span> Beauté
+            </h2>
+            <p className="mt-3 text-base md:text-lg text-muted-foreground max-w-lg mx-auto">
+              Les indispensables pour parfaire votre routine maquillage
+            </p>
+          </div>
+
+          {/* Products grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {accessoiresProducts.map((product, i) => (
+              <motion.div
+                key={product.id}
+                className="group cursor-pointer"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-30px' }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                onClick={() => navigateTo('product', { product })}
               >
-                ✨ Tendances
-              </span>
-
-              <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight text-foreground">
-                Cils
-                <span className="block mt-1" style={{ color: GLAM }}>Magnétiques</span>
-              </h2>
-
-              <p className="mt-6 text-lg md:text-xl lg:text-2xl leading-relaxed text-muted-foreground max-w-2xl mx-auto lg:ml-auto lg:mr-0">
-                Optez pour un regard Chic &amp; Glamour avec nos faux cils magnétiques + eyeliner. Ultra légers, sans colle, hypoallergénique et waterproof.
-              </p>
-
-              {/* Feature badges */}
-              <div className="mt-8 grid grid-cols-2 gap-4 max-w-md mx-auto lg:ml-auto lg:mr-0">
-                {features.map((feat, i) => {
-                  const Icon = feat.icon;
-                  return (
-                    <div key={i} className="flex items-center gap-3">
-                      <div
-                        className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: `${GLAM}15` }}
-                      >
-                        <Icon className="size-5" style={{ color: GLAM }} />
-                      </div>
-                      <span className="text-sm md:text-base font-medium text-foreground">{feat.text}</span>
+                <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  {/* Image */}
+                  <div className="relative aspect-square overflow-hidden bg-gray-50">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full h-full object-contain p-4 md:p-6 group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {/* Badges */}
+                    <div className="absolute top-2 left-2 flex flex-col gap-1">
+                      {product.isNew && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-white" style={{ backgroundColor: GLAM }}>
+                          Nouveau
+                        </span>
+                      )}
+                      {product.isBestseller && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider text-white bg-black/70">
+                          Best-seller
+                        </span>
+                      )}
                     </div>
-                  );
-                })}
-              </div>
-
-              {/* CTA → Navigate to product page */}
-              <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-end">
-                <button
-                  onClick={() => cilsProduct && navigateTo('product', { product: cilsProduct })}
-                  className="px-8 py-4 rounded-full text-base md:text-lg font-bold text-white shadow-lg hover:opacity-90 transition-all hover:shadow-xl"
-                  style={{ backgroundColor: GLAM }}
-                >
-                  Voir le produit →
-                </button>
-              </div>
-            </motion.div>
-
-            {/* Right — Large Image (reversed order) */}
-            <motion.div
-              className="relative flex justify-center lg:justify-start order-1 lg:order-2"
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.7, ease: 'easeOut', delay: 0.15 }}
-            >
-              <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl">
-                <div className="absolute -inset-4 rounded-full opacity-20 blur-3xl" style={{ backgroundColor: GLAM }} />
-                <img
-                  src="/images/products/accessoires/cils-magnetiques.png"
-                  alt="Cils Magnétiques CHIC GLAM BY EVA"
-                  className="relative w-full h-auto rounded-2xl shadow-2xl"
-                />
-              </div>
-            </motion.div>
+                  </div>
+                  {/* Info */}
+                  <div className="p-3 md:p-4 text-center">
+                    <h3 className="text-sm md:text-base font-semibold text-foreground line-clamp-2 group-hover:underline">
+                      {product.name}
+                    </h3>
+                    <div className="mt-2 flex items-center justify-center gap-1">
+                      <Star className="size-3.5 fill-yellow-400 text-yellow-400" />
+                      <span className="text-xs text-muted-foreground">
+                        {product.rating} ({product.reviewCount})
+                      </span>
+                    </div>
+                    <p className="mt-2 text-base md:text-lg font-bold" style={{ color: GLAM }}>
+                      {product.price}€
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </ScrollReveal>
       </div>
@@ -806,8 +795,8 @@ export function GlamshopHomePage() {
       <NewArrivals />
       {/* 7b. Product Split Section — Base Fixatrice */}
       <ProductSplitSection />
-      {/* 7c. Product Split Section — Cils Magnétiques (Accessoires) */}
-      <AccessoireSplitSection />
+      {/* 7c. Accessoires Grid (4 products) */}
+      <AccessoiresGrid />
       {/* 8. Category Promo Carousel */}
       <CategoryPromoCarousel />
       {/* 9. Promo Strip */}
