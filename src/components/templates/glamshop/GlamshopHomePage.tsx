@@ -5,9 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Truck, RotateCcw, ShieldCheck, Star, Clock, Sparkles,
   Instagram, Facebook, ChevronLeft, ChevronRight, X, Zap,
-  Heart, Droplets, Shield, Leaf, Sparkle,
+  Heart, Droplets, Shield, Leaf, Sparkle, ArrowRight, Gem,
 } from 'lucide-react';
-import { HeroSlider } from '@/components/home/HeroSlider';
 import { CategoriesGrid } from '@/components/home/CategoriesGrid';
 import { NewArrivals } from '@/components/home/NewArrivals';
 import { CustomerFeedback } from '@/components/home/CustomerFeedback';
@@ -18,6 +17,129 @@ import { useStore } from '@/store/use-store';
 // ─── Color Constant ─────────────────────────────────────────
 const GLAM = '#bc8752';
 const GLAM_DARK = '#a06e3f';
+
+// ─── 0. Glamshop Hero (amiy-inspired 3-column) ────────────
+function GlamshopHero() {
+  const navigateTo = useStore((s) => s.navigateTo);
+
+  return (
+    <section className="relative w-full overflow-hidden" style={{ minHeight: '100vh' }}>
+      {/* Background */}
+      <div className="absolute inset-0" style={{ backgroundColor: '#FAF5EF' }} />
+      {/* Subtle gold radial glow in center */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 60% 70% at 50% 50%, rgba(188,135,82,0.08) 0%, transparent 100%)',
+        }}
+      />
+
+      {/* Content — 3-column grid */}
+      <div className="relative z-10 grid grid-cols-1 md:grid-cols-3 min-h-screen items-center w-full">
+        {/* ── Left Column: Gloss Product ── */}
+        <motion.div
+          className="flex items-center justify-center px-6 md:px-8 lg:px-12 py-12 md:py-0"
+          initial={{ opacity: 0, x: -60 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, ease: 'easeOut' }}
+        >
+          <div className="relative">
+            {/* Decorative ring */}
+            <div
+              className="absolute -inset-8 md:-inset-12 rounded-full opacity-[0.06]"
+              style={{ border: `3px solid ${GLAM}` }}
+            />
+            {/* Glow behind product */}
+            <div
+              className="absolute -inset-6 rounded-full opacity-20 blur-3xl"
+              style={{ backgroundColor: GLAM }}
+            />
+            <img
+              src="/images/products/glamshop-hero-gloss.png"
+              alt="Gloss à lèvres CHIC GLAM BY EVA"
+              className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 xl:w-96 xl:h-96 object-contain drop-shadow-2xl"
+            />
+          </div>
+        </motion.div>
+
+        {/* ── Center Column: Text Content ── */}
+        <motion.div
+          className="flex flex-col items-center justify-center text-center px-6 md:px-10 py-12 md:py-0"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: 'easeOut', delay: 0.15 }}
+        >
+          {/* Tag */}
+          <span
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs md:text-sm font-bold uppercase tracking-[0.2em] mb-6 md:mb-8"
+            style={{ color: GLAM, border: `1.5px solid ${GLAM}40`, backgroundColor: `${GLAM}08` }}
+          >
+            <Gem className="size-3.5" />
+            Cosmétiques Premium
+          </span>
+
+          {/* Title */}
+          <h1 className="font-heading text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] tracking-tight text-foreground max-w-xl">
+            Cosmétiques
+            <br />
+            <span style={{ color: GLAM }}>by Eva</span>
+          </h1>
+
+          {/* Description */}
+          <p className="mt-5 md:mt-6 text-base md:text-lg lg:text-xl leading-relaxed text-muted-foreground max-w-md">
+            Sublimez votre beauté naturelle avec notre collection exclusive de cosmétiques de qualité premium.
+          </p>
+
+          {/* CTA Button */}
+          <button
+            onClick={() => navigateTo('category', { category: 'makeup' })}
+            className="mt-8 md:mt-10 inline-flex items-center gap-3 px-8 md:px-10 py-4 md:py-5 rounded-full text-white font-bold text-base md:text-lg uppercase tracking-wider shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+            style={{ backgroundColor: GLAM }}
+          >
+            Découvrir
+            <ArrowRight className="size-5" />
+          </button>
+
+          {/* Decorative petals / sparkles */}
+          <div className="mt-8 flex items-center gap-3 opacity-40">
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: GLAM }} />
+            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: GLAM }} />
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: GLAM }} />
+          </div>
+        </motion.div>
+
+        {/* ── Right Column: Mascara Product ── */}
+        <motion.div
+          className="flex items-center justify-center px-6 md:px-8 lg:px-12 py-12 md:py-0"
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, ease: 'easeOut', delay: 0.3 }}
+        >
+          <div className="relative">
+            {/* Decorative ring */}
+            <div
+              className="absolute -inset-8 md:-inset-12 rounded-full opacity-[0.06]"
+              style={{ border: `3px solid ${GLAM}` }}
+            />
+            {/* Glow behind product */}
+            <div
+              className="absolute -inset-6 rounded-full opacity-20 blur-3xl"
+              style={{ backgroundColor: GLAM }}
+            />
+            <img
+              src="/images/products/glamshop-hero-mascara.png"
+              alt="Mascara Bleu Saphir CHIC GLAM BY EVA"
+              className="relative w-56 h-56 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 xl:w-96 xl:h-96 object-contain drop-shadow-2xl"
+            />
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Bottom fade to match page bg */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent, #F7F7F7)' }} />
+    </section>
+  );
+}
 
 // ─── 1. Marquee Banner Component (#bc8752) ─────────────────
 function MarqueeBanner() {
@@ -570,8 +692,8 @@ export function GlamshopHomePage() {
           }
         }
       `}</style>
-      {/* 1. Hero Slider */}
-      <HeroSlider />
+      {/* 0. Hero — amiy-inspired 3-column */}
+      <GlamshopHero />
       {/* 2. Marquee Banner (#bc8752) */}
       <MarqueeBanner />
       {/* 3. Flash Sale Countdown */}
