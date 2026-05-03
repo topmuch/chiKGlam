@@ -12,7 +12,6 @@ import { CategoriesGrid } from '@/components/home/CategoriesGrid';
 import { products, getProductsByCategory } from '@/data/products';
 import { NewArrivals } from '@/components/home/NewArrivals';
 import { CustomerFeedback } from '@/components/home/CustomerFeedback';
-import { PromoDualBanner } from '@/components/home/PromoDualBanner';
 import { ScrollReveal } from '@/components/shared/ScrollReveal';
 import { useStore } from '@/store/use-store';
 
@@ -59,7 +58,8 @@ function GlamshopHero() {
             <img
               src="/images/products/glamshop-hero-gloss.png"
               alt="Gloss à lèvres CHIC GLAM BY EVA"
-              className="relative h-[50vh] sm:h-[55vh] md:h-[65vh] lg:h-[70vh] xl:h-[75vh] w-auto object-contain drop-shadow-2xl"
+              className="relative h-[60vh] sm:h-[65vh] md:h-[75vh] lg:h-[80vh] xl:h-[85vh] w-auto object-contain drop-shadow-2xl"
+              style={{ mixBlendMode: 'multiply' }}
             />
           </div>
         </motion.div>
@@ -131,7 +131,8 @@ function GlamshopHero() {
             <img
               src="/images/products/glamshop-hero-mascara.png"
               alt="Mascara Bleu Saphir CHIC GLAM BY EVA"
-              className="relative h-[50vh] sm:h-[55vh] md:h-[65vh] lg:h-[70vh] xl:h-[75vh] w-auto object-contain drop-shadow-2xl"
+              className="relative h-[60vh] sm:h-[65vh] md:h-[75vh] lg:h-[80vh] xl:h-[85vh] w-auto object-contain drop-shadow-2xl"
+              style={{ mixBlendMode: 'multiply' }}
             />
           </div>
         </motion.div>
@@ -801,8 +802,6 @@ export function GlamshopHomePage() {
       <CategoryPromoCarousel />
       {/* 9. Promo Strip */}
       <PromoStrip text="Retours gratuits sous 15 jours — Satisfait ou remboursé" />
-      {/* 10. Promotional Dual Banner (Offres Exclusives) */}
-      <PromoDualBanner />
       {/* 11. Customer Feedback */}
       <CustomerFeedback />
       {/* 12. Social Media */}
