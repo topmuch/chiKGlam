@@ -569,8 +569,7 @@ function PromoCodePopup() {
                 <input
                   type="email"
                   placeholder="Votre adresse e-mail"
-                  className="w-full px-5 py-3 rounded-full border border-border text-sm focus:outline-none focus:ring-2 focus:ring-offset-1 transition-all"
-                  style={{ focusRingColor: GLAM }}
+                  className="w-full px-5 py-3 rounded-full border border-border text-sm focus:outline-none transition-all"
                 />
                 <button
                   onClick={handleClose}
