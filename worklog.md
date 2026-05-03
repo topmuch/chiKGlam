@@ -148,3 +148,28 @@ Stage Summary:
 - "Nos Marques" section completely removed
 - "Idées Cadeaux" section completely removed
 - Page now has cleaner layout: Hero → Marquee → FlashSale → TrustBar → Categories → PromoStrip → NewArrivals → Carousel → PromoStrip → PromoDual → Feedback → Social → Newsletter → Popup
+
+---
+Task ID: 3
+Agent: Main
+Task: Create product split section + widen entire site
+
+Work Log:
+- Copied hydratante.png (1536x2048) to public/images/products/glamshop-primer-hydratant.png
+- Created ProductSplitSection component in GlamshopHomePage.tsx:
+  - Left: Large product image with glow effect (rounded-2xl, shadow-2xl)
+  - Right: Badge "Best-seller", title "Base Fixatrice / Hydratante" in xl/6xl, large description text (lg:text-2xl), 4 feature icons (Droplets, Shield, Sparkle, Leaf), CTA button
+  - Animations: whileInView slide-in from left/right with staggered delay
+  - Placed after NewArrivals (Cosmétiques by Eva) in page render order
+- Widened entire site from max-w-[1440px] to max-w-[1920px]:
+  - GlamshopHomePage.tsx (all sections: FlashSale, TrustBar, Carousel, Social, Newsletter)
+  - GlamshopHeader.tsx (promo bar, main header, nav bar)
+  - GlamshopFooter.tsx (newsletter, main footer, bottom bar)
+  - NewArrivals.tsx, PromoDualBanner.tsx, CategoriesGrid.tsx, CustomerFeedback.tsx, MegaMenu.tsx
+  - Changed lg:px-8 to lg:px-10 across all files
+- Verified: Compiled successfully, 0 errors in lint
+
+Stage Summary:
+- New split product section under Cosmétiques by Eva with hydratante product image
+- Entire site now uses max-w-[1920px] (was 1440px) — much wider layout
+- All Glamshop components consistently widened

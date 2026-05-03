@@ -32,7 +32,7 @@ export function PromoDualBanner() {
 
   return (
     <section className="py-8 md:py-16">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
         <ScrollReveal>
           <div className="relative rounded-xl overflow-hidden bg-white shadow-sm border border-border">
             <div className="flex flex-col lg:flex-row items-stretch">

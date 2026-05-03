@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Truck, RotateCcw, ShieldCheck, Star, Clock, Sparkles, Gift,
+  Truck, RotateCcw, ShieldCheck, Star, Clock, Sparkles,
   Instagram, Facebook, ChevronLeft, ChevronRight, X, Zap,
-  Heart,
+  Heart, Droplets, Shield, Leaf, Sparkle,
 } from 'lucide-react';
 import { HeroSlider } from '@/components/home/HeroSlider';
 import { CategoriesGrid } from '@/components/home/CategoriesGrid';
@@ -79,7 +79,7 @@ function FlashSaleBanner() {
 
   return (
     <div className="w-full py-3 md:py-4" style={{ backgroundColor: GLAM_DARK }}>
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-white text-sm md:text-base">
           <div className="flex items-center gap-2 font-bold uppercase tracking-wider">
             <Zap className="size-4 md:size-5 fill-yellow-300 text-yellow-300" />
@@ -140,7 +140,7 @@ function TrustBar() {
 
   return (
     <div className="bg-white border-b border-border">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-6 md:py-8">
           {items.map((item) => {
             const Icon = item.icon;
@@ -202,7 +202,7 @@ function CategoryPromoCarousel() {
 
   return (
     <section className="py-8 md:py-12">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
         <ScrollReveal>
           <div className="relative rounded-xl overflow-hidden cursor-pointer group" style={{ minHeight: '220px' }}>
             <AnimatePresence mode="popLayout">
@@ -289,11 +289,105 @@ function CategoryPromoCarousel() {
   );
 }
 
-// ─── 6. Social Media Banner ───────────────────────────────
+// ─── 6. Product Split Section ────────────────────────────
+function ProductSplitSection() {
+  const navigateTo = useStore((s) => s.navigateTo);
+
+  const features = [
+    { icon: Droplets, text: 'Base fixatrice hydratante' },
+    { icon: Shield, text: 'Resserre les pores & matifie' },
+    { icon: Sparkle, text: 'Effet glow naturel' },
+    { icon: Leaf, text: 'Couvrance légère longue tenue' },
+  ];
+
+  return (
+    <section className="py-12 md:py-20 lg:py-24">
+      <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
+        <ScrollReveal>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
+            {/* Left — Large Image */}
+            <motion.div
+              className="relative flex justify-center lg:justify-end"
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.7, ease: 'easeOut' }}
+            >
+              <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl">
+                <div className="absolute -inset-4 rounded-full opacity-20 blur-3xl" style={{ backgroundColor: GLAM }} />
+                <img
+                  src="/images/products/glamshop-primer-hydratant.png"
+                  alt="Base fixatrice hydratante CHIC GLAM BY EVA"
+                  className="relative w-full h-auto rounded-2xl shadow-2xl"
+                />
+              </div>
+            </motion.div>
+
+            {/* Right — Text Content */}
+            <motion.div
+              className="flex flex-col justify-center text-center lg:text-left"
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ duration: 0.7, ease: 'easeOut', delay: 0.15 }}
+            >
+              <span
+                className="inline-block self-center lg:self-start px-4 py-1.5 rounded-full text-xs md:text-sm font-bold uppercase tracking-widest mb-6 text-white"
+                style={{ backgroundColor: GLAM }}
+              >
+                ⭐ Best-seller
+              </span>
+
+              <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight text-foreground">
+                Base Fixatrice
+                <span className="block mt-1" style={{ color: GLAM }}>Hydratante</span>
+              </h2>
+
+              <p className="mt-6 text-lg md:text-xl lg:text-2xl leading-relaxed text-muted-foreground max-w-2xl mx-auto lg:mx-0">
+                Ce primer est une base fixatrice hydratante, un apprêt maquillage qui resserre les pores, matifie et hydrate la peau pour un effet glow. Avec sa couvrance légère, il prépare la peau pour un maquillage longue tenue.
+              </p>
+
+              {/* Feature badges */}
+              <div className="mt-8 grid grid-cols-2 gap-4 max-w-md mx-auto lg:mx-0">
+                {features.map((feat, i) => {
+                  const Icon = feat.icon;
+                  return (
+                    <div key={i} className="flex items-center gap-3">
+                      <div
+                        className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center"
+                        style={{ backgroundColor: `${GLAM}15` }}
+                      >
+                        <Icon className="size-5" style={{ color: GLAM }} />
+                      </div>
+                      <span className="text-sm md:text-base font-medium text-foreground">{feat.text}</span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* CTA */}
+              <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+                <button
+                  onClick={() => navigateTo('category', { category: 'makeup' })}
+                  className="px-8 py-4 rounded-full text-base md:text-lg font-bold text-white shadow-lg hover:opacity-90 transition-all hover:shadow-xl"
+                  style={{ backgroundColor: GLAM }}
+                >
+                  Découvrir →
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        </ScrollReveal>
+      </div>
+    </section>
+  );
+}
+
+// ─── 7. Social Media Banner ───────────────────────────────
 function SocialBanner() {
   return (
     <section className="py-10 md:py-14">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="rounded-xl p-8 md:p-12 text-center" style={{ backgroundColor: '#1a1a1a' }}>
           <Heart className="size-6 mx-auto mb-3 text-white/60" />
           <h2 className="font-heading text-2xl md:text-3xl font-bold text-white tracking-tight">
@@ -337,7 +431,7 @@ function SocialBanner() {
 function NewsletterBanner() {
   return (
     <section className="py-12 md:py-20">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
         <div className="text-white rounded-xl p-8 md:p-14 text-center" style={{ backgroundColor: GLAM }}>
           <div className="inline-flex items-center gap-2 mb-4">
             <Star className="size-5 fill-white text-white" />
@@ -476,6 +570,8 @@ export function GlamshopHomePage() {
       <PromoStrip text="Livraison gratuite dès 100€ d'achat" code="LIVRAISON100" />
       {/* 7. Cosmétiques by Eva (4 products only) */}
       <NewArrivals />
+      {/* 7b. Product Split Section */}
+      <ProductSplitSection />
       {/* 8. Category Promo Carousel */}
       <CategoryPromoCarousel />
       {/* 9. Promo Strip */}

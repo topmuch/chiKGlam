@@ -77,7 +77,7 @@ export default function GlamshopHeader() {
       {/* Promo bar #bc8752 */}
       {promoBarVisible && (
         <div className="text-white relative z-50" style={{ backgroundColor: '#bc8752' }}>
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center h-10">
+          <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-center h-10">
             <p className="text-sm font-semibold tracking-wide text-center">
               <span className="hidden sm:inline">
                 ✨ Livraison gratuite dès 100€ d&apos;achat &nbsp;|&nbsp; Retours gratuits sous 15 jours &nbsp;|&nbsp; ★ Trustpilot 4.8/5 ✨
@@ -95,7 +95,7 @@ export default function GlamshopHeader() {
 
       {/* Main Header */}
       <header className={`sticky top-0 z-50 w-full bg-white transition-shadow duration-300 ${isScrolled ? 'shadow-sm' : ''}`}>
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className="flex items-center gap-2 flex-1 justify-start min-w-0">
               <Button variant="ghost" size="icon" className="md:hidden shrink-0" onClick={() => setMobileMenuOpen(true)} aria-label="Open menu">
@@ -175,7 +175,7 @@ export default function GlamshopHeader() {
         </div>
         {/* Nav Bar */}
         <nav className="hidden md:block border-b border-gray-200 bg-white" onMouseLeave={handleNavMouseLeave}>
-          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
             <ul className="flex items-center justify-center gap-0">
               {navItems.map((item) => (
                 <li key={item.label} className="relative">

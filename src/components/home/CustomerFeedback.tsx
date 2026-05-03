@@ -71,7 +71,7 @@ export function CustomerFeedback() {
 
   return (
     <section className={`py-12 md:py-20 ${isGold || isGlamshop ? 'bg-[#bc8752]' : 'bg-neutral-950'}`}>
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-10">
         <ScrollReveal>
           <div className="text-center mb-8 md:mb-12">
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight">

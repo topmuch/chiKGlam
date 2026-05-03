@@ -59,7 +59,7 @@ export default function GlamshopFooter() {
     <footer className="mt-auto">
       {/* Newsletter section — #bc8752 */}
       <section style={{ backgroundColor: '#bc8752' }}>
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-14">
           <div className="text-center max-w-2xl mx-auto mb-8">
             <h2 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight mb-3 text-black">
               Rejoignez la Communauté CHIC GLAM BY EVA
@@ -90,7 +90,7 @@ export default function GlamshopFooter() {
 
       {/* Main Footer — #bc8752 */}
       <section style={{ backgroundColor: '#bc8752' }}>
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
             {/* Brand */}
             <div>
@@ -147,7 +147,7 @@ export default function GlamshopFooter() {
 
       {/* Bottom Bar — #a07040 */}
       <section style={{ backgroundColor: '#a07040', borderTop: '1px solid rgba(0,0,0,0.1)' }}>
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-5">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 text-center sm:text-left">
               <p className="text-xs text-black/60">&copy; {new Date().getFullYear()} CHIC GLAM BY EVA. Tous droits réservés.</p>
