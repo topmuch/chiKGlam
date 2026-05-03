@@ -44,6 +44,7 @@ export async function PUT(request: NextRequest) {
       'siteName', 'siteDescription', 'siteUrl', 'ogImage', 'contactEmail', 'activeTemplate',
       'stripeKey', 'stripeSecret', 'sumupKey', 'sumUpMerchantId',
       'smtpHost', 'smtpPort', 'smtpUser', 'smtpPass',
+      'maintenanceMode', 'maintenanceMessage', 'maintenanceEnd',
     ];
 
     for (const field of allowedFields) {

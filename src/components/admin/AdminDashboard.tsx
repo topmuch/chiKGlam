@@ -46,6 +46,7 @@ import {
   Mail,
   Palette,
   Newspaper,
+  Wrench,
 } from 'lucide-react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -206,6 +207,9 @@ interface SiteSettings {
   smtpPort?: number;
   smtpUser?: string;
   smtpPass?: string;
+  maintenanceMode?: boolean;
+  maintenanceMessage?: string;
+  maintenanceEnd?: string;
   updatedAt: string;
 }
 
@@ -452,6 +456,7 @@ export default function AdminDashboard() {
     stripeKey: '', stripeSecret: '', sumupKey: '', sumUpMerchantId: '',
     smtpHost: '', smtpPort: '', smtpUser: '', smtpPass: '',
     activeTemplate: 'default',
+    maintenanceMode: false, maintenanceMessage: '', maintenanceEnd: '',
   });
 
   // WooCommerce state
@@ -587,6 +592,9 @@ export default function AdminDashboard() {
           smtpUser: data.settings.smtpUser || '',
           smtpPass: data.settings.smtpPass || '',
           activeTemplate: data.settings.activeTemplate || 'default',
+          maintenanceMode: data.settings.maintenanceMode || false,
+          maintenanceMessage: data.settings.maintenanceMessage || '',
+          maintenanceEnd: data.settings.maintenanceEnd || '',
         });
       }
     } catch (e) {
@@ -1264,6 +1272,7 @@ export default function AdminDashboard() {
       const body = { ...settingsForm };
       if (body.smtpPort) body.smtpPort = parseInt(body.smtpPort);
       else body.smtpPort = null;
+      if (!body.maintenanceEnd) body.maintenanceEnd = null;
       const res = await fetch('/api/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -2814,7 +2823,7 @@ export default function AdminDashboard() {
   );
 
   // ------ SETTINGS ------
-  const [settingsTab, setSettingsTab] = useState<'site' | 'payment' | 'email' | 'template'>('site');
+  const [settingsTab, setSettingsTab] = useState<'site' | 'payment' | 'email' | 'template' | 'maintenance'>('site');
   
   const renderSettings = () => {
     if (settingsLoading) {
@@ -2864,6 +2873,14 @@ export default function AdminDashboard() {
           >
             <Palette className="h-4 w-4 mr-2" />
             Template
+          </Button>
+          <Button
+            variant={settingsTab === 'maintenance' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setSettingsTab('maintenance')}
+          >
+            <Wrench className="h-4 w-4 mr-2" />
+            Maintenance
           </Button>
         </div>
 
@@ -3201,6 +3218,111 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Maintenance Settings Tab */}
+        {settingsTab === 'maintenance' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Wrench className="h-5 w-5" />
+                Mode Maintenance
+              </CardTitle>
+              <CardDescription>
+                Activez la page de maintenance pour les visiteurs pendant une mise à jour
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Toggle */}
+              <div className="flex items-center justify-between p-4 rounded-xl border" style={{ borderColor: settingsForm.maintenanceMode ? '#ef4444' : undefined, background: settingsForm.maintenanceMode ? 'rgba(239,68,68,0.04)' : undefined }}>
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${settingsForm.maintenanceMode ? 'bg-red-100' : 'bg-muted'}`}>
+                    <AlertTriangle className={`h-5 w-5 ${settingsForm.maintenanceMode ? 'text-red-600' : 'text-muted-foreground'}`} />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">Activer le mode maintenance</p>
+                    <p className="text-xs text-muted-foreground">
+                      {settingsForm.maintenanceMode
+                        ? 'Les visiteurs verront la page de maintenance. Vous (admin) gardez l\'accès.'
+                        : 'Le site est accessible normalement par tous les visiteurs.'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSettingsForm({ ...settingsForm, maintenanceMode: !settingsForm.maintenanceMode })}
+                  className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                    settingsForm.maintenanceMode ? 'bg-red-500' : 'bg-neutral-200'
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-6 w-6 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out ${
+                      settingsForm.maintenanceMode ? 'translate-x-5' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              {/* Maintenance Message */}
+              <div className="space-y-2">
+                <Label htmlFor="maintenanceMessage">Message de maintenance</Label>
+                <Input
+                  id="maintenanceMessage"
+                  placeholder="Nous effectuons une mise à jour. Revenez bientôt !"
+                  value={settingsForm.maintenanceMessage}
+                  onChange={(e) => setSettingsForm({ ...settingsForm, maintenanceMessage: e.target.value })}
+                  disabled={!settingsForm.maintenanceMode}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Ce message sera affiché sur la page de maintenance vue par les visiteurs
+                </p>
+              </div>
+
+              {/* Maintenance End Date/Time */}
+              <div className="space-y-2">
+                <Label htmlFor="maintenanceEnd">Date et heure de fin (minuteur)</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="maintenanceEnd"
+                    type="datetime-local"
+                    value={settingsForm.maintenanceEnd}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, maintenanceEnd: e.target.value })}
+                    disabled={!settingsForm.maintenanceMode}
+                    className="max-w-xs"
+                  />
+                  {settingsForm.maintenanceEnd && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSettingsForm({ ...settingsForm, maintenanceEnd: '' })}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Optionnel — Un compte à rebours sera affiché sur la page de maintenance. Laissez vide pour un message sans minuteur.
+                </p>
+              </div>
+
+              {/* Preview warning */}
+              {settingsForm.maintenanceMode && (
+                <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="h-5 w-5 mt-0.5 shrink-0" />
+                    <div>
+                      <p className="font-semibold mb-1">Aperçu en direct</p>
+                      <p>
+                        Le mode maintenance sera actif immédiatement après avoir cliqué sur &quot;Enregistrer&quot;.
+                        En tant qu&apos;administrateur, vous verrez un bandeau d&apos;avertissement mais conserverez l&apos;accès complet au site.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}

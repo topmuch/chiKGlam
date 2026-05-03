@@ -2,8 +2,9 @@
 
 import { useStore } from '@/store/use-store';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTemplate } from '@/hooks/use-template';
+import { MaintenancePage } from '@/components/shared/MaintenancePage';
 
 // Default template components
 import Header from '@/components/layout/Header';
@@ -60,12 +61,42 @@ import { GoldenBlogPage } from '@/components/templates/golden/GoldenBlogPage';
 import GoldenBlogPostPage from '@/components/templates/golden/GoldenBlogPostPage';
 
 export default function Page() {
-  const { currentPage, selectedCategory, selectedProduct } = useStore();
+  const { currentPage, selectedCategory, selectedProduct, currentUser } = useStore();
   const { isLuxuria, isGolden, isGlamshop, isReady } = useTemplate();
+  const [maintenanceInfo, setMaintenanceInfo] = useState<{ mode: boolean; message: string; end: string | null } | null>(null);
+
+  // Check maintenance mode
+  useEffect(() => {
+    async function checkMaintenance() {
+      try {
+        const res = await fetch('/api/maintenance');
+        const data = await res.json();
+        if (data.maintenanceMode) {
+          setMaintenanceInfo({
+            mode: true,
+            message: data.maintenanceMessage || 'Nous effectuons une mise à jour. Revenez bientôt !',
+            end: data.maintenanceEnd || null,
+          });
+        }
+      } catch {
+        // On error, allow normal access
+      }
+    }
+    checkMaintenance();
+    // Poll every 30 seconds in case admin disables maintenance
+    const interval = setInterval(checkMaintenance, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
+
+  // Show maintenance page to non-admin users
+  const isAdmin = currentUser?.role === 'admin';
+  if (maintenanceInfo?.mode && !isAdmin) {
+    return <MaintenancePage message={maintenanceInfo.message} endTime={maintenanceInfo.end} />;
+  }
 
   // ============================================================
   // Default Template Rendering
@@ -191,12 +222,24 @@ export default function Page() {
     );
   }
 
+  // Show maintenance banner to admin (so they know it's active and can disable it)
+  const maintenanceBanner = maintenanceInfo?.mode && isAdmin ? (
+    <div className="bg-amber-500 text-white text-center text-sm py-2 px-4 font-medium">
+      ⚠️ Mode maintenance ACTIF — Les visiteurs voient la page de maintenance.{' '}
+      <button
+        onClick={() => setMaintenanceInfo(null)}
+        className="underline ml-2 hover:text-amber-100"
+      >Masquer</button>
+    </div>
+  ) : null;
+
   // ============================================================
   // Glamshop Template Layout
   // ============================================================
   if (isGlamshop) {
     return (
       <div className="min-h-screen flex flex-col bg-white">
+        {maintenanceBanner}
         <GlamshopHeader />
         <main className="flex-1">
           <AnimatePresence mode="wait">
@@ -229,6 +272,7 @@ export default function Page() {
   if (isGolden) {
     return (
       <div className="min-h-screen flex flex-col bg-white">
+        {maintenanceBanner}
         <GoldenHeader />
         <main className="flex-1">
           <AnimatePresence mode="wait">
@@ -257,6 +301,7 @@ export default function Page() {
   if (isLuxuria) {
     return (
       <div className="min-h-screen flex flex-col bg-white">
+        {maintenanceBanner}
         <LuxuriaHeader />
         <main className="flex-1">
           <AnimatePresence mode="wait">
@@ -284,6 +329,7 @@ export default function Page() {
   // ============================================================
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      {maintenanceBanner}
       <Header />
       <main className="flex-1">
         <AnimatePresence mode="wait">

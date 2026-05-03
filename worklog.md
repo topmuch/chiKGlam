@@ -79,3 +79,27 @@ Stage Summary:
 - 3 remaining categories centered with proper grid layout
 - Template flickering fix: template is read from localStorage before isReady flag is set
 
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Create maintenance page with countdown timer, activable from admin dashboard
+
+Work Log:
+- Updated Prisma schema: added maintenanceMode (Boolean), maintenanceMessage (String), maintenanceEnd (String) to SiteSettings model
+- Pushed schema to DB with `bun run db:push` (success)
+- Updated `/api/settings` route: added maintenance fields to allowedFields whitelist
+- Created `/api/maintenance` route: public endpoint returning maintenance status
+- Created `MaintenancePage.tsx` component: dark gradient background, gold #bc8752 branding, animated particles, countdown timer (days/hours/minutes/seconds), progress bar, contact email
+- Updated `page.tsx`: added maintenance check via API, shows MaintenancePage to non-admin users, shows amber banner to admin when active, polls every 30s
+- Updated AdminDashboard.tsx: added maintenance fields to SiteSettings interface, settingsForm, fetchSettings; added "Maintenance" tab with toggle switch, message input, datetime picker for countdown
+- All lint checks pass (0 errors)
+
+Stage Summary:
+- Files created: src/components/shared/MaintenancePage.tsx, src/app/api/maintenance/route.ts
+- Files modified: prisma/schema.prisma, src/app/api/settings/route.ts, src/app/page.tsx, src/components/admin/AdminDashboard.tsx
+- Admin activates maintenance from: Dashboard > Configuration > Paramètres > onglet "Maintenance"
+- Toggle ON/OFF, custom message, optional countdown end time
+- Admin keeps full access to the site (sees amber warning banner)
+- Non-admin visitors see the full-screen maintenance page with countdown
+

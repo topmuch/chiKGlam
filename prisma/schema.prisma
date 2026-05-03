@@ -191,9 +191,12 @@ model SiteSettings {
   stripeSecret    String?
   sumupKey        String?
   sumUpMerchantId String?
-  smtpHost        String?
-  smtpPort        Int?
-  smtpUser        String?
-  smtpPass        String?
-  updatedAt       DateTime @updatedAt
+  smtpHost            String?
+  smtpPort            Int?
+  smtpUser            String?
+  smtpPass            String?
+  maintenanceMode     Boolean  @default(false)
+  maintenanceMessage  String   @default("Nous effectuons une mise à jour. Revenez bientôt !")
+  maintenanceEnd      String?
+  updatedAt           DateTime @updatedAt
 }
