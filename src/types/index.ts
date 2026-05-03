@@ -41,6 +41,7 @@ export interface Category {
   name: string;
   image: string;
   banner?: string;
+  glamshopImage?: string;
   slug: string;
   subcategories: { name: string; slug: string }[];
 }

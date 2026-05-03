@@ -56,3 +56,26 @@ Stage Summary:
 - Product pages: show category-specific image banner at top when Glamshop is active
 - Lint: 0 errors, 3 pre-existing warnings
 - Dev server: GET / 200 OK
+
+---
+Task ID: 1
+Agent: Main Agent
+Task: Update Glamshop categories — replace images, remove box-de-seduction, center grid, fix flickering
+
+Work Log:
+- Analyzed current category setup: 4 categories in src/data/products.ts, rendered by CategoriesGrid.tsx
+- Copied 3 uploaded images to public/images/categories/: glamshop-makeup.webp, glamshop-lingerie.webp, glamshop-accessoires.webp
+- Added optional `glamshopImage` field to Category type in src/types/index.ts
+- Added glamshopImage paths to all 3 category entries in src/data/products.ts
+- Rewrote CategoriesGrid.tsx: Glamshop branch filters out box-de-seduction, uses glamshopImage, centers 3 items with grid-cols-1 sm:grid-cols-3 max-w-4xl mx-auto
+- Fixed template flickering bug in use-template.ts: simplified from useSyncExternalStore to useState, added requestAnimationFrame delay for isReady to ensure template is set before rendering
+- Verified: lint passes (0 errors), GET / 200
+
+Stage Summary:
+- Makeup category now uses WhatsApp-Image-2023-03-03-at-14.19.31 (1).jpeg
+- Lingerie category now uses 112 (1).png
+- Accessoires category now uses accessoire.jpg
+- Box de séduction category hidden from Glamshop template
+- 3 remaining categories centered with proper grid layout
+- Template flickering fix: template is read from localStorage before isReady flag is set
+
