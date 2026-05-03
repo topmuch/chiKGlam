@@ -64,8 +64,9 @@ export default function Page() {
   const { currentPage, selectedCategory, selectedProduct, currentUser } = useStore();
   const { isLuxuria, isGolden, isGlamshop, isReady } = useTemplate();
   const [maintenanceInfo, setMaintenanceInfo] = useState<{ mode: boolean; message: string; end: string | null } | null>(null);
+  const [maintenanceChecked, setMaintenanceChecked] = useState(false);
 
-  // Check maintenance mode
+  // Check maintenance mode BEFORE showing the site (prevents flickering)
   useEffect(() => {
     async function checkMaintenance() {
       try {
@@ -81,6 +82,7 @@ export default function Page() {
       } catch {
         // On error, allow normal access
       }
+      setMaintenanceChecked(true);
     }
     checkMaintenance();
     // Poll every 30 seconds in case admin disables maintenance
@@ -92,10 +94,21 @@ export default function Page() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
 
-  // Show maintenance page to non-admin users
+  // Show maintenance page to non-admin users (after API check completes)
   const isAdmin = currentUser?.role === 'admin';
   if (maintenanceInfo?.mode && !isAdmin) {
     return <MaintenancePage message={maintenanceInfo.message} endTime={maintenanceInfo.end} />;
+  }
+
+  // Wait for both template AND maintenance check before rendering (prevents any flash)
+  if (!isReady || !maintenanceChecked) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#F7F7F7' }}>
+        <div className="flex flex-col items-center gap-3">
+          <div className="size-8 border-2 rounded-full animate-spin" style={{ borderColor: '#bc875240', borderTopColor: '#bc8752' }} />
+        </div>
+      </div>
+    );
   }
 
   // ============================================================
@@ -211,19 +224,8 @@ export default function Page() {
 
   const hideFooter = currentPage === 'checkout' || currentPage === 'customer-dashboard' || currentPage === 'admin-dashboard' || currentPage === 'cart';
 
-  // Wait for template to be determined before rendering (prevents flash of wrong template)
-  if (!isReady) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#F7F7F7' }}>
-        <div className="flex flex-col items-center gap-3">
-          <div className="size-8 border-2 rounded-full animate-spin" style={{ borderColor: '#bc875240', borderTopColor: '#bc8752' }} />
-        </div>
-      </div>
-    );
-  }
-
-  // Show maintenance banner to admin (so they know it's active and can disable it)
-  const maintenanceBanner = maintenanceInfo?.mode && isAdmin ? (
+  // Show maintenance banner to admin (after initial check, so we know the status)
+  const maintenanceBanner = maintenanceChecked && maintenanceInfo?.mode && isAdmin ? (
     <div className="bg-amber-500 text-white text-center text-sm py-2 px-4 font-medium">
       ⚠️ Mode maintenance ACTIF — Les visiteurs voient la page de maintenance.{' '}
       <button

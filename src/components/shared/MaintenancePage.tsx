@@ -1,58 +1,50 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+/* eslint-disable react-hooks/set-state-in-effect -- setInterval timer requires setState inside effect */
+
+import { useEffect, useState } from 'react';
 
 interface TimeLeft {
   days: number;
   hours: number;
   minutes: number;
   seconds: number;
-  total: number;
+}
+
+function calcTimeLeft(endTime: string): TimeLeft | null {
+  const target = new Date(endTime).getTime();
+  const diff = target - Date.now();
+  if (diff <= 0) return null;
+  return {
+    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+    minutes: Math.floor((diff / (1000 * 60)) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
+  };
 }
 
 export function MaintenancePage({ message, endTime }: { message: string; endTime?: string }) {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
+  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(() => (endTime ? calcTimeLeft(endTime) : null));
   const [mounted, setMounted] = useState(false);
-
-  const calculateTimeLeft = useCallback((): TimeLeft | null => {
-    if (!endTime) return null;
-    const target = new Date(endTime).getTime();
-    const now = Date.now();
-    const diff = target - now;
-
-    if (diff <= 0) return null;
-
-    return {
-      total: diff,
-      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((diff / (1000 * 60)) % 60),
-      seconds: Math.floor((diff / 1000) % 60),
-    };
-  }, [endTime]);
 
   useEffect(() => {
     setMounted(true);
-    setTimeLeft(calculateTimeLeft());
-
     if (!endTime) return;
-
     const timer = setInterval(() => {
-      const remaining = calculateTimeLeft();
+      const remaining = calcTimeLeft(endTime);
       setTimeLeft(remaining);
       if (!remaining) clearInterval(timer);
     }, 1000);
-
     return () => clearInterval(timer);
-  }, [endTime, calculateTimeLeft]);
+  }, [endTime]);
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)' }}>
-      {/* Animated background particles */}
+      {/* Animated background orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full opacity-10 animate-pulse" style={{ background: 'radial-gradient(circle, #bc8752, transparent)', animationDuration: '4s' }} />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full opacity-8 animate-pulse" style={{ background: 'radial-gradient(circle, #bc8752, transparent)', animationDuration: '6s', animationDelay: '2s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-5" style={{ background: 'radial-gradient(circle, #bc8752, transparent)' }} />
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full animate-pulse" style={{ background: 'radial-gradient(circle, rgba(188,135,82,0.15), transparent)', animationDuration: '4s' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full animate-pulse" style={{ background: 'radial-gradient(circle, rgba(188,135,82,0.1), transparent)', animationDuration: '6s', animationDelay: '2s' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(188,135,82,0.05), transparent)' }} />
       </div>
 
       <div className="relative z-10 text-center px-4 sm:px-6 max-w-2xl mx-auto">
@@ -61,7 +53,6 @@ export function MaintenancePage({ message, endTime }: { message: string; endTime
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6" style={{ background: 'rgba(188,135,82,0.15)', border: '2px solid rgba(188,135,82,0.3)' }}>
             <svg className="w-10 h-10" style={{ color: '#bc8752' }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17l-5.1-5.1m0 0L11.42 4.97m-5.1 5.1H21M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
             </svg>
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight mb-2">
@@ -100,7 +91,7 @@ export function MaintenancePage({ message, endTime }: { message: string; endTime
                 <div key={item.label} className="flex items-center gap-3 sm:gap-4">
                   <div className="flex flex-col items-center">
                     <div
-                      className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl flex items-center justify-center text-2xl sm:text-3xl md:text-4xl font-bold text-white transition-transform"
+                      className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl flex items-center justify-center text-2xl sm:text-3xl md:text-4xl font-bold text-white"
                       style={{
                         background: 'rgba(188,135,82,0.12)',
                         border: '1px solid rgba(188,135,82,0.25)',
@@ -121,24 +112,10 @@ export function MaintenancePage({ message, endTime }: { message: string; endTime
                 </div>
               ))}
             </div>
-
-            {/* Progress bar */}
-            <div className="mt-6 mx-auto max-w-md">
-              <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(188,135,82,0.15)' }}>
-                <div
-                  className="h-full rounded-full transition-all duration-1000"
-                  style={{
-                    background: 'linear-gradient(90deg, #bc8752, #d4a574)',
-                    width: `${Math.max(0, 100 - (timeLeft.total / (new Date(endTime).getTime() - (Date.now() - 60000)) * 100))}%`,
-                    boxShadow: '0 0 10px rgba(188,135,82,0.4)',
-                  }}
-                />
-              </div>
-            </div>
           </div>
         )}
 
-        {/* No countdown — just maintenance message */}
+        {/* No countdown — spinner */}
         {mounted && !endTime && (
           <div className="mb-10">
             <div className="inline-flex items-center gap-3 px-6 py-3 rounded-xl" style={{ background: 'rgba(188,135,82,0.1)', border: '1px solid rgba(188,135,82,0.2)' }}>
