@@ -25,22 +25,22 @@ function MarqueeBanner() {
   const content = items.map((item, i) => (
     <span
       key={i}
-      className="inline-flex items-center text-white font-semibold text-sm uppercase tracking-widest mx-4 shrink-0"
+      className="inline-flex items-center text-white font-semibold text-base md:text-lg uppercase tracking-widest mx-6 shrink-0"
     >
-      <span className="mx-3 text-white/40">✦</span>
+      <span className="mx-4 text-white/40">✦</span>
       {item}
     </span>
   ));
 
   return (
-    <div className="w-full py-3 overflow-hidden" style={{ backgroundColor: GLAM }}>
+    <div className="w-full py-4 md:py-5 overflow-hidden" style={{ backgroundColor: GLAM }}>
       <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
         .glamshop-marquee {
-          animation: marquee 25s linear infinite;
+          animation: marquee 30s linear infinite;
         }
       `}</style>
       <div className="flex glamshop-marquee whitespace-nowrap">
