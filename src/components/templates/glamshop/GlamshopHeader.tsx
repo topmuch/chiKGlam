@@ -103,7 +103,7 @@ export default function GlamshopHeader() {
               </Button>
             </div>
             <div className="absolute left-1/2 -translate-x-1/2 z-10">
-              <button onClick={() => navigateTo('home')} className="font-heading font-bold text-lg sm:text-xl md:text-2xl tracking-tight text-foreground hover:opacity-80 transition-opacity whitespace-nowrap" style={{ width: '265px', height: '35px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <button onClick={() => navigateTo('home')} className="font-heading font-bold text-xl sm:text-2xl md:text-3xl tracking-tight text-foreground hover:opacity-80 transition-opacity whitespace-nowrap" style={{ width: '320px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 CHIC GLAM BY EVA
               </button>
             </div>
