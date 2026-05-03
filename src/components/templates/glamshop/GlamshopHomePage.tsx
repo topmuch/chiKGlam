@@ -26,7 +26,7 @@ function GlamshopHero() {
   return (
     <section className="relative w-full overflow-hidden" style={{ minHeight: '100vh' }}>
       {/* Background */}
-      <div className="absolute inset-0" style={{ backgroundColor: '#FAF5EF' }} />
+      <div className="absolute inset-0" style={{ backgroundColor: '#f9d2b3' }} />
       {/* Subtle gold radial glow in center */}
       <div
         className="absolute inset-0 pointer-events-none"
